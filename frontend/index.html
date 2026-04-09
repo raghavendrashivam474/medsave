@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedSave | Medicine Price & Savings Checker</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <button class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon"></i>
+    </button>
+    <div class="container">
+        <header>
+            <h1>MedSave</h1>
+            <p class="subtitle">Search generic alternatives & calculate savings instantly</p>
+        </header>
+
+        <section class="search-box">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" id="searchInput" placeholder="Search branded medicine (e.g. Crocin, Glycomet)...">
+        </section>
+
+        <div id="results" class="results-container">
+            <div class="empty-state">
+                <i class="fas fa-pills" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                <p>Enter a medicine name to start comparing prices</p>
+            </div>
+        </div>
+
+        <section class="stores-section" id="storesSection">
+            <h2 style="margin-bottom: 1.5rem; font-size: 1.8rem;">Nearby Jan Aushadhi Stores</h2>
+            <div style="margin-bottom: 2rem; display: flex; gap: 10px;">
+                <input type="text" id="pincodeInput" placeholder="Enter Pincode (e.g. 110001)" 
+                       style="padding: 0.8rem 1rem; border-radius: 12px; border: 1px solid var(--glass-border); background: var(--card-bg); color: white; flex: 1;">
+                <button id="findStoresBtn" style="padding: 0.8rem 1.5rem; border-radius: 12px; background: var(--blue); color: white; border: none; font-weight: 600; cursor: pointer;">Find</button>
+            </div>
+            <div id="storeResults"></div>
+        </section>
+
+        <footer style="margin-top: 5rem; text-align: center; color: var(--text-secondary); font-size: 0.9rem; padding: 2rem; border-top: 1px solid var(--glass-border);">
+            <p>© 2026 MedSave Utility. All data is for informational purposes.</p>
+            <p style="margin-top: 0.5rem; color: var(--accent); font-weight: 600;">⚠️ Consult a doctor before switching medicines.</p>
+        </footer>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
