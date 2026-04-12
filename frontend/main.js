@@ -1,4 +1,4 @@
-const API_BASE = 'https://medsave-bqf3.onrender.com';
+const API_BASE = 'https://medsave-bqf3.onrender.com/api';
 
 const searchInput = document.getElementById('searchInput');
 const resultsContainer = document.getElementById('results');
