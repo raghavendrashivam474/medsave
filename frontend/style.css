@@ -31,6 +31,10 @@ body {
     padding: 2rem;
 }
 
+@media (max-width: 600px) {
+    body { padding: 1rem; }
+}
+
 .container {
     max-width: 900px;
     width: 100%;
@@ -48,6 +52,7 @@ h1 {
     font-weight: 800;
     background: linear-gradient(to right, #22c55e, #3b82f6);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     margin-bottom: 0.5rem;
 }
@@ -167,6 +172,8 @@ input[type="text"]:focus {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
 .price-box {
@@ -331,9 +338,34 @@ input[type="text"]:focus {
 }
 
 @media (max-width: 600px) {
-    h1 { font-size: 2rem; }
+    h1 { font-size: 2.2rem; }
+    p.subtitle { font-size: 1rem; }
+    
     .card-body { grid-template-columns: 1fr; }
+    
+    .price-comparison {
+        flex-direction: column !important;
+        gap: 1.5rem !important;
+        text-align: center;
+    }
+    
+    .price-comparison .fa-chevron-right {
+        transform: rotate(90deg);
+        opacity: 0.5;
+    }
+
+    .store-search-controls {
+        flex-direction: column !important;
+        gap: 10px;
+    }
+
     .theme-toggle { top: 1rem; right: 1rem; }
+}
+
+@media (max-width: 400px) {
+    h1 { font-size: 1.8rem; }
+    .brand-name { font-size: 1.2rem; }
+    .price-val { font-size: 1.3rem; }
 }
 
 /* Light Theme Variables */

@@ -1,17 +1,32 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
+import psycopg2
+from psycopg2.extras import RealDictCursor
 import sqlite3
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
 
-DB_PATH = os.path.join(os.path.dirname(__file__), 'database.db')
+DATABASE_URL = os.getenv('DATABASE_URL')
 
 def get_db_connection():
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    return conn
+    # Use SQLite if NO DATABASE_URL is set, or if it contains the placeholder '@host:'
+    # or if it explicitly specifies an sqlite file.
+    is_postgres = DATABASE_URL and 'postgresql://' in DATABASE_URL and '@host:' not in DATABASE_URL
+    
+    if is_postgres:
+        conn = psycopg2.connect(DATABASE_URL, cursor_factory=RealDictCursor)
+        return conn
+    else:
+        # Use local SQLite as fallback
+        db_path = os.path.join(os.path.dirname(__file__), 'database.db')
+        conn = sqlite3.connect(db_path)
+        conn.row_factory = sqlite3.Row
+        return conn
 
 @app.route('/api/search', methods=['GET'])
 def search_medicine():
@@ -24,21 +39,42 @@ def search_medicine():
     
     # Fuzzy search on brand name or generic name
     # We join brands with medicines to show comparison
-    sql = """
-        SELECT 
-            b.brand_name, 
-            m.generic_name, 
-            m.salt, 
-            m.dosage, 
-            m.form, 
-            b.mrp as brand_price, 
-            m.jan_price as generic_price
-        FROM brands b
-        JOIN medicines m ON b.generic_id = m.id
-        WHERE b.brand_name LIKE ? OR m.generic_name LIKE ?
-    """
-    search_term = f"%{query}%"
-    results = cur.execute(sql, (search_term, search_term)).fetchall()
+    # ILIKE is Postgres, for SQLite we use LIKE (usually case-insensitive for ASCII)
+    # or use LOWER() for better compatibility.
+    if isinstance(conn, sqlite3.Connection):
+        sql = """
+            SELECT 
+                b.brand_name, 
+                m.generic_name, 
+                m.salt, 
+                m.dosage, 
+                m.form, 
+                b.mrp as brand_price, 
+                m.jan_price as generic_price
+            FROM brands b
+            JOIN medicines m ON b.generic_id = m.id
+            WHERE b.brand_name LIKE ? OR m.generic_name LIKE ?
+        """
+        search_term = f"%{query}%"
+        cur.execute(sql, (search_term, search_term))
+    else:
+        sql = """
+            SELECT 
+                b.brand_name, 
+                m.generic_name, 
+                m.salt, 
+                m.dosage, 
+                m.form, 
+                b.mrp as brand_price, 
+                m.jan_price as generic_price
+            FROM brands b
+            JOIN medicines m ON b.generic_id = m.id
+            WHERE b.brand_name ILIKE %s OR m.generic_name ILIKE %s
+        """
+        search_term = f"%{query}%"
+        cur.execute(sql, (search_term, search_term))
+        
+    results = cur.fetchall()
     
     output = []
     for row in results:
@@ -55,6 +91,7 @@ def search_medicine():
             'savings_percent': round(savings_percent, 1)
         })
     
+    cur.close()
     conn.close()
     return jsonify(output)
 
@@ -67,12 +104,14 @@ def get_stores():
     conn = get_db_connection()
     cur = conn.cursor()
     
+    param_marker = '?' if isinstance(conn, sqlite3.Connection) else '%s'
+    
     if pincode:
-        results = cur.execute("SELECT * FROM stores WHERE pincode = ?", (pincode,)).fetchall()
+        cur.execute(f"SELECT * FROM stores WHERE pincode = {param_marker}", (pincode,))
+        results = cur.fetchall()
     elif lat and lng:
-        # Simple distance calculation (Euclidean approximation for local search)
-        # In a real app, use Haversine or a spatial extension like SpatiaLite
-        results = cur.execute("SELECT * FROM stores").fetchall()
+        cur.execute("SELECT * FROM stores")
+        results = cur.fetchall()
         user_lat = float(lat)
         user_lng = float(lng)
         
@@ -80,22 +119,32 @@ def get_stores():
         for row in results:
             d_lat = user_lat - row['lat']
             d_lng = user_lng - row['lng']
-            # Approx distance in km (very rough)
             distance = ((d_lat * 111)**2 + (d_lng * 85)**2)**0.5
             store_dict = dict(row)
             store_dict['distance'] = distance
             output.append(store_dict)
             
-        # Sort by distance
         output.sort(key=lambda x: x['distance'])
+        cur.close()
         conn.close()
-        return jsonify(output[:5]) # Return nearest 5
+        return jsonify(output[:5])
     else:
-        results = cur.execute("SELECT * FROM stores LIMIT 10").fetchall()
+        cur.execute("SELECT * FROM stores LIMIT 10")
+        results = cur.fetchall()
         
     output = [dict(row) for row in results]
+    cur.close()
     conn.close()
     return jsonify(output)
+
+# Serve Frontend
+@app.route('/')
+def serve_index():
+    return send_from_directory('../frontend', 'index.html')
+
+@app.route('/<path:path>')
+def serve_static(path):
+    return send_from_directory('../frontend', path)
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
