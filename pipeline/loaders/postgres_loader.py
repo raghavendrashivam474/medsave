@@ -4,8 +4,17 @@ pipeline/loaders/postgres_loader.py
 Database loader for the MedSave Data Engine.
 
 Supports both SQLite (local development) and PostgreSQL/Supabase (production).
-Backend selection mirrors backend/seed_data.py logic to guarantee that
-the pipeline writes to the same database the Flask API reads from.
+Backend selection mirrors backend/seed_data.py logic.
+
+This loader is additive and idempotent:
+    - Existing medicines and brands are never deleted
+    - Duplicates are detected in Python before insertion
+    - Re-running the pipeline on the same source is a no-op
+    - Running the pipeline on new sources adds only truly new records
+
+Duplicate detection:
+    - Medicine  = (generic_name, dosage)
+    - Brand     = (brand_name, generic_id)
 
 This is the only layer in the pipeline permitted to execute SQL.
 """
@@ -29,15 +38,14 @@ class PostgresLoader:
     """
     Loads Medicine and Brand entities into the MedSave database.
 
-    Despite the name, this loader supports both SQLite and PostgreSQL.
-    The backend is chosen based on the DATABASE_URL scheme, mirroring
-    the detection logic in backend/seed_data.py.
+    Additive and idempotent. Never deletes existing data.
+    Backend chosen automatically from DATABASE_URL scheme.
     """
 
     def __init__(self, database_url: str) -> None:
         self.database_url = database_url
         self._conn = None
-        self._medicine_id_map: dict[str, int] = {}
+        self._medicine_id_map: dict[tuple[str, str], int] = {}
         self._backend = "postgres" if _is_postgres(database_url) else "sqlite"
         logger.info("Loader backend selected: %s", self._backend)
 
@@ -71,93 +79,118 @@ class PostgresLoader:
     # ------------------------------------------------------------------
 
     def load_medicines(self, medicines: list[Medicine]) -> None:
-        logger.info("Loading %d medicines", len(medicines))
+        logger.info("Loading %d medicines (additive)", len(medicines))
 
         cursor = self._conn.cursor()
 
-        # Wipe existing data so pipeline is idempotent
-        cursor.execute("DELETE FROM brands")
-        cursor.execute("DELETE FROM medicines")
+        # Step 1: Load existing medicines into memory for duplicate detection
+        cursor.execute("SELECT id, generic_name, dosage FROM medicines")
+        for row in cursor.fetchall():
+            key = (row[1], row[2])
+            self._medicine_id_map[key] = row[0]
 
-        # Deduplicate by generic_name so brand mapping works cleanly
-        seen: dict[str, Medicine] = {}
+        existing_count = len(self._medicine_id_map)
+        logger.info("Existing medicines in database: %d", existing_count)
+
+        # Step 2: Deduplicate incoming medicines by (generic_name, dosage)
+        seen_in_batch: dict[tuple[str, str], Medicine] = {}
         for m in medicines:
-            if m.generic_name not in seen:
-                seen[m.generic_name] = m
-        unique_medicines = list(seen.values())
+            key = (m.generic_name, m.dosage)
+            if key not in seen_in_batch:
+                seen_in_batch[key] = m
 
-        if self._backend == "sqlite":
+        # Step 3: Filter out ones that already exist in database
+        new_medicines = [
+            m for key, m in seen_in_batch.items()
+            if key not in self._medicine_id_map
+        ]
+
+        skipped = len(seen_in_batch) - len(new_medicines)
+        logger.info(
+            "New medicines to insert: %d (skipped as duplicates: %d)",
+            len(new_medicines), skipped
+        )
+
+        # Step 4: Insert only the new ones
+        if new_medicines:
+            placeholder = "?" if self._backend == "sqlite" else "%s"
+            sql = (
+                "INSERT INTO medicines "
+                "(generic_name, salt, dosage, form, jan_price) "
+                f"VALUES ({placeholder}, {placeholder}, {placeholder}, "
+                f"{placeholder}, {placeholder})"
+            )
             cursor.executemany(
-                """
-                INSERT INTO medicines (generic_name, salt, dosage, form, jan_price)
-                VALUES (?, ?, ?, ?, ?)
-                """,
+                sql,
                 [
                     (m.generic_name, m.salt, m.dosage, m.form, m.jan_price)
-                    for m in unique_medicines
+                    for m in new_medicines
                 ]
             )
-            cursor.execute("SELECT id, generic_name FROM medicines")
-            for row in cursor.fetchall():
-                self._medicine_id_map[row[1]] = row[0]
 
-        else:
-            from psycopg2.extras import execute_values
-            result = execute_values(
-                cursor,
-                """
-                INSERT INTO medicines (generic_name, salt, dosage, form, jan_price)
-                VALUES %s
-                RETURNING id, generic_name
-                """,
-                [
-                    (m.generic_name, m.salt, m.dosage, m.form, m.jan_price)
-                    for m in unique_medicines
-                ],
-                fetch=True
-            )
-            self._medicine_id_map = {row[1]: row[0] for row in result}
+        # Step 5: Rebuild id map so brands can resolve foreign keys
+        cursor.execute("SELECT id, generic_name, dosage FROM medicines")
+        self._medicine_id_map = {}
+        for row in cursor.fetchall():
+            self._medicine_id_map[(row[1], row[2])] = row[0]
 
-        logger.info("Medicines inserted: %d", len(self._medicine_id_map))
+        logger.info(
+            "Medicines inserted: %d, total in database: %d",
+            len(new_medicines), len(self._medicine_id_map)
+        )
 
     def load_brands(self, brands: list[Brand]) -> None:
-        logger.info("Loading %d brands", len(brands))
+        logger.info("Loading %d brands (additive)", len(brands))
 
-        rows = []
+        cursor = self._conn.cursor()
+
+        # Step 1: Load existing brands for duplicate detection
+        cursor.execute("SELECT brand_name, generic_id FROM brands")
+        existing_brands: set[tuple[str, int]] = set()
+        for row in cursor.fetchall():
+            existing_brands.add((row[0], row[1]))
+
+        logger.info("Existing brands in database: %d", len(existing_brands))
+
+        # Step 2: Build candidate brand rows, resolving generic_id
+        # We resolve by generic_name alone. If multiple dosages exist for
+        # the same generic, pick the first — brand rows in the source
+        # dataset are keyed to generic_name only.
+        generic_name_to_id: dict[str, int] = {}
+        for (generic_name, _dosage), medicine_id in self._medicine_id_map.items():
+            generic_name_to_id.setdefault(generic_name, medicine_id)
+
+        new_rows: list[tuple[str, int, float]] = []
+        seen_in_batch: set[tuple[str, int]] = set()
         skipped_missing = 0
+        skipped_duplicate = 0
+
         for brand in brands:
-            generic_id = self._medicine_id_map.get(brand.generic_name)
+            generic_id = generic_name_to_id.get(brand.generic_name)
             if generic_id is None:
                 skipped_missing += 1
                 continue
-            rows.append((brand.brand_name, generic_id, brand.mrp))
 
-        # Honor UNIQUE (brand_name, generic_id) constraint
-        rows = list({(r[0], r[1]): r for r in rows}.values())
+            key = (brand.brand_name, generic_id)
+            if key in existing_brands or key in seen_in_batch:
+                skipped_duplicate += 1
+                continue
 
-        cursor = self._conn.cursor()
-
-        if self._backend == "sqlite":
-            cursor.executemany(
-                """
-                INSERT OR IGNORE INTO brands (brand_name, generic_id, mrp)
-                VALUES (?, ?, ?)
-                """,
-                rows
-            )
-        else:
-            from psycopg2.extras import execute_values
-            execute_values(
-                cursor,
-                """
-                INSERT INTO brands (brand_name, generic_id, mrp)
-                VALUES %s
-                ON CONFLICT DO NOTHING
-                """,
-                rows
-            )
+            seen_in_batch.add(key)
+            new_rows.append((brand.brand_name, generic_id, brand.mrp))
 
         logger.info(
-            "Brands inserted: %d (missing generic: %d)",
-            len(rows), skipped_missing
+            "New brands to insert: %d (duplicate: %d, missing generic: %d)",
+            len(new_rows), skipped_duplicate, skipped_missing
         )
+
+        # Step 3: Insert only new brands
+        if new_rows:
+            placeholder = "?" if self._backend == "sqlite" else "%s"
+            sql = (
+                "INSERT INTO brands (brand_name, generic_id, mrp) "
+                f"VALUES ({placeholder}, {placeholder}, {placeholder})"
+            )
+            cursor.executemany(sql, new_rows)
+
+        logger.info("Brands inserted: %d", len(new_rows))

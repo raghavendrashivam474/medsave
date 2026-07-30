@@ -1,0 +1,26 @@
+﻿name,salt,dosage,form,brand_name,mrp,jan_price
+Losartan,Losartan Potassium,50MG,Tablet,Losar,65.00,8.40
+Losartan,Losartan Potassium,25MG,Tablet,Cozaar,140.00,5.20
+Losartan,Losartan Potassium,100MG,Tablet,Repace,180.00,14.80
+Levothyroxine,Levothyroxine Sodium,50MCG,Tablet,Thyronorm,145.00,18.60
+Levothyroxine,Levothyroxine Sodium,100MCG,Tablet,Eltroxin,175.00,22.30
+Levothyroxine,Levothyroxine Sodium,25MCG,Tablet,Thyrox,120.00,15.40
+Ciprofloxacin,Ciprofloxacin Hydrochloride,500MG,Tablet,Cifran,68.00,9.80
+Ciprofloxacin,Ciprofloxacin Hydrochloride,250MG,Tablet,Ciplox,45.00,6.20
+Diclofenac,Diclofenac Sodium,50MG,Tablet,Voveran,42.00,5.10
+Diclofenac,Diclofenac Sodium,100MG,Tablet,Voltaren,88.00,11.40
+Ranitidine,Ranitidine Hydrochloride,150MG,Tablet,Rantac,35.00,4.80
+Ranitidine,Ranitidine Hydrochloride,300MG,Tablet,Zinetac,58.00,7.90
+Levocetirizine,Levocetirizine Dihydrochloride,5MG,Tablet,Levocet,48.00,6.30
+Levocetirizine,Levocetirizine Dihydrochloride,10MG,Tablet,Xyzal,110.00,12.80
+Montelukast,Montelukast Sodium,10MG,Tablet,Montair,155.00,20.40
+Montelukast,Montelukast Sodium,5MG,Tablet,Singulair,185.00,24.60
+Rosuvastatin,Rosuvastatin Calcium,10MG,Tablet,Rosuvas,175.00,22.80
+Rosuvastatin,Rosuvastatin Calcium,20MG,Tablet,Crestor,320.00,42.10
+Telmisartan,Telmisartan,40MG,Tablet,Telma,88.00,11.60
+Telmisartan,Telmisartan,80MG,Tablet,Micardis,165.00,21.40
+Clopidogrel,Clopidogrel Bisulfate,75MG,Tablet,Clopilet,145.00,18.90
+Clopidogrel,Clopidogrel Bisulfate,150MG,Tablet,Plavix,285.00,37.60
+Furosemide,Furosemide,40MG,Tablet,Lasix,28.00,3.80
+Furosemide,Furosemide,20MG,Tablet,Frusenex,22.00,2.90
+Hydrochlorothiazide,Hydrochlorothiazide,25MG,Tablet,Hydrazide,32.00,4.20
