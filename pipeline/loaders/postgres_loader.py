@@ -1,119 +1,163 @@
-"""
+﻿"""
 pipeline/loaders/postgres_loader.py
 
-PostgreSQL loader for the MedSave Data Engine.
+Database loader for the MedSave Data Engine.
 
-The loader is the only layer in the pipeline permitted to interact
-with the database. All other layers (parsers, normalizers, validators)
-operate exclusively on pipeline entities.
+Supports both SQLite (local development) and PostgreSQL/Supabase (production).
+Backend selection mirrors backend/seed_data.py logic to guarantee that
+the pipeline writes to the same database the Flask API reads from.
 
-Responsibilities (future sprints):
-    - Connect to PostgreSQL using the configured DATABASE_URL
-    - Insert validated Medicine entities into the medicines table
-    - Resolve medicine IDs after insertion
-    - Insert validated Brand entities into the brands table
-    - Handle duplicates gracefully
-
-This sprint defines the public interface only.
-No SQL insertion logic is implemented here.
+This is the only layer in the pipeline permitted to execute SQL.
 """
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+import sqlite3
 
-if TYPE_CHECKING:
-    from pipeline.entities.medicine import Medicine
-    from pipeline.entities.brand import Brand
+from pipeline.entities import Medicine, Brand
+from pipeline.logger import get_logger
+
+logger = get_logger(__name__)
+
+
+def _is_postgres(url: str) -> bool:
+    """Match the detection logic used in backend/seed_data.py."""
+    return bool(url) and "postgresql://" in url and "@host:" not in url
 
 
 class PostgresLoader:
     """
-    Loads validated pipeline entities into the MedSave PostgreSQL database.
+    Loads Medicine and Brand entities into the MedSave database.
 
-    This class is the single point of contact between the Data Engine
-    and the database. Nothing outside this class should construct or
-    execute SQL queries.
-
-    Usage (future):
-        loader = PostgresLoader(database_url="postgresql://...")
-        loader.connect()
-        loader.load_medicines(medicines)
-        loader.load_brands(brands)
-        loader.close()
+    Despite the name, this loader supports both SQLite and PostgreSQL.
+    The backend is chosen based on the DATABASE_URL scheme, mirroring
+    the detection logic in backend/seed_data.py.
     """
 
     def __init__(self, database_url: str) -> None:
-        """
-        Initialize the loader with a database connection string.
-
-        Args:
-            database_url: A fully qualified PostgreSQL connection string.
-                          Example: postgresql://user:password@localhost/medsave
-        """
         self.database_url = database_url
-        self._connection = None
+        self._conn = None
+        self._medicine_id_map: dict[str, int] = {}
+        self._backend = "postgres" if _is_postgres(database_url) else "sqlite"
+        logger.info("Loader backend selected: %s", self._backend)
+
+    # ------------------------------------------------------------------
+    # Connection management
+    # ------------------------------------------------------------------
 
     def connect(self) -> None:
-        """
-        Establish a connection to the PostgreSQL database.
+        logger.info("Connecting to database")
 
-        Not implemented in Sprint 2.1.
+        if self._backend == "sqlite":
+            path = self.database_url.replace("sqlite:///", "")
+            self._conn = sqlite3.connect(path)
+        else:
+            import psycopg2
+            self._conn = psycopg2.connect(self.database_url)
 
-        Raises:
-            NotImplementedError: Always. Implementation pending.
-        """
-        raise NotImplementedError(
-            "PostgresLoader.connect() is not yet implemented. "
-            "This will be built in Sprint 2.2."
-        )
+        logger.info("Connection established")
 
-    def load_medicines(self, medicines: list[Medicine]) -> None:
-        """
-        Insert a list of Medicine entities into the medicines table.
-
-        Duplicate handling and ID resolution will be implemented
-        in a future sprint.
-
-        Args:
-            medicines: A list of validated Medicine entities.
-
-        Raises:
-            NotImplementedError: Always. Implementation pending.
-        """
-        raise NotImplementedError(
-            "PostgresLoader.load_medicines() is not yet implemented. "
-            "This will be built in Sprint 2.2."
-        )
-
-    def load_brands(self, brands: list[Brand]) -> None:
-        """
-        Insert a list of Brand entities into the brands table.
-
-        Brand insertion requires that the corresponding Medicine
-        records already exist so that foreign key IDs can be resolved.
-
-        Args:
-            brands: A list of validated Brand entities.
-
-        Raises:
-            NotImplementedError: Always. Implementation pending.
-        """
-        raise NotImplementedError(
-            "PostgresLoader.load_brands() is not yet implemented. "
-            "This will be built in Sprint 2.2."
-        )
+    def commit(self) -> None:
+        self._conn.commit()
+        logger.info("Transaction committed")
 
     def close(self) -> None:
-        """
-        Close the database connection cleanly.
+        if self._conn:
+            self._conn.close()
+            logger.info("Connection closed")
 
-        Not implemented in Sprint 2.1.
+    # ------------------------------------------------------------------
+    # Load operations
+    # ------------------------------------------------------------------
 
-        Raises:
-            NotImplementedError: Always. Implementation pending.
-        """
-        raise NotImplementedError(
-            "PostgresLoader.close() is not yet implemented. "
-            "This will be built in Sprint 2.2."
+    def load_medicines(self, medicines: list[Medicine]) -> None:
+        logger.info("Loading %d medicines", len(medicines))
+
+        cursor = self._conn.cursor()
+
+        # Wipe existing data so pipeline is idempotent
+        cursor.execute("DELETE FROM brands")
+        cursor.execute("DELETE FROM medicines")
+
+        # Deduplicate by generic_name so brand mapping works cleanly
+        seen: dict[str, Medicine] = {}
+        for m in medicines:
+            if m.generic_name not in seen:
+                seen[m.generic_name] = m
+        unique_medicines = list(seen.values())
+
+        if self._backend == "sqlite":
+            cursor.executemany(
+                """
+                INSERT INTO medicines (generic_name, salt, dosage, form, jan_price)
+                VALUES (?, ?, ?, ?, ?)
+                """,
+                [
+                    (m.generic_name, m.salt, m.dosage, m.form, m.jan_price)
+                    for m in unique_medicines
+                ]
+            )
+            cursor.execute("SELECT id, generic_name FROM medicines")
+            for row in cursor.fetchall():
+                self._medicine_id_map[row[1]] = row[0]
+
+        else:
+            from psycopg2.extras import execute_values
+            result = execute_values(
+                cursor,
+                """
+                INSERT INTO medicines (generic_name, salt, dosage, form, jan_price)
+                VALUES %s
+                RETURNING id, generic_name
+                """,
+                [
+                    (m.generic_name, m.salt, m.dosage, m.form, m.jan_price)
+                    for m in unique_medicines
+                ],
+                fetch=True
+            )
+            self._medicine_id_map = {row[1]: row[0] for row in result}
+
+        logger.info("Medicines inserted: %d", len(self._medicine_id_map))
+
+    def load_brands(self, brands: list[Brand]) -> None:
+        logger.info("Loading %d brands", len(brands))
+
+        rows = []
+        skipped_missing = 0
+        for brand in brands:
+            generic_id = self._medicine_id_map.get(brand.generic_name)
+            if generic_id is None:
+                skipped_missing += 1
+                continue
+            rows.append((brand.brand_name, generic_id, brand.mrp))
+
+        # Honor UNIQUE (brand_name, generic_id) constraint
+        rows = list({(r[0], r[1]): r for r in rows}.values())
+
+        cursor = self._conn.cursor()
+
+        if self._backend == "sqlite":
+            cursor.executemany(
+                """
+                INSERT OR IGNORE INTO brands (brand_name, generic_id, mrp)
+                VALUES (?, ?, ?)
+                """,
+                rows
+            )
+        else:
+            from psycopg2.extras import execute_values
+            execute_values(
+                cursor,
+                """
+                INSERT INTO brands (brand_name, generic_id, mrp)
+                VALUES %s
+                ON CONFLICT DO NOTHING
+                """,
+                rows
+            )
+
+        logger.info(
+            "Brands inserted: %d (missing generic: %d)",
+            len(rows), skipped_missing
         )

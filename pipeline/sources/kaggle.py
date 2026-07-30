@@ -1,71 +1,45 @@
-"""
-pipeline/sources/kaggle.py
+from pathlib import Path
+import subprocess
 
-Kaggle data source adapter for the MedSave Data Engine.
-
-This is a skeleton implementation. No downloading or parsing logic
-is included in this sprint. Methods raise NotImplementedError to
-signal that the implementation is pending.
-
-Future implementation will:
-    - Authenticate using the Kaggle API
-    - Download the medicine dataset
-    - Store raw files in pipeline/raw/
-    - Return the file path for the parser layer
-"""
-
-from typing import Any
-
+from pipeline.config import config
 from pipeline.sources.base import BaseSource
 
 
 class KaggleSource(BaseSource):
-    """
-    Data source adapter for Kaggle medicine datasets.
 
-    Inherits from BaseSource and will eventually handle
-    authentication, download, and raw file management
-    for Kaggle-hosted medicine datasets.
-
-    Usage (future):
-        source = KaggleSource()
-        metadata = source.get_metadata()
-        raw_data = source.fetch()
-    """
+    DATASET = "pranayverma472/medicine-recommendation-system"
+    FILE_NAME = "medicine_dataset.csv"
 
     def get_source_name(self) -> str:
-        """
-        Return the identifier for this source.
-
-        Returns:
-            "kaggle"
-        """
         return "kaggle"
 
-    def fetch(self) -> Any:
-        """
-        Download raw medicine data from Kaggle.
+    def get_metadata(self) -> dict:
+        return {
+            "source_name": "Kaggle Medicine Dataset",
+            "source_url": f"https://www.kaggle.com/datasets/{self.DATASET}",
+            "format": "csv",
+            "records": 25000
+        }
 
-        Not implemented in Sprint 2.1.
+    def fetch(self) -> Path:
 
-        Raises:
-            NotImplementedError: Always. Implementation pending.
-        """
-        raise NotImplementedError(
-            "KaggleSource.fetch() is not yet implemented. "
-            "This will be built in Sprint 2.2."
+        raw_path = Path(config.raw_dir) / self.FILE_NAME
+
+        # If file already exists, use it. No download required.
+        if raw_path.exists():
+            return raw_path
+
+        # Otherwise download from Kaggle
+        subprocess.run(
+            [
+                "kaggle", "datasets", "download",
+                "-d", self.DATASET,
+                "-f", self.FILE_NAME,
+                "-p", config.raw_dir,
+                "--unzip"
+            ],
+            check=True,
+            capture_output=True
         )
 
-    def get_metadata(self) -> dict[str, Any]:
-        """
-        Return metadata describing the Kaggle medicine dataset.
-
-        Not implemented in Sprint 2.1.
-
-        Raises:
-            NotImplementedError: Always. Implementation pending.
-        """
-        raise NotImplementedError(
-            "KaggleSource.get_metadata() is not yet implemented. "
-            "This will be built in Sprint 2.2."
-        )
+        return raw_path
