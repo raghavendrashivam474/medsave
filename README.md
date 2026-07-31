@@ -103,3 +103,35 @@ MedSave simplifies the process into a few intuitive steps while handling the com
 | ?? Find a nearby Jan Aushadhi Kendra | Locates nearby stores for easy access |
 | ? Make an informed decision | Presents clear and actionable insights |
 
+
+## Built One Layer at a Time
+
+Every layer in MedSave has a single responsibility, working together to transform a medicine search into meaningful healthcare insights.
+
+?? **Presentation**
+HTML • CSS • JavaScript
+
+¦
+?
+
+?? **Application**
+Flask
+
+¦
+?
+
+??? **Data**
+SQLite
+
+¦
+?
+
+?? **Insights**
+Chart.js
+
+¦
+?
+
+?? **Accessibility**
+Google Maps API
+
