@@ -71,3 +71,21 @@ MedSave helps users discover cost-effective generic medicines, compare prices, e
 
 
 
+
+## Key Features
+
+### ?? Smart Medicine Search
+Search medicines using either the brand name or generic composition to instantly discover affordable alternatives.
+
+### ?? Savings Calculator
+Estimate monthly and yearly savings by comparing branded medicines with generic equivalents.
+
+### ?? Price Comparison
+Visualize medicine costs through intuitive comparisons, helping users make informed healthcare decisions.
+
+### ?? Jan Aushadhi Locator
+Locate nearby Jan Aushadhi Kendras with integrated map support for easy navigation and medicine availability.
+
+### ?? Progressive Web App
+Install MedSave as a Progressive Web App (PWA) for a fast, reliable, and mobile-friendly experience.
+
