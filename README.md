@@ -180,3 +180,11 @@ If you'd like to contribute:
 
 Please ensure new features are documented and follow the existing project structure whenever possible.
 
+---
+
+## License
+
+This project is licensed under the MIT License.
+
+You are free to use, modify, and distribute this software in accordance with the terms of the license. See the `LICENSE` file for more information.
+
