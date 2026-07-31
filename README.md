@@ -165,3 +165,18 @@ As MedSave evolves, the documentation will continue to expand with architecture 
 - [ ] Pharmacy integration
 - [ ] Multi-language support
 
+---
+
+## Contributing
+
+Contributions, suggestions, and constructive feedback are always welcome.
+
+If you'd like to contribute:
+
+1. Fork the repository.
+2. Create a new feature branch.
+3. Make your changes with clear, focused commits.
+4. Submit a pull request with a concise description of your improvements.
+
+Please ensure new features are documented and follow the existing project structure whenever possible.
+
