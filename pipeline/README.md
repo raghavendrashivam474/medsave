@@ -2,243 +2,239 @@
 
 ## Overview
 
-The MedSave Data Engine is a dedicated subsystem responsible for the complete lifecycle of medicine data, from acquisition through to database loading.
+The MedSave Data Engine is a dedicated ETL subsystem responsible for the complete lifecycle of medicine data—from acquisition through processing, validation, and database loading.
 
-It operates independently of the Flask API and frontend. The Flask API remains completely unaware of the Data Engine. Its sole responsibility is to populate the database that the backend already serves.
+It operates independently of both the Flask backend and the frontend application.
+
+The backend never communicates directly with the pipeline. Instead, the Data Engine prepares and maintains the database, while the backend simply exposes that data through REST APIs.
+
+This separation keeps data engineering isolated from application logic and allows both systems to evolve independently.
 
 ---
 
-## Architecture
+## High-Level Architecture
 
 ```text
-                 Flask API
-                      |
-                      v
-               PostgreSQL Database
-                      ^
-                      |
-               PostgreSQL Loader
-                      ^
-                      |
-               Validation Layer
-                      ^
-                      |
-             Normalization Layer
-                      ^
-                      |
-                  Parser Layer
-                      ^
-                      |
-                Source Adapters
+External Data Sources
+        │
+        ▼
++----------------------+
+|   Source Layer       |
+| pipeline/sources/    |
++----------------------+
+        │
+        ▼
++----------------------+
+|   Parser Layer       |
+| pipeline/parsers/    |
++----------------------+
+        │
+        ▼
++----------------------+
+| Normalizer Layer     |
+| pipeline/normalizers/|
++----------------------+
+        │
+        ▼
++----------------------+
+| Validator Layer      |
+| pipeline/validators/ |
++----------------------+
+        │
+        ▼
++----------------------+
+|   Loader Layer       |
+| pipeline/loaders/    |
++----------------------+
+        │
+        ▼
++----------------------+
+| PostgreSQL / SQLite  |
++----------------------+
+        ▲
+        │
++----------------------+
+| Flask Backend API    |
++----------------------+
+        ▲
+        │
++----------------------+
+| Frontend             |
++----------------------+
 ```
 
-Data flows strictly upward through the pipeline.
+Data always flows downward through the pipeline.
 
-Each layer has a single responsibility and communicates only with the layer immediately below it.
+Each layer communicates only with its adjacent layer, maintaining clear separation of responsibilities.
 
 ---
 
-## Folder Responsibilities
+## Directory Responsibilities
 
 | Component | Responsibility |
 |-----------|----------------|
-| `entities/` | Internal pipeline data models independent of the database schema. |
-| `sources/` | External data source adapters implementing `BaseSource`. |
-| `parsers/` | Convert raw datasets into pipeline entities. |
-| `normalizers/` | Clean and standardize entity values. |
-| `validators/` | Apply business validation rules before loading. |
-| `loaders/` | Persist validated entities into the database. |
-| `raw/` | Store downloaded datasets exactly as received. |
-| `processed/` | Store processed datasets. |
-| `config.py` | Shared configuration and environment variables. |
-| `data_engine.py` | Entry point of the Data Engine. |
-
----
-
-## Execution Flow
-
-When fully implemented, the Data Engine executes the following workflow.
-
-```text
-1. Load configuration
-
-2. Source Adapter
-       |
-       v
-Download dataset
-
-3. Parser
-       |
-       v
-Medicine Entity
-Brand Entity
-
-4. Normalizer
-       |
-       v
-Standardized Entities
-
-5. Validator
-       |
-       v
-Validated Entities
-
-6. Loader
-       |
-       v
-PostgreSQL Database
-```
+| entities/ | Internal pipeline models independent of the database schema |
+| sources/ | External dataset adapters |
+| parsers/ | Convert raw datasets into pipeline entities |
+| normalizers/ | Standardize entity values |
+| validators/ | Apply business validation rules |
+| loaders/ | Persist validated entities into the database |
+| raw/ | Original datasets exactly as received |
+| processed/ | Intermediate or processed datasets |
+| config.py | Shared configuration |
+| logger.py | Pipeline logging |
+| data_engine.py | Pipeline orchestration entry point |
 
 ---
 
 ## Running the Data Engine
 
-From the repository root:
+From the project root:
 
 ```bash
 python -m pipeline.data_engine
 ```
 
-Expected output:
+Example output:
 
 ```text
-=====================================
+========================================
 
-  MedSave Data Engine
-  Version 0.1
+        MedSave Data Engine
+        Version 0.3
 
-  Pipeline initialized successfully.
+Pipeline Initialized
 
-=====================================
+Source Loaded
+Parser Completed
+Normalization Completed
+Validation Completed
+Database Updated
+
+========================================
+
+Medicines Loaded : 25
+Brands Loaded    : 25
+
+Pipeline Completed Successfully
 ```
 
 ---
 
-## Environment Variables
+## Configuration
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| DATABASE_URL | PostgreSQL / SQLite connection string | sqlite:///backend/medsave.db |
-| RAW_DIR | Directory for raw downloaded datasets | pipeline/raw |
-| PROCESSED_DIR | Directory for processed datasets | pipeline/processed |
+| Variable | Purpose | Default |
+|----------|---------|---------|
+| DATABASE_URL | Database connection | SQLite fallback |
+| RAW_DIR | Raw dataset directory | pipeline/raw |
+| PROCESSED_DIR | Processed dataset directory | pipeline/processed |
 
 ---
 
-## Extending the Data Engine
+## Layer Responsibilities
 
-### Adding a New Data Source
+| Layer | Responsible For | Never Responsible For |
+|-------|------------------|------------------------|
+| Source | Acquiring datasets | Parsing, validation, SQL |
+| Parser | Creating entities | Normalization, SQL |
+| Normalizer | Standardizing values | Validation, SQL |
+| Validator | Applying business rules | Modifying entities |
+| Loader | Database persistence | Parsing or normalization |
 
-1. Create a new adapter in `pipeline/sources/`.
-2. Inherit from `BaseSource`.
+---
+
+## Extending the Pipeline
+
+### Adding a New Source
+
+1. Create a module inside `pipeline/sources/`
+2. Inherit from the common source interface.
 3. Implement:
    - `get_source_name()`
    - `fetch()`
    - `get_metadata()`
-4. Export the class from `pipeline/sources/__init__.py`.
-
-### Adding a New Loader
-
-1. Create a new loader in `pipeline/loaders/`.
-2. Follow the same interface as `PostgresLoader`.
-3. Export the loader from `pipeline/loaders/__init__.py`.
-
-The remainder of the pipeline should require no changes.
+4. Export it from `pipeline/sources/__init__.py`
 
 ---
 
-## Future Roadmap
+### Adding a New Parser
 
-| Sprint | Objective |
-|---------|-----------|
-| 2.1 | Data Engine Foundation |
-| 2.2 | Kaggle Source + CSV Parser |
-| 2.3 | Normalization + Validation |
-| 2.4 | PostgreSQL Loader |
-| 2.5 | Additional Data Sources |
-| 2.6 | Scheduling & Monitoring |
+1. Create a parser inside `pipeline/parsers/`
+2. Convert raw data into pipeline entities.
+3. Return collections of `Medicine` and `Brand`.
+
+---
+
+### Adding a New Validation Rule
+
+Update the validator with the required business rule.
+
+Validation should:
+
+- Accept
+- Reject
+- Log failures
+
+It should never modify incoming entities.
+
+---
+
+## Current Capability Status
+
+| Capability | Status |
+|------------|--------|
+| Source abstraction | ✅ Complete |
+| Kaggle source | ✅ Complete |
+| CSV parsing | ✅ Complete |
+| Data normalization | ✅ Complete |
+| Validation | ✅ Complete |
+| PostgreSQL loader | ✅ Complete |
+| SQLite fallback | ✅ Complete |
+| Idempotent loading | ✅ Complete |
+| Shared configuration | ✅ Complete |
+| Structured logging | ✅ Complete |
+| Jan Aushadhi integration | 🚧 Planned |
+| NPPA integration | 🚧 Planned |
+| Real pharmacy dataset | 🚧 Planned |
+| Scheduled execution | 🚧 Planned |
+
+---
+
+## Related Documentation
+
+| Document | Location |
+|----------|----------|
+| Pipeline Architecture | docs/data/PIPELINE_ARCHITECTURE.md |
+| Data Flow | docs/data/DATA_FLOW.md |
+| Data Strategy | docs/data/DATA_STRATEGY.md |
+| Data Sources | docs/data/DATA_SOURCES.md |
+| Data Audit | docs/data/DATA_AUDIT.md |
+| Dataset Limitations | docs/data/DATASET_LIMITATIONS.md |
+| Future Data Expansion | docs/data/FUTURE_DATA_EXPANSION.md |
 
 ---
 
 ## Design Principles
 
-- Entities are independent of the database schema.
-- Database IDs belong exclusively to the loader layer.
-- Source adapters never perform parsing.
-- Parsers never perform normalization.
-- Normalizers never perform database operations.
-- Validators enforce business rules before persistence.
-- The loader is the only layer permitted to execute SQL.
-- The Flask API remains completely unaware of the Data Engine.
-- Every external source must inherit from `BaseSource`.
-- Every pipeline layer has a single responsibility.
+The MedSave Data Engine follows several core engineering principles:
+
+- Every layer has a single responsibility.
+- Pipeline entities remain independent of the database schema.
+- Source adapters only acquire data.
+- Parsers only create entities.
+- Normalizers only standardize values.
+- Validators only verify business rules.
+- The loader is the only component permitted to execute SQL.
+- The backend communicates only with the database.
+- The frontend communicates only with the backend.
+- Every new data source integrates through the existing pipeline rather than bypassing it.
 
 ---
 
-## Capability Mapping
+## Long-Term Vision
 
-| Capability | Primary Module |
-|------------|----------------|
-| Entity Representation | `pipeline/entities/` |
-| Data Acquisition | `pipeline/sources/` |
-| Data Parsing | `pipeline/parsers/` |
-| Data Normalization | `pipeline/normalizers/` |
-| Data Validation | `pipeline/validators/` |
-| Database Persistence | `pipeline/loaders/` |
-| Configuration | `pipeline/config.py` |
-| Pipeline Orchestration | `pipeline/data_engine.py` |
+The Data Engine has been designed as a modular foundation for MedSave's future growth.
 
----
+As new government datasets, pharmacy directories, pricing authorities, and healthcare sources become available, they should integrate into the existing pipeline without requiring major architectural changes.
 
-## Current Repository Capabilities
-
-| Capability | Status |
-|------------|--------|
-| Flask Backend | ✅ Complete |
-| Medicine Search | ✅ Complete |
-| Savings Calculation | ✅ Complete |
-| Store Lookup | ✅ Complete |
-| Data Engine Foundation | ✅ Complete |
-| Source Abstraction | ✅ Complete |
-| Entity Model | ✅ Complete |
-| Configuration Layer | ✅ Complete |
-| CSV Parsing | 🚧 Planned |
-| Normalization | 🚧 Planned |
-| Validation | 🚧 Planned |
-| Database Loading | 🚧 Planned |
-| Kaggle Integration | 🚧 Planned |
-
----
-
-## Repository Evolution
-
-```text
-MVP
- |
- v
-Deployment
- |
- v
-Database Recovery
- |
- v
-Data Engine Foundation (Sprint 2.1)
- |
- v
-Kaggle Ingestion (Sprint 2.2)
- |
- v
-Normalization & Validation (Sprint 2.3)
- |
- v
-Production Data Pipeline
-```
-
----
-
-## End Product
-
-The MedSave Data Engine transforms MedSave from a project relying on manually seeded sample data into a modular, extensible ingestion framework.
-
-Future data sources, including Kaggle, Jan Aushadhi, CDSCO, NPPA, and other trusted medicine repositories, can be integrated by implementing new source adapters while reusing the existing parser, normalizer, validator, and loader infrastructure.
-
-The Flask API and frontend remain unchanged throughout this evolution.
+This approach keeps the data layer scalable, maintainable, and capable of supporting future AI-powered healthcare features while preserving the engineering principles established during the project's early development.
