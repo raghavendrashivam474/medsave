@@ -140,3 +140,28 @@ Additional project documentation is available in the `docs/` directory.
 | `DATABASE_SETUP.md` | Database configuration and setup instructions |
 
 As MedSave evolves, the documentation will continue to expand with architecture guides, API references, deployment instructions, and contributor resources.
+
+---
+
+## Roadmap
+
+### Phase 1 — Foundation
+- [x] Medicine search
+- [x] Generic medicine discovery
+- [x] Price comparison
+- [x] Savings calculator
+- [x] Jan Aushadhi locator
+- [x] Progressive Web App support
+
+### Phase 2 — Intelligence
+- [ ] Personalized medicine recommendations
+- [ ] Medicine availability prediction
+- [ ] AI-powered medicine assistant
+- [ ] Advanced analytics dashboard
+
+### Phase 3 — Ecosystem
+- [ ] User accounts and saved medicines
+- [ ] Prescription management
+- [ ] Pharmacy integration
+- [ ] Multi-language support
+
