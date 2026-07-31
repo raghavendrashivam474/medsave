@@ -126,3 +126,17 @@ Then open:
 ```text
 http://localhost:8000
 ```
+
+---
+
+## Documentation
+
+Additional project documentation is available in the `docs/` directory.
+
+| Document | Description |
+|----------|-------------|
+| `PHASE_1_PLAN.md` | Phase 1 development roadmap and implementation plan |
+| `SPRINT_2.2_REPORT.md` | Sprint progress and development report |
+| `DATABASE_SETUP.md` | Database configuration and setup instructions |
+
+As MedSave evolves, the documentation will continue to expand with architecture guides, API references, deployment instructions, and contributor resources.
