@@ -1,8 +1,30 @@
-# MedSave
+<div align="center">
+
+# 💊 MedSave
 
 ### Affordable Medicines. Smarter Choices.
 
 **Medicine Price Comparison & Generic Alternative Discovery Platform**
+
+Helping users discover affordable generic medicines, compare prices, estimate savings, and locate nearby Jan Aushadhi Kendras.
+
+<br>
+
+![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Flask](https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
+![Chart.js](https://img.shields.io/badge/Chart.js-FF6384?style=for-the-badge&logo=chartdotjs&logoColor=white)
+![Google Maps](https://img.shields.io/badge/Google%20Maps-4285F4?style=for-the-badge&logo=googlemaps&logoColor=white)
+
+<br>
+
+![Status](https://img.shields.io/badge/Status-Active%20Development-success?style=flat-square)
+![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)
+![Version](https://img.shields.io/badge/Version-v0.1.0-orange?style=flat-square)
+
+</div>
+
+> *Helping families make informed healthcare decisions while reducing medicine costs.*
 
 MedSave is an intelligent healthcare platform that helps users discover affordable generic alternatives to branded medicines, estimate potential savings, and locate nearby Jan Aushadhi Kendras.
 
@@ -10,21 +32,25 @@ Built with the goal of improving medicine affordability and accessibility, MedSa
 
 ---
 
-## Why MedSave?
+## 🎯 Why MedSave?
 
 For many middle-class families, a medical emergency is not only a health crisis but also a financial one. Medicines often account for a significant portion of treatment costs, while affordable generic alternatives remain underutilized due to limited awareness and accessibility.
 
 MedSave helps users discover cost-effective generic medicines, compare prices, estimate potential savings, and locate nearby Jan Aushadhi Kendras. Our goal is simple: if MedSave can help a family save even ₹5,000–₹20,000 during a difficult time, we believe it has made a meaningful impact.
 
-## Key Features
+## ✨ Key Features
 
-- **Smart Search**: Search by Brand (e.g., Crocin) or Generic (e.g., Paracetamol).
-- **Price Analytics**: Visual bar charts comparing Branded vs Generic costs.
-- **Interactive Calculator**: Input your dosage to see monthly/yearly savings.
-- **Store Locator**: Find Jan Aushadhi stores with integrated Google Maps directions.
-- **PWA Ready**: Install the app on your mobile device for pharmacy-ready access.
+- 🔍 **Smart Search** — Search by Brand (Crocin) or Generic (Paracetamol).
+- 💰 **Price Analytics** — Compare branded and generic medicine prices.
+- 🧮 **Savings Calculator** — Estimate monthly and yearly savings.
+- 📍 **Store Locator** — Find nearby Jan Aushadhi Kendras.
+- 📱 **PWA Ready** — Install MedSave like a mobile app.
 
-## How MedSave Works
+## 📸 Screenshots
+
+> Screenshots coming soon.
+
+## 🔄 How MedSave Works
 
 Finding affordable medicines shouldn't require medical expertise or hours of research.
 MedSave simplifies the process into a few intuitive steps while handling the complexity behind the scenes.
@@ -37,19 +63,21 @@ MedSave simplifies the process into a few intuitive steps while handling the com
 | Find a nearby Jan Aushadhi Kendra | Locates nearby stores for easy access |
 | Make an informed decision | Presents clear and actionable insights |
 
-## Built One Layer at a Time
+## 🏗️ Built One Layer at a Time
 
 Every layer in MedSave has a single responsibility, working together to transform a medicine search into meaningful healthcare insights.
 
-- **Presentation** — HTML, CSS, JavaScript
-- **Application** — Flask
-- **Data** — SQLite
-- **Insights** — Chart.js
-- **Accessibility** — Google Maps API
+| Layer | Technology |
+|-------|------------|
+| 🎨 Presentation | HTML • CSS • JavaScript |
+| ⚙️ Backend | Flask |
+| 🗄️ Database | SQLite |
+| 📊 Visualization | Chart.js |
+| 📍 Maps | Google Maps API |
 
 ---
 
-## Project Structure
+## 📂 Project Structure
 
 ```text
 medsave/
@@ -65,7 +93,7 @@ The repository is organized with a clear separation of responsibilities. Each di
 
 ---
 
-## Getting Started
+## 🚀 Getting Started
 
 ### Prerequisites
 
@@ -80,7 +108,7 @@ Before running MedSave, ensure the following tools are installed:
 Clone the repository:
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/raghavendrashivam474/medsave.git
 cd medsave
 ```
 
@@ -129,7 +157,7 @@ http://localhost:8000
 
 ---
 
-## Documentation
+## 📚 Documentation
 
 Additional project documentation is available in the `docs/` directory.
 
@@ -143,9 +171,10 @@ As MedSave evolves, the documentation will continue to expand with architecture 
 
 ---
 
-## Roadmap
+## 🛣️ Roadmap
 
-### Phase 1 — Foundation
+### 🟢 Phase 1 — Foundation
+
 - [x] Medicine search
 - [x] Generic medicine discovery
 - [x] Price comparison
@@ -153,13 +182,15 @@ As MedSave evolves, the documentation will continue to expand with architecture 
 - [x] Jan Aushadhi locator
 - [x] Progressive Web App support
 
-### Phase 2 — Intelligence
+### 🟡 Phase 2 — Intelligence
+
 - [ ] Personalized medicine recommendations
 - [ ] Medicine availability prediction
 - [ ] AI-powered medicine assistant
 - [ ] Advanced analytics dashboard
 
-### Phase 3 — Ecosystem
+### 🔵 Phase 3 — Ecosystem
+
 - [ ] User accounts and saved medicines
 - [ ] Prescription management
 - [ ] Pharmacy integration
@@ -167,7 +198,7 @@ As MedSave evolves, the documentation will continue to expand with architecture 
 
 ---
 
-## Contributing
+## 🤝 Contributing
 
 Contributions, suggestions, and constructive feedback are always welcome.
 
@@ -182,9 +213,28 @@ Please ensure new features are documented and follow the existing project struct
 
 ---
 
-## License
+<div align="center">
+
+## 👥 Team
+
+MedSave is being built by a team of engineering students passionate about making healthcare information more affordable and accessible.
+
+Together, we combine software engineering, research, UI/UX design, and data-driven thinking to build practical solutions that create meaningful social impact.
+
+</div>
+
+---
+
+## 📄 License
 
 This project is licensed under the MIT License.
 
 You are free to use, modify, and distribute this software in accordance with the terms of the license. See the `LICENSE` file for more information.
 
+---
+
+<div align="center">
+
+Made with ❤️ to make healthcare more affordable.
+
+</div>
