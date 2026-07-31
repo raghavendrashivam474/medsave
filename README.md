@@ -89,3 +89,17 @@ Locate nearby Jan Aushadhi Kendras with integrated map support for easy navigati
 ### ?? Progressive Web App
 Install MedSave as a Progressive Web App (PWA) for a fast, reliable, and mobile-friendly experience.
 
+
+## How MedSave Works
+
+Finding affordable medicines shouldn't require medical expertise or hours of research.
+MedSave simplifies the process into a few intuitive steps while handling the complexity behind the scenes.
+
+| ?? What You Do | ?? What MedSave Does |
+|---------------|----------------------|
+| ?? Search a medicine | Searches the medicine database |
+| ?? Explore branded and generic options | Compares medicines and identifies affordable alternatives |
+| ?? Review potential savings | Calculates estimated cost savings |
+| ?? Find a nearby Jan Aushadhi Kendra | Locates nearby stores for easy access |
+| ? Make an informed decision | Presents clear and actionable insights |
+
