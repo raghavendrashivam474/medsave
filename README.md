@@ -46,3 +46,19 @@ Every layer in MedSave has a single responsibility, working together to transfor
 - **Data** — SQLite
 - **Insights** — Chart.js
 - **Accessibility** — Google Maps API
+
+---
+
+## Project Structure
+
+```text
+medsave/
+├── backend/          # Flask backend and API
+├── frontend/         # Web interface
+├── docs/             # Project documentation
+├── pipeline/         # Data processing and ETL
+├── README.md         # Project overview
+└── PHASE_1_PLAN.md   # Phase 1 implementation roadmap
+```
+
+The repository is organized with a clear separation of responsibilities. Each directory focuses on a specific aspect of the project, making MedSave easier to understand, maintain, and extend as new features are introduced.
