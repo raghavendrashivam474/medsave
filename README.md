@@ -62,3 +62,67 @@ medsave/
 ```
 
 The repository is organized with a clear separation of responsibilities. Each directory focuses on a specific aspect of the project, making MedSave easier to understand, maintain, and extend as new features are introduced.
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+Before running MedSave, ensure the following tools are installed:
+
+- Python 3.10 or later
+- Git
+- A modern web browser (Chrome, Edge, or Firefox)
+
+### Installation
+
+Clone the repository:
+
+```bash
+git clone <repository-url>
+cd medsave
+```
+
+Install the required dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+### Initialize the Database
+
+Populate the local database with sample medicine data:
+
+```bash
+python backend/seed_data.py
+```
+
+### Run the Backend
+
+Start the Flask development server:
+
+```bash
+python backend/app.py
+```
+
+The backend will be available at:
+
+```text
+http://127.0.0.1:5000
+```
+
+### Run the Frontend
+
+Open a new terminal and serve the frontend:
+
+```bash
+cd frontend
+python -m http.server 8000
+```
+
+Then open:
+
+```text
+http://localhost:8000
+```
