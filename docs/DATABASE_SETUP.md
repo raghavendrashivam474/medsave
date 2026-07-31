@@ -17,7 +17,7 @@ This guide explains how to recreate the MedSave PostgreSQL database from scratch
 
 ```bash
 git clone https://github.com/<your-username>/medsave.git
-cd medsave/backend
+cd medsave
 ```
 
 ---
@@ -74,7 +74,7 @@ Create a `.env` file inside the `backend` directory.
 ```env
 DATABASE_URL=postgresql://postgres.<project-ref>:<password>@aws-0-<region>.pooler.supabase.com:5432/postgres
 ```
-
+> **Note:** Both the Flask backend and the MedSave Data Engine use the same `DATABASE_URL`. This ensures the ETL pipeline and REST API always operate on the same database.
 ---
 
 ## 6. Create Database Schema
@@ -90,7 +90,7 @@ Create a new query.
 Copy the contents of:
 
 ```
-schema.sql
+backend/database/schema.sql
 ```
 
 Paste them into the SQL Editor and click **Run**.
@@ -102,7 +102,7 @@ Paste them into the SQL Editor and click **Run**.
 Run
 
 ```bash
-python seed_data.py
+python backend/seed_data.py
 ```
 
 Expected output:
@@ -117,7 +117,7 @@ Database seeded successfully!
 ## 8. Start the Backend
 
 ```bash
-python app.py
+python backend/app.py
 ```
 
 Expected output:
@@ -135,6 +135,15 @@ Open
 ```
 http://127.0.0.1:5000/api/search?q=crocin
 ```
+## 10. Verify the Data Engine
+
+Run:
+
+```bash
+python -m pipeline.data_engine
+```
+
+If the pipeline is configured correctly, it should complete successfully and report the number of medicines and brands processed.
 
 Expected response
 
@@ -161,7 +170,7 @@ Expected response
 
 The database schema has not been created.
 
-Run `schema.sql` using the Supabase SQL Editor.
+Run `backend/database/schema.sql` using the Supabase SQL Editor.
 
 ---
 
@@ -194,13 +203,22 @@ pip install -r requirements.txt
 # Project Structure
 
 ```
-backend/
-├── app.py
-├── schema.sql
-├── seed_data.py
-├── requirements.txt
-├── .env
-└── DATABASE_SETUP.md
+medsave/
+├── backend/
+│   ├── app.py
+│   ├── database/
+│   │   ├── connection.py
+│   │   └── schema.sql
+│   ├── api/
+│   ├── models/
+│   ├── services/
+│   ├── requirements.txt
+│   ├── seed_data.py
+│   └── .env
+├── pipeline/
+├── frontend/
+└── docs/
+    └── DATABASE_SETUP.md
 ```
 
 ---
@@ -212,7 +230,7 @@ backend/
 - [ ] Install dependencies
 - [ ] Create Supabase project
 - [ ] Configure `DATABASE_URL`
-- [ ] Run `schema.sql`
-- [ ] Execute `seed_data.py`
+- [ ] Run `backend/database/schema.sql`
+- [ ] Execute `python backend/seed_data.py`
 - [ ] Start backend
 - [ ] Verify `/api/search`
