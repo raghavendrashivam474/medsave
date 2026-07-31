@@ -8,31 +8,41 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# ✅ Initialize Flask with static folder
-app = Flask(__name__, static_folder="static")
+# ✅ Initialize Flask with external frontend folder
+app = Flask(
+    __name__,
+    static_folder="../frontend",
+    static_url_path=""
+)
 CORS(app)
 
-DATABASE_URL = os.getenv('DATABASE_URL')
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 
 # 🔌 DB CONNECTION
 def get_db_connection():
-    is_postgres = DATABASE_URL and 'postgresql://' in DATABASE_URL and '@host:' not in DATABASE_URL
-    
+    is_postgres = (
+        DATABASE_URL
+        and "postgresql://" in DATABASE_URL
+        and "@host:" not in DATABASE_URL
+    )
+
     if is_postgres:
-        conn = psycopg2.connect(DATABASE_URL, cursor_factory=RealDictCursor)
-        return conn
-    else:
-        db_path = os.path.join(os.path.dirname(__file__), 'database.db')
-        conn = sqlite3.connect(db_path)
-        conn.row_factory = sqlite3.Row
-        return conn
+        return psycopg2.connect(
+            DATABASE_URL,
+            cursor_factory=RealDictCursor
+        )
+
+    db_path = os.path.join(os.path.dirname(__file__), "database.db")
+    conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row
+    return conn
 
 
 # 🔍 SEARCH API
-@app.route('/api/search', methods=['GET'])
+@app.route("/api/search", methods=["GET"])
 def search_medicine():
-    query = request.args.get('q', '').strip()
+    query = request.args.get("q", "").strip()
     if not query:
         return jsonify([])
 
@@ -41,53 +51,56 @@ def search_medicine():
 
     if isinstance(conn, sqlite3.Connection):
         sql = """
-            SELECT 
-                b.brand_name, 
-                m.generic_name, 
-                m.salt, 
-                m.dosage, 
-                m.form, 
-                b.mrp as brand_price, 
-                m.jan_price as generic_price
+            SELECT
+                b.brand_name,
+                m.generic_name,
+                m.salt,
+                m.dosage,
+                m.form,
+                b.mrp AS brand_price,
+                m.jan_price AS generic_price
             FROM brands b
             JOIN medicines m ON b.generic_id = m.id
             WHERE b.brand_name LIKE ? OR m.generic_name LIKE ?
         """
-        search_term = f"%{query}%"
-        cur.execute(sql, (search_term, search_term))
     else:
         sql = """
-            SELECT 
-                b.brand_name, 
-                m.generic_name, 
-                m.salt, 
-                m.dosage, 
-                m.form, 
-                b.mrp as brand_price, 
-                m.jan_price as generic_price
+            SELECT
+                b.brand_name,
+                m.generic_name,
+                m.salt,
+                m.dosage,
+                m.form,
+                b.mrp AS brand_price,
+                m.jan_price AS generic_price
             FROM brands b
             JOIN medicines m ON b.generic_id = m.id
             WHERE b.brand_name ILIKE %s OR m.generic_name ILIKE %s
         """
-        search_term = f"%{query}%"
-        cur.execute(sql, (search_term, search_term))
 
+    search_term = f"%{query}%"
+    cur.execute(sql, (search_term, search_term))
     results = cur.fetchall()
 
     output = []
+
     for row in results:
-        savings = row['brand_price'] - row['generic_price']
-        savings_percent = (savings / row['brand_price']) * 100 if row['brand_price'] > 0 else 0
+        savings = row["brand_price"] - row["generic_price"]
+        savings_percent = (
+            (savings / row["brand_price"]) * 100
+            if row["brand_price"] > 0
+            else 0
+        )
 
         output.append({
-            'brand_name': row['brand_name'],
-            'generic_name': row['generic_name'],
-            'salt': row['salt'],
-            'dosage': row['dosage'],
-            'form': row['form'],
-            'brand_price': row['brand_price'],
-            'generic_price': row['generic_price'],
-            'savings_percent': round(savings_percent, 1)
+            "brand_name": row["brand_name"],
+            "generic_name": row["generic_name"],
+            "salt": row["salt"],
+            "dosage": row["dosage"],
+            "form": row["form"],
+            "brand_price": row["brand_price"],
+            "generic_price": row["generic_price"],
+            "savings_percent": round(savings_percent, 1),
         })
 
     cur.close()
@@ -97,19 +110,22 @@ def search_medicine():
 
 
 # 🏪 STORES API
-@app.route('/api/stores', methods=['GET'])
+@app.route("/api/stores", methods=["GET"])
 def get_stores():
-    pincode = request.args.get('pincode', '').strip()
-    lat = request.args.get('lat', '').strip()
-    lng = request.args.get('lng', '').strip()
+    pincode = request.args.get("pincode", "").strip()
+    lat = request.args.get("lat", "").strip()
+    lng = request.args.get("lng", "").strip()
 
     conn = get_db_connection()
     cur = conn.cursor()
 
-    param_marker = '?' if isinstance(conn, sqlite3.Connection) else '%s'
+    param_marker = "?" if isinstance(conn, sqlite3.Connection) else "%s"
 
     if pincode:
-        cur.execute(f"SELECT * FROM stores WHERE pincode = {param_marker}", (pincode,))
+        cur.execute(
+            f"SELECT * FROM stores WHERE pincode = {param_marker}",
+            (pincode,)
+        )
         results = cur.fetchall()
 
     elif lat and lng:
@@ -120,16 +136,18 @@ def get_stores():
         user_lng = float(lng)
 
         output = []
+
         for row in results:
-            d_lat = user_lat - row['lat']
-            d_lng = user_lng - row['lng']
-            distance = ((d_lat * 111)**2 + (d_lng * 85)**2)**0.5
+            d_lat = user_lat - row["lat"]
+            d_lng = user_lng - row["lng"]
+
+            distance = ((d_lat * 111) ** 2 + (d_lng * 85) ** 2) ** 0.5
 
             store = dict(row)
-            store['distance'] = distance
+            store["distance"] = distance
             output.append(store)
 
-        output.sort(key=lambda x: x['distance'])
+        output.sort(key=lambda x: x["distance"])
 
         cur.close()
         conn.close()
@@ -149,16 +167,16 @@ def get_stores():
 
 
 # 🌐 SERVE FRONTEND
-@app.route('/')
+@app.route("/")
 def serve_index():
-    return send_from_directory('static', 'index.html')
+    return send_from_directory(app.static_folder, "index.html")
 
 
-@app.route('/<path:path>')
+@app.route("/<path:path>")
 def serve_static(path):
-    return send_from_directory('static', path)
+    return send_from_directory(app.static_folder, path)
 
 
 # ▶️ RUN (LOCAL ONLY)
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True, port=5000)
