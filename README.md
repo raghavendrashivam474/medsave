@@ -1,10 +1,12 @@
-# MedSave | Medicine Price & Savings Checker
+# MedSave
 
-MedSave is a modern utility that helps users identify cheaper generic alternatives to branded medicines, calculate potential savings based on their prescriptions, and locate nearby Jan Aushadhi stores.
+### Affordable Medicines. Smarter Choices.
 
-## Project Structure
-- **/backend**: Flask API, SQLite database, and seed data.
-- **/frontend**: Vanilla HTML/CSS/JS frontend with Chart.js and PWA support.
+**Medicine Price Comparison & Generic Alternative Discovery Platform**
+
+MedSave is an intelligent healthcare platform that helps users discover affordable generic alternatives to branded medicines, estimate potential savings, and locate nearby Jan Aushadhi Kendras.
+
+Built with the goal of improving medicine affordability and accessibility, MedSave empowers users to make informed healthcare decisions while reducing unnecessary medicine expenditure.
 
 ---
 
@@ -53,3 +55,5 @@ python -m http.server 8000
 - **Interactive Calculator**: Input your dosage to see monthly/yearly savings.
 - **Store Locator**: Find Jan Aushadhi stores with integrated Google Maps directions.
 - **PWA Ready**: Install the app on your mobile device for pharmacy-ready access.
+
+
