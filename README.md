@@ -10,6 +10,12 @@ Built with the goal of improving medicine affordability and accessibility, MedSa
 
 ---
 
+## Why MedSave?
+
+For many middle-class families, a medical emergency is not only a health crisis but also a financial one. Medicines often account for a significant portion of treatment costs, while affordable generic alternatives remain underutilized due to limited awareness and accessibility.
+
+MedSave helps users discover cost-effective generic medicines, compare prices, estimate potential savings, and locate nearby Jan Aushadhi Kendras. Our goal is simple: if MedSave can help a family save even ?5,000–?20,000 during a difficult time, we believe it has made a meaningful impact.
+
 ## ðŸš€ Setup & Execution Procedure
 
 ### 1. Prerequisites
@@ -49,11 +55,19 @@ python -m http.server 8000
 
 ---
 
+## Why MedSave?
+
+For many middle-class families, a medical emergency is not only a health crisis but also a financial one. Medicines often account for a significant portion of treatment costs, while affordable generic alternatives remain underutilized due to limited awareness and accessibility.
+
+MedSave helps users discover cost-effective generic medicines, compare prices, estimate potential savings, and locate nearby Jan Aushadhi Kendras. Our goal is simple: if MedSave can help a family save even ?5,000–?20,000 during a difficult time, we believe it has made a meaningful impact.
+
 ## âœ¨ Features
 - **Smart Search**: Search by Brand (e.g., Crocin) or Generic (e.g., Paracetamol).
 - **Price Analytics**: Visual bar charts comparing Branded vs Generic costs.
 - **Interactive Calculator**: Input your dosage to see monthly/yearly savings.
 - **Store Locator**: Find Jan Aushadhi stores with integrated Google Maps directions.
 - **PWA Ready**: Install the app on your mobile device for pharmacy-ready access.
+
+
 
 
