@@ -1,9 +1,9 @@
 ﻿# MedSave Future Data Expansion Plan
 
-**Version:** 1.0  
-**Sprint:** 2.3  
-**Status:** Active  
-**Last Updated:** 2026-07-31
+**Version:** 2.0
+**Sprint:** Milestone 5
+**Status:** Active
+**Last Updated:** 2026-08-01
 
 ---
 
@@ -14,6 +14,25 @@ This document defines the long-term roadmap for expanding the MedSave data ecosy
 It outlines how new datasets should be introduced, the order in which they should be integrated, and the engineering principles that should guide every future expansion.
 
 The objective is to build a scalable, trustworthy, and maintainable medicine database capable of supporting MedSave throughout its evolution.
+
+---
+
+## Schema Readiness — v0.5.0
+
+As of Milestone 5, the MedSave database schema has been evolved to support future data expansion with minimal structural changes.
+
+Rather than introducing new tables for every future dataset, the schema now includes carefully planned nullable columns that can be populated incrementally as additional data sources are integrated.
+
+This allows future pipeline work to focus primarily on ingestion and validation instead of repeated schema redesign.
+
+The current schema is prepared for:
+
+- Official PMBI medicine catalogue
+- NPPA pricing information
+- CDSCO regulatory metadata
+- Jan Aushadhi Kendra directory expansion
+
+Future schema changes should remain incremental and continue following the engineering principles defined within `SCHEMA_CHANGELOG.md`.
 
 ---
 
@@ -30,6 +49,8 @@ Every future dataset should follow these principles:
 4. **Documentation before implementation.** Every new source should be evaluated and documented before engineering work begins.
 
 5. **Validation before persistence.** No dataset should enter the database without passing the validation layer.
+
+6. **Schema before ingestion.** If a future dataset requires additional database fields, evolve the schema first and document the changes in `docs/data/SCHEMA_CHANGELOG.md` before extending the ETL pipeline.
 
 ---
 
@@ -164,75 +185,92 @@ The existing architecture has already been designed to accommodate these additio
 
 ---
 
-## Expected Schema Evolution
+## Current Schema Readiness
 
-As richer datasets become available, additional database fields may be introduced.
+Following the database evolution completed in **Milestone 5 (v0.5.0)**, the schema has been prepared to support future data expansion with minimal structural changes.
 
-Potential additions include:
+Rather than requiring new columns for every future dataset, several expansion fields now exist as nullable columns and can be populated incrementally by future pipeline sources.
 
 ### Medicines
 
-- Manufacturer
-- Therapeutic Category
-- Drug Schedule
-- Strength
-- Route of Administration
+| Field | Current Status | Planned Source |
+|-------|----------------|----------------|
+| `manufacturer` | 🟡 Ready | PMBI Medicine Catalogue |
+| `therapeutic_category` | 🟡 Ready | PMBI Medicine Catalogue |
+| `schedule` | 🟡 Ready | CDSCO Regulatory Data |
 
 ### Brands
 
-- Manufacturer
-- Package Size
-- Batch Information
+| Field | Current Status | Planned Source |
+|-------|----------------|----------------|
+| `manufacturer` | 🟡 Ready | NPPA Pricing Data |
 
 ### Stores
 
-- Phone Number
-- Email
-- Operating Hours
-- State
-- District
-- Latitude
-- Longitude
+| Field | Current Status | Planned Source |
+|-------|----------------|----------------|
+| `state` | 🟡 Ready | Jan Aushadhi Kendra Directory |
+| `phone` | 🟡 Ready | Jan Aushadhi Kendra Directory |
 
-Schema evolution should always remain backward compatible whenever possible.
+These fields are intentionally nullable so that existing datasets remain fully compatible while future data sources can enrich the database over time.
+
+Most future expansion work should therefore focus on extending the ETL pipeline rather than modifying the database schema.
 
 ---
 
 ## Long-Term Expansion Roadmap
 
 ```text
-Current
+v0.4.0
+Demonstration Dataset
+(Kaggle)
 
-Kaggle Demonstration Dataset
+        │
+        ▼
+
+v0.5.0
+Database Evolution
+Schema ready for future expansion
+
         │
         ▼
 
 Phase 1
-
 Official PMBI Medicine Catalogue
+Populates:
+• manufacturer
+• therapeutic_category
+
         │
         ▼
 
 Phase 2
-
 Official NPPA Pricing
+Populates:
+• brands.manufacturer
+
         │
         ▼
 
 Phase 3
-
 Expanded Medicine Datasets
+Populates:
+• medicines.schedule
+(if regulatory datasets are integrated)
+
         │
         ▼
 
 Phase 4
+Official Jan Aushadhi Kendra Directory
+Populates:
+• stores.state
+• stores.phone
 
-Real Pharmacy Directory
         │
         ▼
 
 Future
-
 Multi-source Healthcare Knowledge Base
 ```
 
@@ -277,3 +315,5 @@ It is about improving confidence, completeness, and maintainability while preser
 Every future dataset should strengthen the quality of the platform without increasing unnecessary complexity.
 
 A carefully curated dataset will always provide greater long-term value than a large but unreliable collection of records.
+
+As of **v0.5.0**, the underlying database schema has been prepared for the planned expansion phases documented above. Future work should primarily involve integrating new data sources through the existing ETL pipeline while preserving the stability, maintainability, and modular architecture of the platform.
