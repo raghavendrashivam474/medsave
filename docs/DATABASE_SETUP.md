@@ -1,13 +1,18 @@
 # MedSave Database Setup
 
-This guide explains how to recreate the MedSave PostgreSQL database from scratch.
+**Version:** 2.0  
+**Schema Version:** v0.5.0  
+**Last Updated:** 2026-08-01
+
+This guide explains how to set up and maintain the MedSave database for both fresh installations and future schema upgrades.
 
 ---
 
 ## Prerequisites
 
 - Python 3.13+
-- PostgreSQL Database (Supabase recommended)
+- PostgreSQL database (Supabase recommended)
+- SQLite is also supported for local development
 - Git
 - Virtual Environment
 
@@ -74,7 +79,9 @@ Create a `.env` file inside the `backend` directory.
 ```env
 DATABASE_URL=postgresql://postgres.<project-ref>:<password>@aws-0-<region>.pooler.supabase.com:5432/postgres
 ```
-> **Note:** Both the Flask backend and the MedSave Data Engine use the same `DATABASE_URL`. This ensures the ETL pipeline and REST API always operate on the same database.
+
+> **Note:** Both the Flask backend and the MedSave Data Engine use the same `DATABASE_URL`. This ensures the ETL pipeline and REST API always operate on the same database. When configured with SQLite, the same workflow continues to function for local development.
+
 ---
 
 ## 6. Create Database Schema
@@ -97,13 +104,33 @@ Paste them into the SQL Editor and click **Run**.
 
 ---
 
-## 7. Seed Initial Data
+## 7. Database Schema
+
+The canonical database schema is maintained in:
+
+```text
+backend/database/schema.sql
+```
+
+As of **v0.5.0**, the schema has been strengthened with additional constraints, indexes, and expansion-ready columns while preserving compatibility with the existing backend and Data Engine.
+
+Future schema modifications should always be documented in:
+
+```text
+docs/data/SCHEMA_CHANGELOG.md
+```
+
+---
+
+## 8. Seed Initial Data
 
 Run
 
 ```bash
 python backend/seed_data.py
 ```
+
+The seed script creates the required tables (if they do not already exist) and populates the database with demonstration data compatible with the current schema version.
 
 Expected output:
 
@@ -114,7 +141,7 @@ Database seeded successfully!
 
 ---
 
-## 8. Start the Backend
+## 9. Start the Backend
 
 ```bash
 python backend/app.py
@@ -128,14 +155,17 @@ Running on http://127.0.0.1:5000
 
 ---
 
-## 9. Verify Installation
+## 10. Verify Installation
 
 Open
 
 ```
 http://127.0.0.1:5000/api/search?q=crocin
 ```
-## 10. Verify the Data Engine
+
+---
+
+## 11. Verify the Data Engine
 
 Run:
 
@@ -143,7 +173,7 @@ Run:
 python -m pipeline.data_engine
 ```
 
-If the pipeline is configured correctly, it should complete successfully and report the number of medicines and brands processed.
+If the pipeline is configured correctly, it should complete successfully and ingest validated medicine data into the configured database. The pipeline is designed to work alongside the Flask backend using the shared `DATABASE_URL`.
 
 Expected response
 
@@ -223,6 +253,19 @@ medsave/
 
 ---
 
+## Related Documentation
+
+| Document | Purpose |
+|----------|---------|
+| `docs/data/SCHEMA_CHANGELOG.md` | Authoritative history of database schema evolution |
+| `docs/data/FUTURE_DATA_EXPANSION.md` | Long-term data expansion roadmap |
+| `docs/data/PIPELINE_ARCHITECTURE.md` | ETL architecture |
+| `pipeline/README.md` | MedSave Data Engine |
+
+> **Note:** `SCHEMA_CHANGELOG.md` serves as the authoritative record of database evolution and should be updated whenever structural schema changes are introduced.
+
+---
+
 # Recovery Checklist
 
 - [ ] Clone repository
@@ -231,6 +274,9 @@ medsave/
 - [ ] Create Supabase project
 - [ ] Configure `DATABASE_URL`
 - [ ] Run `backend/database/schema.sql`
+- [ ] Review `docs/data/SCHEMA_CHANGELOG.md` (when upgrading an existing database)
 - [ ] Execute `python backend/seed_data.py`
 - [ ] Start backend
-- [ ] Verify `/api/search`
+- [ ] Verify backend (`/api/search`)
+- [ ] Verify Data Engine (`python -m pipeline.data_engine`)
+
