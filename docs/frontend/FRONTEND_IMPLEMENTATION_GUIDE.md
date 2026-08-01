@@ -28,17 +28,23 @@ Our goal isn't just to build another medicine search website—we want to make t
 
 ## Where the project currently stands
 
-At the moment, the backend already has:
+The project has progressed beyond the initial prototype and now includes a solid backend and data foundation.
 
-- Flask backend
-- PostgreSQL database
-- ETL pipeline
-- Medicine dataset
-- Basic search prototype
+Current implementation includes:
 
-The frontend currently exists only as a simple proof of concept built using HTML, CSS and JavaScript.
+- Modular Flask backend using Blueprints
+- PostgreSQL with SQLite development fallback
+- Standalone MedSave Data Engine (ETL pipeline)
+- Data validation and normalization pipeline
+- Medicine search APIs
+- Store locator APIs
+- Health monitoring endpoint
+- Initial medicine dataset and ingestion pipeline
+- Comprehensive project documentation
 
-You're not expected to continue that design.
+The current frontend is still a proof of concept built with HTML, CSS, and JavaScript.
+
+You're **not** expected to continue the existing design. Instead, treat it as a functional reference while designing a cleaner, more modern user experience.
 
 ---
 
@@ -46,29 +52,29 @@ You're not expected to continue that design.
 
 A user should ideally experience something like this:
 
-Search a medicine
+Search for a branded or generic medicine
 
 ↓
 
-See matching medicines
+See matching medicines and generic alternatives
 
 ↓
 
-Compare nearby pharmacies
+Compare prices and estimated savings
 
 ↓
 
-Check stock, distance and price
+Explore nearby Jan Aushadhi Kendras and pharmacies
 
 ↓
 
-Choose the most suitable pharmacy
+View medicine and store details
 
 ↓
 
-Navigate there
+Choose the most suitable option and navigate there
 
-Everything in the interface should help make this journey simple and intuitive.
+Everything in the interface should help users make informed healthcare decisions quickly, confidently, and with minimal effort.
 
 ---
 
@@ -77,17 +83,21 @@ Everything in the interface should help make this journey simple and intuitive.
 These are the core features that MedSave should eventually support.
 
 - Medicine Search
+- Generic Medicine Discovery
 - Search Suggestions
 - Search Results
 - Medicine Details
+- Price Comparison
+- Savings Calculation
 - Store Details
-- Nearby Pharmacy Listing
+- Nearby Jan Aushadhi & Pharmacy Listing
 - Store Comparison
 - Map / Navigation Integration
 - Proper Loading States
 - Empty States
 - Error Handling
 - Responsive Design
+- Accessible User Experience
 
 How these are presented is completely open to your creativity, but these capabilities should exist.
 
@@ -99,25 +109,29 @@ The backend will eventually provide data through APIs.
 
 So instead of designing around hardcoded data, try to think of the interface as something that will eventually receive real information from the backend.
 
-Some examples of information you'll receive include:
+Some examples of information you'll eventually receive include:
 
-For medicines:
+### Medicine
 
-- Name
-- Manufacturer
+- Brand Name
 - Generic Name
-- Price
-- Availability
+- Salt / Composition
+- Dosage
+- Form (Tablet, Capsule, Syrup, etc.)
+- Brand Price
+- Jan Aushadhi Price
+- Estimated Savings
 
-For pharmacies:
+### Store
 
-- Name
+- Store Name
 - Address
-- Contact
 - Distance
-- Stock Availability
+- Contact Information
+- Availability Status
+- Location Coordinates (for map integration)
 
-The exact structure may change slightly, but these are the main entities you'll be working with.
+The exact API responses may evolve as the backend grows, but the frontend should be designed around reusable data-driven components rather than hardcoded values.
 
 ---
 
@@ -164,13 +178,15 @@ We're not looking for someone to replicate a design—we'd love you to contribut
 
 To make future integration easier, it would be great if:
 
-- Components are reusable.
-- The layout is responsive.
-- The code remains modular.
-- Similar UI isn't duplicated unnecessarily.
-- Future API integration can happen with minimal changes.
+- Components are reusable and composable.
+- The layout is fully responsive across desktop and mobile.
+- The codebase remains modular and easy to maintain.
+- Similar UI patterns are abstracted into reusable components.
+- The interface is designed around API-driven data rather than hardcoded values.
+- Loading, empty, and error states are handled consistently.
+- Future backend integration requires minimal frontend changes.
 
-These aren't restrictions—they're just things that will help us later.
+These aren't restrictions—they're engineering practices that will help the project scale as new features are added.
 
 ---
 
