@@ -85,12 +85,15 @@ Notes
   latitude/longitude for clarity at the API boundary.
 """
 
+import logging
 import math
 import sqlite3
 
 from flask import Blueprint, jsonify, request
 
 from backend.database.connection import get_db_connection
+
+logger = logging.getLogger(__name__)
 
 stores_bp = Blueprint("stores", __name__)
 
@@ -208,7 +211,7 @@ def _bad_request(message):
 
 def _server_error(context):
     """Return a standard 500 server-error envelope. Never expose internals."""
-    print(f"[ERROR] stores — {context}")
+    logger.exception("Store API error: %s", context)
     return jsonify({
         "success": False,
         "message": "An unexpected error occurred.",

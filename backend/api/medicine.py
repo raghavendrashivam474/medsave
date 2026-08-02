@@ -78,11 +78,14 @@ Design notes
   errors always return JSON, never an unhandled 500 HTML page.
 """
 
+import logging
 import sqlite3
 
 from flask import Blueprint, jsonify
 
 from backend.database.connection import get_db_connection
+
+logger = logging.getLogger(__name__)
 
 medicine_bp = Blueprint("medicine", __name__)
 
@@ -217,7 +220,7 @@ def get_medicine(medicine_id):
 
     except Exception as exc:
         # Log the real error internally. Never expose it to the client.
-        print(f"[ERROR] GET /api/medicine/{medicine_id} — {exc}")
+        logger.exception("GET /api/medicine/%s failed", medicine_id)
         return jsonify({
             "success": False,
             "message": "An unexpected error occurred.",
