@@ -1,4 +1,4 @@
-﻿"""
+"""
 backend/app.py
 
 MedSave Flask application entry point.
@@ -20,9 +20,10 @@ from dotenv import load_dotenv
 from flask import Flask
 from flask_cors import CORS
 
-from backend.api.health import health_bp
-from backend.api.search import search_bp
-from backend.api.stores import stores_bp
+from backend.api.health   import health_bp
+from backend.api.medicine import medicine_bp
+from backend.api.search   import search_bp
+from backend.api.stores   import stores_bp
 
 load_dotenv()
 
@@ -36,6 +37,7 @@ CORS(app)
 
 # Register API blueprints
 app.register_blueprint(health_bp)
+app.register_blueprint(medicine_bp)
 app.register_blueprint(search_bp)
 app.register_blueprint(stores_bp)
 
