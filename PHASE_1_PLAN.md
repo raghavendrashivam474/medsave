@@ -5,7 +5,7 @@
 **Status:** 🟡 Active  
 **Phase:** College Internal Selection  
 **Duration:** ~20–30 Days  
-**Last Updated:** 31 Jul 2026
+**Last Updated:** 02 Aug 2026
 
 ---
 
@@ -15,12 +15,12 @@
 |-----------|-------|
 | Project | MedSave |
 | Current Phase | College Internal Selection |
-| Current Status | Milestone 5 In Progress |
-| Current Version | v0.4.0 |
-| Current Milestone | Database Evolution |
-| Overall Progress | ~31% |
+| Current Status | Milestone 7 In Progress |
+| Current Version | v0.6.0 |
+| Current Milestone | Frontend MVP |
+| Overall Progress | ~55% |
 | Repository Status | Active |
-| Last Updated | 31 Jul 2026 |
+| Last Updated | 02 Aug 2026 |
 
 This snapshot provides a quick overview of the project's current phase and should be updated whenever major milestones are completed.
 
@@ -60,11 +60,13 @@ MedSave already has a functional prototype and is no longer in the ideation stag
 
 The project currently demonstrates:
 
-- Medicine search
-- Nearby pharmacy discovery
-- Backend APIs
-- Database integration
-- Initial ETL pipeline
+- Medicine search and comparison
+- Medicine Details API
+- Store Listing & Store Details APIs
+- Stable REST backend with standardized API contracts
+- Database integration (PostgreSQL + SQLite)
+- Structured ETL data pipeline
+- Backend test suite (114 passing tests)
 - Cloud deployment
 
 Phase 1 focuses on refining this foundation rather than rebuilding it.
@@ -130,9 +132,9 @@ Phase 1 is considered successful when **MedSave is officially selected by the co
 
 | Field | Value |
 |-------|-------|
-| Current Milestone | Database Evolution |
-| Objective | Evolve the database architecture for scalability and future integrations |
-| Next Task | Review database schema and begin Milestone 5 implementation |
+| Current Milestone | Frontend MVP |
+| Objective | Build the production-ready frontend and integrate it with the stabilized backend |
+| Next Task | Begin Milestone 7 implementation and frontend development |
 | Blockers | None |
 
 ---
@@ -212,26 +214,12 @@ The objective of this phase is to deliver a convincing and reliable demonstratio
 | Repository Architecture | ✅ Complete |
 | Documentation | ✅ Complete |
 | Data Strategy & Validation | ✅ Complete |
-| Database Evolution | 🟡 In Progress |
-| Backend Expansion | ⬜ Not Started |
-| Frontend Development | ⬜ Not Started |
+| Database Evolution | ✅ Complete |
+| Backend Expansion (Milestone 6) | ✅ Complete |
+| Frontend Development (Milestone 7) | 🚧 In Progress |
 | AI Features | ⬜ Not Started |
 | Maps Integration | ⬜ Not Started |
 | Pipeline Evolution | ⬜ Not Started |
-| Pilot Validation | ⬜ Not Started |
-| Presentation | ⬜ Not Started |
-| Judge FAQ | ⬜ Not Started |
-------------|--------|
-| README | 🟡 In Progress |
-| Folder Structure | ⬜ Not Started |
-| Documentation | ⬜ Not Started |
-| Data Strategy | ⬜ Not Started |
-| Database | ⬜ Not Started |
-| Backend | ⬜ Not Started |
-| Frontend | ⬜ Not Started |
-| AI | ⬜ Not Started |
-| Maps | ⬜ Not Started |
-| ETL Pipeline | ⬜ Not Started |
 | Pilot Validation | ⬜ Not Started |
 | Presentation | ⬜ Not Started |
 | Judge FAQ | ⬜ Not Started |
@@ -244,31 +232,17 @@ The objective of this phase is to deliver a convincing and reliable demonstratio
 |-----------|---------|--------------|--------|
 | README | Establish project identity | Vision, Features, Setup, Architecture, Roadmap | ✅ Complete |
 | Repository Architecture | Modular, scalable repository structure | Clean project organization | ✅ Complete |
-| Documentation | Engineering documentation | Technical docs and implementation guides | ✅ Complete |
-| Data Strategy & Validation | Data architecture and validation pipeline | Strategy, validation, pipeline docs | ✅ Complete |
-| Database Evolution | Improve schema and persistence layer | Database refinement | 🟡 In Progress |
-| Backend Expansion | API improvements | Additional endpoints and architecture | ⬜ Not Started |
-| Frontend Development | Better UI/UX | Modern responsive frontend | ⬜ Not Started |
-| AI Features | Intelligent assistance | Recommendation features | ⬜ Not Started |
-| Maps Integration | Navigation and location | Map-based pharmacy discovery | ⬜ Not Started |
-| Pipeline Evolution | Multi-source ETL | Advanced ingestion pipeline | ⬜ Not Started |
-| Pilot Validation | Real-world validation | Stable demonstration | ⬜ Not Started |
-| Presentation | SIH presentation | Demo and presentation assets | ⬜ Not Started |
-| Judge FAQ | Technical Q&A | Evaluation preparation | ⬜ Not Started |
------------|---------|--------------|--------|
-| README | Establish project identity | Vision, Features, Setup, Architecture, Roadmap | ⬜ Not Started |
-| Folder Structure | Organize repository | Logical project structure | ⬜ Not Started |
-| Documentation | Document engineering decisions | Technical documentation | ⬜ Not Started |
-| Data Strategy | Define data sources and processing | Data acquisition and processing plan | ⬜ Not Started |
-| Database | Review and improve schema | Optimized database design | ⬜ Not Started |
-| Backend | Review architecture and APIs | Backend improvements | ⬜ Not Started |
-| Frontend | Improve usability and UI | Enhanced user experience | ⬜ Not Started |
-| AI | Improve intelligent recommendations | AI enhancements | ⬜ Not Started |
-| Maps | Improve medicine discovery | Better navigation and location services | ⬜ Not Started |
-| ETL Pipeline | Improve ingestion and validation | Reliable data pipeline | ⬜ Not Started |
-| Pilot Validation | Prepare realistic demonstration | Pilot-ready dataset and workflow | ⬜ Not Started |
-| Presentation | Prepare SIH presentation | Demo and presentation material | ⬜ Not Started |
-| Judge FAQ | Prepare expected questions | Technical and business Q&A | ⬜ Not Started |
+| Documentation | Engineering documentation | Technical documentation and implementation guides | ✅ Complete |
+| Data Strategy & Validation | Data architecture and validation pipeline | Strategy, validation pipeline, ETL documentation | ✅ Complete |
+| Database Evolution | Improve schema and persistence layer | Database refinement and stable data model | ✅ Complete |
+| Backend Expansion (Milestone 6) | Production-ready backend platform | Stable REST APIs, Medicine APIs, Store APIs, testing, backend stabilization | ✅ Complete |
+| Frontend Development (Milestone 7) | Modern user experience | Responsive frontend, backend integration, polished UX | 🚧 In Progress |
+| AI Features | Intelligent healthcare assistance | Recommendation and intelligent search features | ⬜ Not Started |
+| Maps Integration | Navigation and location intelligence | Interactive maps and nearby pharmacy discovery | ⬜ Not Started |
+| Pipeline Evolution | Multi-source healthcare ingestion | Hybrid ETL and automated synchronization | ⬜ Not Started |
+| Pilot Validation | Real-world validation | Stable end-to-end demonstration | ⬜ Not Started |
+| Presentation | Internal & SIH presentation | Demo assets and presentation | ⬜ Not Started |
+| Judge FAQ | Technical evaluation preparation | FAQ and technical discussion material | ⬜ Not Started |
 
 ---
 
@@ -307,6 +281,14 @@ The objective of this phase is to deliver a convincing and reliable demonstratio
 
 # Change Log
 
+## 02 Aug 2026
+
+- Completed Milestone 6 — Backend Platform.
+- Backend APIs stabilized and frozen for Phase 1.
+- Medicine Details API and Store APIs completed.
+- Backend test suite expanded to **114 passing tests**.
+- Documentation synchronization initiated.
+- Phase 1 execution focus moved to **Milestone 7 — Frontend MVP**.
 
 ## 31 Jul 2026
 
@@ -342,11 +324,11 @@ If resuming after a long break:
 | Item | Value |
 |------|-------|
 | Current Phase | Phase 1 |
-| Current Milestone | Database Evolution |
-| Last Completed | Data Strategy & Validation |
-| Next Task | Review and evolve the database schema |
-| Next Milestone | Backend Expansion |
-| Overall Progress | ~31% |
+| Current Milestone | Frontend MVP |
+| Last Completed | Milestone 6 – Backend Platform |
+| Next Task | Build the Phase 1 frontend and integrate backend APIs |
+| Next Milestone | Frontend Development |
+| Overall Progress | ~55% |
 
 ---
 
@@ -402,10 +384,10 @@ Focus Areas
 |-----------|-------|
 | Owner | Team UGC |
 | Maintained By | Project Team |
-| Version | 1.2 |
+| Version | 1.3 |
 | Review Frequency | After every milestone |
-| Last Reviewed | 31 Jul 2026 |
-| Next Review | After Milestone 5 completion |
+| Last Reviewed | 02 Aug 2026 |
+| Next Review | After Milestone 7 completion |
 
 ---
 
@@ -418,6 +400,4 @@ Whenever development resumes, this document should be reviewed before writing an
 If future engineering decisions conflict with this document, **update the documentation first**, then update the implementation.
 
 > **Documentation leads implementation—not the other way around.**
-
-
 
