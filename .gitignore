@@ -1,4 +1,4 @@
-# Python
+﻿# Python
 __pycache__/
 *.py[cod]
 *$py.class
@@ -23,40 +23,29 @@ wheels/
 
 # Database
 backend/database.db
-
 # OS
 .DS_Store
 Thumbs.db
-
 # IDEs
 .vscode/
 .idea/
-
 # Environment Variables
 .env
 backend/.env
-
 # Python Virtual Environments
 venv/
 .venv/
-
 # Python Cache
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
-
 # Logs
 *.log
-
 # Coverage
 .coverage
 htmlcov/
-
 # Jupyter
 .ipynb_checkpoints/
-
 # Temporary Files
 *.tmp
 *.bak
-
-backend/database.db
