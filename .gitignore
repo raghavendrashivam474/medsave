@@ -58,3 +58,5 @@ htmlcov/
 # Temporary Files
 *.tmp
 *.bak
+
+backend/database.db
