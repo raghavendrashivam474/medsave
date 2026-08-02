@@ -339,8 +339,9 @@ def get_stores():
             SELECT *
             FROM   stores
             ORDER  BY city ASC, name ASC
-            LIMIT  {_DEFAULT_LIMIT}
-            """
+            LIMIT  {placeholder}
+            """,
+            (_DEFAULT_LIMIT,),
         )
         rows   = cur.fetchall()
         stores = [_build_store(r) for r in rows]
