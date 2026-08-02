@@ -1,4 +1,4 @@
-# backend/api/stores.py
+﻿# backend/api/stores.py
 
 """
 backend/api/stores.py
