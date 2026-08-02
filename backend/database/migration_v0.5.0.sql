@@ -1,4 +1,4 @@
-﻿-- =============================================================================
+-- =============================================================================
 -- MedSave Database Migration
 -- Version    : v0.5.0
 -- Migrates from : v0.4.0
@@ -497,7 +497,11 @@ CREATE INDEX IF NOT EXISTS idx_stores_pincode
 CREATE INDEX IF NOT EXISTS idx_stores_coordinates
     ON stores (lat, lng);
 
-RAISE NOTICE 'All indexes created or already exist.';
+DO $$
+BEGIN
+    RAISE NOTICE 'All indexes created or already exist.';
+END;
+$$;
 
 
 -- =============================================================================

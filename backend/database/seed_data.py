@@ -1,4 +1,4 @@
-﻿"""
+"""
 backend/database/seed_data.py
 
 Seeds the MedSave database with demonstration data.
@@ -72,7 +72,7 @@ def _adapt_schema_for_sqlite(schema_sql: str) -> str:
     sql = sql.replace("SERIAL PRIMARY KEY", "INTEGER PRIMARY KEY")
 
     # Remove COMMENT ON lines entirely
-    sql = re.sub(r"COMMENT ON [^\n]+;\n?", "", sql)
+    sql = re.sub(r"COMMENT ON .*?;\s*", "", sql, flags=re.DOTALL)
 
     # Remove CHECK constraints inline within column definitions
     # Matches: CHECK (expression) including nested parens
@@ -103,7 +103,7 @@ def seed():
         param_marker = "%s"
     else:
         print("Seeding local SQLite database...")
-        db_path = os.path.join(os.path.dirname(__file__), "database.db")
+        db_path = os.path.join(os.path.dirname(__file__), "..", "database.db")
         os.makedirs(os.path.dirname(db_path), exist_ok=True)
         conn = sqlite3.connect(db_path)
         param_marker = "?"
