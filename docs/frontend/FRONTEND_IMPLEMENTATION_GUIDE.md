@@ -1,4 +1,4 @@
-# MedSave Frontend Implementation Guide
+﻿# MedSave Frontend Implementation Guide
 
 ## Purpose
 
@@ -28,7 +28,7 @@ Our goal isn't just to build another medicine search website—we want to make t
 
 ## Where the project currently stands
 
-The project has progressed beyond the initial prototype and now includes a solid backend and data foundation.
+The project has progressed beyond the initial prototype and now includes a feature-complete backend for Phase 1, a mature healthcare data pipeline, and a stable database foundation.
 
 Current implementation includes:
 
@@ -42,7 +42,7 @@ Current implementation includes:
 - Initial medicine dataset and ingestion pipeline
 - Comprehensive project documentation
 
-The current frontend is still a proof of concept built with HTML, CSS, and JavaScript.
+The current frontend is a legacy HTML/CSS/JavaScript prototype that now serves as a functional reference for the new Frontend MVP.
 
 You're **not** expected to continue the existing design. Instead, treat it as a functional reference while designing a cleaner, more modern user experience.
 
@@ -105,7 +105,7 @@ How these are presented is completely open to your creativity, but these capabil
 
 ## While designing, please keep these things in mind
 
-The backend will eventually provide data through APIs.
+The frontend will consume data from stable backend APIs completed during Milestone 6.
 
 So instead of designing around hardcoded data, try to think of the interface as something that will eventually receive real information from the backend.
 
@@ -184,9 +184,9 @@ To make future integration easier, it would be great if:
 - Similar UI patterns are abstracted into reusable components.
 - The interface is designed around API-driven data rather than hardcoded values.
 - Loading, empty, and error states are handled consistently.
-- Future backend integration requires minimal frontend changes.
+- Backend integration should require minimal frontend changes.
 
-These aren't restrictions—they're engineering practices that will help the project scale as new features are added.
+These aren't restrictionsâ€”they're engineering practices that will help the project scale as new features are added.
 
 ---
 
