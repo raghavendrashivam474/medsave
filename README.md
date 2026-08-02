@@ -19,17 +19,33 @@ Helping users discover affordable generic medicines, compare prices, estimate sa
 
 <br>
 
-![Status](https://img.shields.io/badge/Status-Active%20Development-success?style=flat-square)
+![Status](https://img.shields.io/badge/Status-Backend%20Complete-success?style=flat-square)
+![Milestone](https://img.shields.io/badge/Milestone-MS7%20Current-blue?style=flat-square)
 ![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)
-![Version](https://img.shields.io/badge/Version-v0.4.0-orange?style=flat-square)
+![Version](https://img.shields.io/badge/Version-v0.6.0-orange?style=flat-square)
 
 </div>
 
 > *Helping families make informed healthcare decisions while reducing medicine costs.*
 
-MedSave is an intelligent healthcare platform that helps users discover affordable generic alternatives to branded medicines, estimate potential savings, and locate nearby Jan Aushadhi Kendras.
+MedSave is an intelligent healthcare platform that helps users discover affordable generic alternatives to branded medicines, compare prices, estimate potential savings, and locate nearby Jan Aushadhi Kendras through a reliable, API-driven healthcare platform.
 
-Built with the goal of improving medicine affordability and accessibility, MedSave empowers users to make informed healthcare decisions while reducing unnecessary medicine expenditure.
+The project now features a feature-complete backend for Phase 1, a structured healthcare data pipeline, and a scalable database foundation. With the backend stabilized after Milestone 6, development is currently focused on building the Phase 1 frontend experience while maintaining a clean separation between the data pipeline, backend services, and user interface.
+
+---
+
+## 🚦 Project Status
+
+**Current Milestone:** Milestone 7 — Frontend MVP
+
+| Component | Status |
+|-----------|--------|
+| Backend APIs | ✅ Complete |
+| Database Schema (v0.5.0) | ✅ Stable |
+| Data Pipeline | ✅ Operational |
+| Frontend | 🚧 In Progress |
+| Hybrid Data Ingestion | 📋 Planned (MS9) |
+| Internal Hackathon | 🎯 Phase 1 |
 
 ---
 
@@ -43,15 +59,48 @@ Our goal is simple: if MedSave can help a family save even **₹5,000–₹20,00
 
 ---
 
+## 🏗️ Architecture Overview
+
+```text
+Frontend (HTML/CSS/JavaScript)
+            │
+            ▼
+      Flask REST API
+            │
+            ▼
+ PostgreSQL / SQLite
+            ▲
+            │
+   MedSave Data Engine
+            │
+            ▼
+ Trusted Healthcare Sources
+```
+
+---
+
+
 ## ✨ Key Features
 
-- 🔍 **Smart Search** — Search by brand name (Crocin) or generic medicine (Paracetamol).
-- 💰 **Price Analytics** — Compare branded and generic medicine prices.
-- 🧮 **Savings Calculator** — Estimate monthly and yearly savings.
-- 📍 **Store Locator** — Find nearby Jan Aushadhi Kendras.
-- 🔄 **Data Engine** — Dedicated ETL pipeline with validation and additive loading.
-- 🗄️ **Dual Database Support** — PostgreSQL for production and SQLite for local development.
-- 📱 **Progressive Web App** — Install MedSave like a native mobile application.
+- 🔍 **Smart Medicine Search** — Search by brand name or generic medicine with fast API-powered results.
+- 💊 **Medicine Details & Comparison** — Explore medicine information, compare branded and generic alternatives, and estimate potential savings.
+- 💰 **Savings Estimation** — Calculate expected cost savings by choosing affordable generic medicines.
+- 📍 **Store Discovery** — Locate nearby Jan Aushadhi Kendras, filter by location, and view detailed store information.
+- 🔄 **Healthcare Data Engine** — Dedicated ETL pipeline with validation, normalization, and expansion-ready hybrid ingestion architecture.
+- 🗄️ **Scalable Data Platform** — PostgreSQL for production with SQLite support for local development.
+- 🧩 **Modular Backend Architecture** — Stable REST APIs with standardized contracts, comprehensive testing, and clean separation between pipeline, backend, and frontend.
+
+---
+
+## 🔌 Available APIs
+
+- Health API (`/api/health`)
+- Medicine Search API (`/api/search`)
+- Medicine Details API (`/api/medicine/<id>`)
+- Store Listing API (`/api/stores`)
+- Store Details API (`/api/stores/<id>`)
+
+---
 
 ## 📸 Screenshots
 
@@ -70,6 +119,17 @@ Finding affordable medicines shouldn't require medical expertise or hours of res
 | Review potential savings | Calculates estimated cost savings |
 | Find a nearby Jan Aushadhi Kendra | Locates nearby stores for easy access |
 | Make an informed decision | Presents clear and actionable insights |
+
+---
+
+## 📖 Documentation Overview
+
+- Phase 1 Plan
+- Database Setup
+- Pipeline Architecture
+- Frontend Guide
+- Data Strategy
+- Schema Changelog
 
 ---
 
@@ -284,6 +344,21 @@ As MedSave evolves, this documentation will continue to grow with API references
 
 ---
 
+## 🚀 Future Vision
+
+MedSave is being designed as a long-term healthcare platform rather than a single-purpose medicine search application.
+
+Future milestones will introduce:
+
+- Hybrid healthcare data ingestion
+- Automated dataset synchronization
+- Price history and trend tracking
+- AI-assisted medicine discovery
+- Enhanced location intelligence
+- Expanded healthcare datasets
+
+---
+
 ## 🛣️ Roadmap
 
 ### 🟢 Phase 1 — Engineering Foundation *(~31% Complete)*
@@ -366,3 +441,5 @@ You are free to use, modify, and distribute this software in accordance with the
 Made with ❤️ to make healthcare more affordable.
 
 </div>
+
+
