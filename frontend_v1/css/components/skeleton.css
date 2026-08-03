@@ -1,0 +1,117 @@
+﻿/* ============================================================
+   AAROGYA — LOADING SKELETON
+   css/components/skeleton.css
+
+   Skeleton screens replace content while data is loading.
+   Always prefer skeleton over spinners for content areas.
+   ============================================================ */
+
+/* ----------------------------------------------------------
+   BASE SKELETON
+   ---------------------------------------------------------- */
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-skeleton-base) 25%,
+    var(--color-skeleton-shimmer) 50%,
+    var(--color-skeleton-base) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s infinite;
+  border-radius: var(--radius-sm);
+  display: block;
+}
+
+@keyframes skeleton-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ----------------------------------------------------------
+   SKELETON SHAPES
+   ---------------------------------------------------------- */
+
+.skeleton-text {
+  height: 16px;
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-2);
+}
+
+.skeleton-text-sm {
+  height: 12px;
+}
+
+.skeleton-text-lg {
+  height: 20px;
+}
+
+.skeleton-heading {
+  height: 28px;
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-3);
+}
+
+.skeleton-avatar {
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+.skeleton-avatar-sm  { width: 32px; height: 32px; }
+.skeleton-avatar-md  { width: 48px; height: 48px; }
+.skeleton-avatar-lg  { width: 64px; height: 64px; }
+
+.skeleton-image {
+  width: 100%;
+  border-radius: var(--radius-md);
+}
+
+.skeleton-badge {
+  height: 22px;
+  width: 80px;
+  border-radius: var(--radius-full);
+}
+
+.skeleton-button {
+  height: 40px;
+  border-radius: var(--radius-md);
+}
+
+/* ----------------------------------------------------------
+   SKELETON CARD
+   ---------------------------------------------------------- */
+
+.skeleton-card {
+  background-color: var(--color-card-bg);
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+}
+
+.skeleton-card-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.skeleton-card-lines {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.skeleton-line-full    { width: 100%; }
+.skeleton-line-3-4     { width: 75%; }
+.skeleton-line-half    { width: 50%; }
+.skeleton-line-quarter { width: 25%; }
+
+/* ----------------------------------------------------------
+   WIDTH HELPERS FOR SKELETON
+   ---------------------------------------------------------- */
+
+.skeleton-w-full    { width: 100%; }
+.skeleton-w-3-4     { width: 75%; }
+.skeleton-w-half    { width: 50%; }
+.skeleton-w-quarter { width: 25%; }
+.skeleton-w-1-3     { width: 33%; }

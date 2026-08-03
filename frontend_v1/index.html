@@ -1,0 +1,1120 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<!--
+  ============================================================
+  AAROGYA — Design System Foundation
+  frontend_v1/index.html
+
+  This page is the Sprint 1 deliverable.
+  It is NOT a feature page.
+  It is a living style guide that demonstrates every
+  reusable component built in this sprint.
+
+  Future sprint pages will import the same CSS files
+  and assemble these components into real screens.
+  ============================================================
+-->
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Aarogya Design System — Frontend Foundation" />
+  <title>Aarogya — Design System</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Design Tokens (always first) -->
+  <link rel="stylesheet" href="css/base/variables.css" />
+
+  <!-- Themes -->
+  <link rel="stylesheet" href="css/themes/light.css" />
+  <link rel="stylesheet" href="css/themes/dark.css" />
+
+  <!-- Base -->
+  <link rel="stylesheet" href="css/base/reset.css" />
+  <link rel="stylesheet" href="css/base/typography.css" />
+
+  <!-- Layout -->
+  <link rel="stylesheet" href="css/layout/grid.css" />
+  <link rel="stylesheet" href="css/layout/utilities.css" />
+
+  <!-- Components -->
+  <link rel="stylesheet" href="css/components/navigation.css" />
+  <link rel="stylesheet" href="css/components/buttons.css" />
+  <link rel="stylesheet" href="css/components/inputs.css" />
+  <link rel="stylesheet" href="css/components/cards.css" />
+  <link rel="stylesheet" href="css/components/badges.css" />
+  <link rel="stylesheet" href="css/components/dividers.css" />
+  <link rel="stylesheet" href="css/components/skeleton.css" />
+  <link rel="stylesheet" href="css/components/states.css" />
+
+  <!-- Theme script — load before body renders to avoid flash -->
+  <script src="js/theme.js"></script>
+</head>
+
+<body>
+
+  <!-- ======================================================
+       HEADER
+       ====================================================== -->
+
+  <header class="header" role="banner">
+    <div class="container">
+      <div class="header-inner">
+
+        <!-- Logo -->
+        <a href="/" class="header-logo" aria-label="Aarogya Home">
+          <div class="header-logo-icon" aria-hidden="true">
+            <!-- Medicine / cross icon -->
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 5v14M5 12h14"/>
+            </svg>
+          </div>
+          <div>
+            <div class="header-logo-name">Aarogya</div>
+            <div class="header-logo-tagline">Affordable Healthcare</div>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation -->
+        <nav class="header-nav" aria-label="Main navigation">
+          <a href="#" class="nav-link active">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round"
+              aria-hidden="true">
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+            </svg>
+            Search
+          </a>
+          <a href="#" class="nav-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round"
+              aria-hidden="true">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+              <polyline points="9,22 9,12 15,12 15,22"/>
+            </svg>
+            Stores
+          </a>
+          <a href="#" class="nav-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round"
+              aria-hidden="true">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+            Trust
+          </a>
+        </nav>
+
+        <!-- Header Actions -->
+        <div class="header-actions">
+
+          <!-- Theme Toggle -->
+          <button
+            class="theme-toggle"
+            data-theme-toggle
+            aria-label="Switch to dark theme"
+            title="Toggle theme"
+          >
+            <!-- Moon icon (shown in light mode) -->
+            <svg class="theme-toggle-icon icon-moon" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round"
+              aria-hidden="true">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+            <!-- Sun icon (shown in dark mode) -->
+            <svg class="theme-toggle-icon icon-sun" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round"
+              aria-hidden="true">
+              <circle cx="12" cy="12" r="5"/>
+              <line x1="12" y1="1"  x2="12" y2="3"/>
+              <line x1="12" y1="21" x2="12" y2="23"/>
+              <line x1="4.22" y1="4.22"   x2="5.64" y2="5.64"/>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+              <line x1="1"  y1="12" x2="3"  y2="12"/>
+              <line x1="21" y1="12" x2="23" y2="12"/>
+              <line x1="4.22"  y1="19.78" x2="5.64"  y2="18.36"/>
+              <line x1="18.36" y1="5.64"  x2="19.78" y2="4.22"/>
+            </svg>
+          </button>
+
+          <!-- Mobile Menu Toggle -->
+          <button
+            class="mobile-menu-toggle"
+            data-mobile-toggle
+            aria-label="Open navigation menu"
+            aria-expanded="false"
+            aria-controls="mobile-nav"
+          >
+            <span class="bar" aria-hidden="true"></span>
+            <span class="bar" aria-hidden="true"></span>
+            <span class="bar" aria-hidden="true"></span>
+          </button>
+
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Navigation Drawer -->
+  <nav class="mobile-nav" id="mobile-nav" aria-label="Mobile navigation">
+    <a href="#" class="nav-link active">Search Medicines</a>
+    <a href="#" class="nav-link">Nearby Stores</a>
+    <a href="#" class="nav-link">Trust Passport</a>
+    <a href="#" class="nav-link">Price Compare</a>
+    <hr class="divider" />
+    <button
+      class="btn btn-outline btn-full"
+      data-theme-toggle
+    >
+      Toggle Theme
+    </button>
+  </nav>
+
+  <!-- ======================================================
+       MAIN CONTENT
+       ====================================================== -->
+
+  <main class="page-main" id="main-content">
+    <div class="container">
+
+      <!-- ====================================================
+           SECTION 1 — HERO / INTRO
+           ==================================================== -->
+
+      <section class="section-sm" aria-labelledby="intro-heading">
+        <div class="flex flex-col items-center text-center" style="padding-block: var(--space-12);">
+          <span class="badge badge-primary mb-4" aria-label="Sprint 1 status">
+            Sprint 1 — Design System Foundation
+          </span>
+          <h1 class="text-display mb-4" id="intro-heading">
+            Aarogya Design System
+          </h1>
+          <p class="text-body-lg text-secondary" style="max-width: 560px;">
+            Every button, card, input, badge, and layout utility
+            available for assembly into future product screens.
+          </p>
+          <div class="flex gap-3 mt-8 flex-wrap justify-center">
+            <button class="btn btn-primary btn-lg">Get Started</button>
+            <button class="btn btn-outline btn-lg">View Components</button>
+          </div>
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <!-- ====================================================
+           SECTION 2 — TYPOGRAPHY
+           ==================================================== -->
+
+      <section class="section" aria-labelledby="type-heading">
+        <h2 class="text-heading-xl mb-2" id="type-heading">Typography</h2>
+        <p class="text-body text-secondary mb-8">
+          Complete type hierarchy. Every level has a defined class.
+        </p>
+
+        <div class="card mb-6">
+          <p class="text-display-xl mb-4">Display XL — Aarogya</p>
+          <p class="text-display-lg mb-4">Display LG — Affordable Medicine</p>
+          <p class="text-display mb-6">Display — Find Generic Alternatives</p>
+
+          <hr class="divider" />
+
+          <p class="text-heading-xl mb-3">Heading XL — Medicine Search</p>
+          <p class="text-heading-lg mb-3">Heading LG — Nearby Stores</p>
+          <p class="text-heading mb-3">Heading — Trust Passport</p>
+          <p class="text-heading-sm mb-6">Heading SM — Price Comparison</p>
+
+          <hr class="divider" />
+
+          <p class="text-subheading mb-2">Subheading — Verified Pharmacies</p>
+          <p class="text-subheading-sm mb-6">Subheading SM — Generic Medicines</p>
+
+          <hr class="divider" />
+
+          <p class="text-body-lg mb-2">
+            Body LG — Generic medicines can save up to 80% compared to branded alternatives.
+          </p>
+          <p class="text-body mb-2">
+            Body — Aarogya helps you find affordable and verified generic medicines near you.
+          </p>
+          <p class="text-body-sm mb-6">
+            Body SM — All stores listed on Aarogya are verified by our trust team.
+          </p>
+
+          <hr class="divider" />
+
+          <p class="text-caption mb-2">Caption — Last updated 2 minutes ago</p>
+          <p class="text-caption-strong mb-6">Caption Strong — 42 stores found nearby</p>
+
+          <hr class="divider" />
+
+          <p class="text-label mb-2">Label — Medicine Category</p>
+          <p class="text-label-sm">Label SM — Verified Store</p>
+        </div>
+
+        <!-- Color utilities -->
+        <div class="card">
+          <h3 class="text-heading-sm mb-4">Text Color Utilities</h3>
+          <div class="flex flex-col gap-2">
+            <p class="text-body text-primary">text-primary — Primary text color</p>
+            <p class="text-body text-secondary">text-secondary — Secondary text color</p>
+            <p class="text-body text-muted">text-muted — Muted / placeholder text</p>
+            <p class="text-body text-brand">text-brand — Brand green</p>
+            <p class="text-body text-accent">text-accent — Accent blue</p>
+            <p class="text-body text-success">text-success — Success green</p>
+            <p class="text-body text-warning">text-warning — Warning orange</p>
+            <p class="text-body text-error">text-error — Error red</p>
+          </div>
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <!-- ====================================================
+           SECTION 3 — BUTTONS
+           ==================================================== -->
+
+      <section class="section" aria-labelledby="btn-heading">
+        <h2 class="text-heading-xl mb-2" id="btn-heading">Buttons</h2>
+        <p class="text-body text-secondary mb-8">
+          All button variants, sizes, and states.
+        </p>
+
+        <!-- Variants -->
+        <div class="card mb-6">
+          <h3 class="text-heading-sm mb-4">Variants</h3>
+          <div class="flex flex-wrap gap-3">
+            <button class="btn btn-primary">Primary</button>
+            <button class="btn btn-secondary">Secondary</button>
+            <button class="btn btn-outline">Outline</button>
+            <button class="btn btn-ghost">Ghost</button>
+            <button class="btn btn-accent">Accent</button>
+            <button class="btn btn-danger">Danger</button>
+          </div>
+        </div>
+
+        <!-- Sizes -->
+        <div class="card mb-6">
+          <h3 class="text-heading-sm mb-4">Sizes</h3>
+          <div class="flex flex-wrap items-center gap-3">
+            <button class="btn btn-primary btn-xs">Extra Small</button>
+            <button class="btn btn-primary btn-sm">Small</button>
+            <button class="btn btn-primary btn-md">Medium</button>
+            <button class="btn btn-primary btn-lg">Large</button>
+            <button class="btn btn-primary btn-xl">Extra Large</button>
+          </div>
+        </div>
+
+        <!-- Shapes & States -->
+        <div class="card mb-6">
+          <h3 class="text-heading-sm mb-4">Shapes &amp; States</h3>
+          <div class="flex flex-wrap gap-3">
+            <button class="btn btn-primary btn-pill">Pill Shape</button>
+            <button class="btn btn-outline btn-pill">Pill Outline</button>
+            <button class="btn btn-primary btn-loading">Loading</button>
+            <button class="btn btn-primary" disabled>Disabled</button>
+          </div>
+        </div>
+
+        <!-- Icon Buttons -->
+        <div class="card">
+          <h3 class="text-heading-sm mb-4">Icon Buttons</h3>
+          <div class="flex flex-wrap items-center gap-3">
+
+            <!-- Search -->
+            <button class="btn btn-icon" aria-label="Search">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+              </svg>
+            </button>
+
+            <!-- Store -->
+            <button class="btn btn-icon" aria-label="Store">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                <polyline points="9,22 9,12 15,12 15,22"/>
+              </svg>
+            </button>
+
+            <!-- Trust -->
+            <button class="btn btn-icon" aria-label="Trust">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+            </button>
+
+            <!-- Medicine -->
+            <button class="btn btn-icon" aria-label="Medicine">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+              </svg>
+            </button>
+
+            <!-- Primary icon button -->
+            <button class="btn btn-icon btn-primary" aria-label="Add item">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 5v14M5 12h14"/>
+              </svg>
+            </button>
+
+          </div>
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <!-- ====================================================
+           SECTION 4 — INPUTS
+           ==================================================== -->
+
+      <section class="section" aria-labelledby="input-heading">
+        <h2 class="text-heading-xl mb-2" id="input-heading">Inputs</h2>
+        <p class="text-body text-secondary mb-8">
+          Text fields, search inputs, and all states.
+        </p>
+
+        <div class="grid grid-auto-md gap-6">
+
+          <!-- Search Input -->
+          <div class="input-group">
+            <label class="input-label" for="demo-search">Search Medicines</label>
+            <div class="input-search-wrapper">
+              <span class="input-icon-left" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                </svg>
+              </span>
+              <input
+                type="search"
+                id="demo-search"
+                class="input input-search"
+                placeholder="Search by medicine name or salt..."
+              />
+            </div>
+            <span class="input-helper">
+              Search over 12,000 medicines
+            </span>
+          </div>
+
+          <!-- Standard Text Input -->
+          <div class="input-group">
+            <label class="input-label input-label-required" for="demo-text">
+              Medicine Name
+            </label>
+            <input
+              type="text"
+              id="demo-text"
+              class="input"
+              placeholder="e.g. Paracetamol 500mg"
+            />
+            <span class="input-helper">Enter brand or generic name</span>
+          </div>
+
+          <!-- Error State -->
+          <div class="input-group">
+            <label class="input-label" for="demo-error">Pincode</label>
+            <input
+              type="text"
+              id="demo-error"
+              class="input input-error-state"
+              value="12"
+              aria-describedby="demo-error-msg"
+              aria-invalid="true"
+            />
+            <span class="input-error-text" id="demo-error-msg" role="alert">
+              Please enter a valid 6-digit pincode
+            </span>
+          </div>
+
+          <!-- Disabled Input -->
+          <div class="input-group">
+            <label class="input-label" for="demo-disabled">Store ID</label>
+            <input
+              type="text"
+              id="demo-disabled"
+              class="input"
+              value="STORE-00421"
+              disabled
+            />
+            <span class="input-helper">Auto-assigned. Cannot be changed.</span>
+          </div>
+
+          <!-- Success State -->
+          <div class="input-group">
+            <label class="input-label" for="demo-success">Email</label>
+            <input
+              type="email"
+              id="demo-success"
+              class="input input-success-state"
+              value="user@example.com"
+            />
+            <span class="text-caption text-success">Email verified</span>
+          </div>
+
+          <!-- Large Input -->
+          <div class="input-group">
+            <label class="input-label" for="demo-large">Quick Search (Large)</label>
+            <div class="input-search-wrapper">
+              <span class="input-icon-left" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                </svg>
+              </span>
+              <input
+                type="search"
+                id="demo-large"
+                class="input input-search input-lg"
+                placeholder="Search medicines..."
+              />
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <!-- ====================================================
+           SECTION 5 — CARDS
+           ==================================================== -->
+
+      <section class="section" aria-labelledby="card-heading">
+        <h2 class="text-heading-xl mb-2" id="card-heading">Cards</h2>
+        <p class="text-body text-secondary mb-8">
+          Content container variants.
+        </p>
+
+        <div class="grid grid-auto-md gap-6 mb-6">
+
+          <!-- Basic Card -->
+          <article class="card">
+            <h3 class="card-title">Basic Card</h3>
+            <p class="card-subtitle">Standard bordered container</p>
+            <div class="card-body mt-4">
+              <p class="text-body text-secondary">
+                The default card. Use this for most content blocks.
+                Has a border and background color.
+              </p>
+            </div>
+          </article>
+
+          <!-- Elevated Card -->
+          <article class="card-elevated">
+            <h3 class="card-title">Elevated Card</h3>
+            <p class="card-subtitle">With shadow — lifts on hover</p>
+            <div class="card-body mt-4">
+              <p class="text-body text-secondary">
+                Use for featured content, medicine results, and
+                store listings that benefit from visual depth.
+              </p>
+            </div>
+          </article>
+
+          <!-- Interactive Card -->
+          <article class="card-interactive" tabindex="0" role="button"
+            aria-label="View Paracetamol details">
+            <h3 class="card-title">Interactive Card</h3>
+            <p class="card-subtitle">Clickable — hover to see border</p>
+            <div class="card-body mt-4">
+              <p class="text-body text-secondary">
+                Wrap search results and store listings in this card.
+                Keyboard accessible via tabindex.
+              </p>
+            </div>
+          </article>
+
+          <!-- Flat Card -->
+          <article class="card-flat">
+            <h3 class="card-title">Flat Card</h3>
+            <p class="card-subtitle">Sunken surface, no border</p>
+            <div class="card-body mt-4">
+              <p class="text-body text-secondary">
+                Use for sidebar panels, filter areas, and
+                supplemental content sections.
+              </p>
+            </div>
+          </article>
+
+        </div>
+
+        <!-- Information Cards -->
+        <div class="grid grid-auto-md gap-4 mb-6">
+          <div class="card-info">
+            <p class="text-caption-strong">Info Card</p>
+            <p class="text-body-sm text-secondary mt-1">
+              Use for neutral informational messages.
+            </p>
+          </div>
+          <div class="card-info card-success">
+            <p class="text-caption-strong text-success">Success Card</p>
+            <p class="text-body-sm text-secondary mt-1">
+              Medicine found at 3 stores nearby.
+            </p>
+          </div>
+          <div class="card-info card-warning">
+            <p class="text-caption-strong text-warning">Warning Card</p>
+            <p class="text-body-sm text-secondary mt-1">
+              Stock levels may be limited at this store.
+            </p>
+          </div>
+          <div class="card-info card-error">
+            <p class="text-caption-strong text-error">Error Card</p>
+            <p class="text-body-sm text-secondary mt-1">
+              Store is currently closed. Check back later.
+            </p>
+          </div>
+        </div>
+
+        <!-- Card with Header and Footer -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title">Card with Header &amp; Footer</h3>
+              <p class="card-subtitle">Full card structure example</p>
+            </div>
+            <span class="badge badge-success">Verified</span>
+          </div>
+          <div class="card-body">
+            <p class="text-body text-secondary">
+              This shows the card-header / card-body / card-footer
+              pattern. Use this for medicine detail panels and store cards
+              where action buttons are needed.
+            </p>
+          </div>
+          <div class="card-footer">
+            <button class="btn btn-ghost btn-sm">Cancel</button>
+            <button class="btn btn-primary btn-sm">View Details</button>
+          </div>
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <!-- ====================================================
+           SECTION 6 — BADGES
+           ==================================================== -->
+
+      <section class="section" aria-labelledby="badge-heading">
+        <h2 class="text-heading-xl mb-2" id="badge-heading">Badges</h2>
+        <p class="text-body text-secondary mb-8">
+          Status indicators for medicines, stores, and trust signals.
+        </p>
+
+        <div class="card mb-6">
+          <h3 class="text-heading-sm mb-4">Soft Badges</h3>
+          <div class="flex flex-wrap gap-3">
+            <span class="badge badge-primary">Generic</span>
+            <span class="badge badge-success">Available</span>
+            <span class="badge badge-warning">Low Stock</span>
+            <span class="badge badge-error">Unavailable</span>
+            <span class="badge badge-info">Price Drop</span>
+            <span class="badge badge-accent">Featured</span>
+            <span class="badge badge-neutral">Branded</span>
+          </div>
+        </div>
+
+        <div class="card mb-6">
+          <h3 class="text-heading-sm mb-4">Solid Badges</h3>
+          <div class="flex flex-wrap gap-3">
+            <span class="badge badge-solid-primary">Verified Store</span>
+            <span class="badge badge-solid-accent">Top Rated</span>
+            <span class="badge badge-solid-error">Closed</span>
+            <span class="badge badge-solid-warning">Limited Stock</span>
+          </div>
+        </div>
+
+        <div class="card mb-6">
+          <h3 class="text-heading-sm mb-4">Verified Badge</h3>
+          <div class="flex flex-wrap gap-4">
+            <span class="badge-verified">
+              <svg class="badge-icon" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round"
+                aria-hidden="true">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              Verified Pharmacy
+            </span>
+            <span class="badge-verified">
+              <svg class="badge-icon" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round"
+                aria-hidden="true">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+              Trust Certified
+            </span>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 class="text-heading-sm mb-4">Dot Badges</h3>
+          <div class="flex flex-col gap-3">
+            <span class="badge-dot dot-success">Store is Open</span>
+            <span class="badge-dot dot-warning">Closing Soon</span>
+            <span class="badge-dot dot-error">Store Closed</span>
+            <span class="badge-dot dot-info">Online Only</span>
+            <span class="badge-dot dot-neutral">Status Unknown</span>
+          </div>
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <!-- ====================================================
+           SECTION 7 — DIVIDERS
+           ==================================================== -->
+
+      <section class="section" aria-labelledby="divider-heading">
+        <h2 class="text-heading-xl mb-2" id="divider-heading">Dividers</h2>
+        <p class="text-body text-secondary mb-8">
+          Horizontal and labeled dividers for separating content.
+        </p>
+
+        <div class="card">
+          <p class="text-caption text-muted mb-3">Default divider</p>
+          <hr class="divider" />
+
+          <p class="text-caption text-muted mb-3">Strong divider</p>
+          <hr class="divider divider-strong" />
+
+          <p class="text-caption text-muted mb-3">Dashed divider</p>
+          <hr class="divider divider-dashed" />
+
+          <p class="text-caption text-muted mb-3">Labeled divider</p>
+          <div class="divider-label">
+            <span class="divider-label-text">Generic Alternatives</span>
+          </div>
+
+          <p class="text-caption text-muted">
+            Vertical divider:
+            <span style="display: inline-flex; align-items: center;">
+              Medicines
+              <span class="divider-vertical" role="separator" aria-hidden="true"></span>
+              Stores
+              <span class="divider-vertical" role="separator" aria-hidden="true"></span>
+              Prices
+            </span>
+          </p>
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <!-- ====================================================
+           SECTION 8 — LOADING SKELETONS
+           ==================================================== -->
+
+      <section class="section" aria-labelledby="skeleton-heading">
+        <h2 class="text-heading-xl mb-2" id="skeleton-heading">Loading Skeletons</h2>
+        <p class="text-body text-secondary mb-8">
+          Shown while data loads. Prevents layout shift.
+        </p>
+
+        <div class="grid grid-auto-md gap-6">
+
+          <!-- Medicine Card Skeleton -->
+          <div class="skeleton-card" aria-busy="true" aria-label="Loading medicine">
+            <div class="skeleton-card-header">
+              <div class="skeleton skeleton-avatar skeleton-avatar-md"></div>
+              <div style="flex: 1;">
+                <div class="skeleton skeleton-heading skeleton-line-3-4"></div>
+                <div class="skeleton skeleton-text-sm skeleton-line-half"></div>
+              </div>
+            </div>
+            <div class="skeleton-card-lines">
+              <div class="skeleton skeleton-text skeleton-line-full"></div>
+              <div class="skeleton skeleton-text skeleton-line-3-4"></div>
+              <div class="skeleton skeleton-text skeleton-line-half"></div>
+              <div class="flex gap-3 mt-2">
+                <div class="skeleton skeleton-badge"></div>
+                <div class="skeleton skeleton-badge"></div>
+              </div>
+              <div class="skeleton skeleton-button mt-2"></div>
+            </div>
+          </div>
+
+          <!-- Store Card Skeleton -->
+          <div class="skeleton-card" aria-busy="true" aria-label="Loading store">
+            <div class="skeleton-card-header">
+              <div class="skeleton skeleton-avatar skeleton-avatar-lg" style="border-radius: var(--radius-md);"></div>
+              <div style="flex: 1;">
+                <div class="skeleton skeleton-heading skeleton-line-3-4"></div>
+                <div class="skeleton skeleton-text-sm skeleton-line-half"></div>
+                <div class="skeleton skeleton-text-sm skeleton-line-quarter mt-2"></div>
+              </div>
+            </div>
+            <div class="skeleton-card-lines">
+              <div class="skeleton skeleton-text skeleton-line-full"></div>
+              <div class="skeleton skeleton-text skeleton-line-3-4"></div>
+              <div class="flex gap-3 mt-2">
+                <div class="skeleton skeleton-button" style="width: 50%;"></div>
+                <div class="skeleton skeleton-button" style="width: 50%;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- List Skeleton -->
+          <div class="skeleton-card" aria-busy="true" aria-label="Loading results">
+            <div class="flex flex-col gap-4">
+              <div class="flex items-center gap-3">
+                <div class="skeleton skeleton-avatar skeleton-avatar-sm"></div>
+                <div style="flex: 1;">
+                  <div class="skeleton skeleton-text skeleton-line-3-4"></div>
+                  <div class="skeleton skeleton-text-sm skeleton-line-half mt-2"></div>
+                </div>
+                <div class="skeleton skeleton-badge"></div>
+              </div>
+              <hr class="divider" />
+              <div class="flex items-center gap-3">
+                <div class="skeleton skeleton-avatar skeleton-avatar-sm"></div>
+                <div style="flex: 1;">
+                  <div class="skeleton skeleton-text skeleton-line-full"></div>
+                  <div class="skeleton skeleton-text-sm skeleton-line-3-4 mt-2"></div>
+                </div>
+                <div class="skeleton skeleton-badge"></div>
+              </div>
+              <hr class="divider" />
+              <div class="flex items-center gap-3">
+                <div class="skeleton skeleton-avatar skeleton-avatar-sm"></div>
+                <div style="flex: 1;">
+                  <div class="skeleton skeleton-text skeleton-line-half"></div>
+                  <div class="skeleton skeleton-text-sm skeleton-line-quarter mt-2"></div>
+                </div>
+                <div class="skeleton skeleton-badge"></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <!-- ====================================================
+           SECTION 9 — EMPTY & ERROR STATES
+           ==================================================== -->
+
+      <section class="section" aria-labelledby="state-heading">
+        <h2 class="text-heading-xl mb-2" id="state-heading">States</h2>
+        <p class="text-body text-secondary mb-8">
+          Empty and error states for every content area.
+        </p>
+
+        <div class="grid grid-auto-md gap-6">
+
+          <!-- Empty State -->
+          <div class="card">
+            <div class="empty-state">
+              <div class="empty-state-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="1.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="8"/>
+                  <path d="m21 21-4.35-4.35"/>
+                  <line x1="8" y1="11" x2="14" y2="11"/>
+                </svg>
+              </div>
+              <h3 class="empty-state-title">No Medicines Found</h3>
+              <p class="empty-state-description">
+                We couldn't find any results for your search.
+                Try a different name or check the spelling.
+              </p>
+              <div class="empty-state-actions">
+                <button class="btn btn-primary">Try Again</button>
+                <button class="btn btn-ghost">Browse All</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Error State -->
+          <div class="card">
+            <div class="error-state">
+              <div class="error-state-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="1.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/>
+                  <line x1="12" y1="8" x2="12" y2="12"/>
+                  <line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+              </div>
+              <h3 class="error-state-title">Something Went Wrong</h3>
+              <p class="error-state-description">
+                We couldn't load the medicine data.
+                Please check your connection and try again.
+              </p>
+              <div class="error-state-code" role="note">
+                ERR_NETWORK_TIMEOUT — 504
+              </div>
+              <div class="error-state-actions">
+                <button class="btn btn-primary">Retry</button>
+                <button class="btn btn-ghost">Go Home</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Inline States -->
+        <div class="mt-6 flex flex-col gap-4">
+          <div class="state-inline state-inline-success" role="status">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round"
+              aria-hidden="true">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            <span class="text-body-sm font-medium">
+              Medicine found at 4 verified stores nearby.
+            </span>
+          </div>
+          <div class="state-inline state-inline-warning" role="alert">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round"
+              aria-hidden="true">
+              <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
+              <line x1="12" y1="9" x2="12" y2="13"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+            <span class="text-body-sm font-medium">
+              Stock is limited at this location. Call before visiting.
+            </span>
+          </div>
+          <div class="state-inline state-inline-error" role="alert">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round"
+              aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="15" y1="9" x2="9" y2="15"/>
+              <line x1="9" y1="9" x2="15" y2="15"/>
+            </svg>
+            <span class="text-body-sm font-medium">
+              Unable to fetch prices. Please try again.
+            </span>
+          </div>
+          <div class="state-inline state-inline-info" role="note">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round"
+              aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="16" x2="12" y2="12"/>
+              <line x1="12" y1="8"  x2="12.01" y2="8"/>
+            </svg>
+            <span class="text-body-sm font-medium">
+              Generic alternatives may be available at a lower cost.
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <!-- ====================================================
+           SECTION 10 — COLOR SYSTEM
+           ==================================================== -->
+
+      <section class="section" aria-labelledby="color-heading">
+        <h2 class="text-heading-xl mb-2" id="color-heading">Color System</h2>
+        <p class="text-body text-secondary mb-8">
+          All colors come from CSS variables. Switch theme to see them adapt.
+        </p>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+
+          <div class="card card-sm text-center">
+            <div style="height: 56px; border-radius: var(--radius-md); background-color: var(--color-primary-green); margin-bottom: var(--space-3);"></div>
+            <p class="text-caption-strong">Primary Green</p>
+            <p class="text-caption text-muted">--color-primary-green</p>
+          </div>
+
+          <div class="card card-sm text-center">
+            <div style="height: 56px; border-radius: var(--radius-md); background-color: var(--color-secondary-green); margin-bottom: var(--space-3);"></div>
+            <p class="text-caption-strong">Secondary Green</p>
+            <p class="text-caption text-muted">--color-secondary-green</p>
+          </div>
+
+          <div class="card card-sm text-center">
+            <div style="height: 56px; border-radius: var(--radius-md); background-color: var(--color-accent-blue); margin-bottom: var(--space-3);"></div>
+            <p class="text-caption-strong">Accent Blue</p>
+            <p class="text-caption text-muted">--color-accent-blue</p>
+          </div>
+
+          <div class="card card-sm text-center">
+            <div style="height: 56px; border-radius: var(--radius-md); background-color: var(--color-success); margin-bottom: var(--space-3);"></div>
+            <p class="text-caption-strong">Success</p>
+            <p class="text-caption text-muted">--color-success</p>
+          </div>
+
+          <div class="card card-sm text-center">
+            <div style="height: 56px; border-radius: var(--radius-md); background-color: var(--color-warning); margin-bottom: var(--space-3);"></div>
+            <p class="text-caption-strong">Warning</p>
+            <p class="text-caption text-muted">--color-warning</p>
+          </div>
+
+          <div class="card card-sm text-center">
+            <div style="height: 56px; border-radius: var(--radius-md); background-color: var(--color-error); margin-bottom: var(--space-3);"></div>
+            <p class="text-caption-strong">Error</p>
+            <p class="text-caption text-muted">--color-error</p>
+          </div>
+
+          <div class="card card-sm text-center">
+            <div style="height: 56px; border-radius: var(--radius-md); background-color: var(--color-background); border: 1px solid var(--color-border); margin-bottom: var(--space-3);"></div>
+            <p class="text-caption-strong">Background</p>
+            <p class="text-caption text-muted">--color-background</p>
+          </div>
+
+          <div class="card card-sm text-center">
+            <div style="height: 56px; border-radius: var(--radius-md); background-color: var(--color-surface-sunken); border: 1px solid var(--color-border); margin-bottom: var(--space-3);"></div>
+            <p class="text-caption-strong">Surface Sunken</p>
+            <p class="text-caption text-muted">--color-surface-sunken</p>
+          </div>
+
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <!-- ====================================================
+           SECTION 11 — LAYOUT DEMO
+           ==================================================== -->
+
+      <section class="section" aria-labelledby="layout-heading">
+        <h2 class="text-heading-xl mb-2" id="layout-heading">Layout System</h2>
+        <p class="text-body text-secondary mb-8">
+          Responsive grid utilities. Resize the browser to see them adapt.
+        </p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+          <div class="bg-primary-subtle border rounded-md p-4 text-center">
+            <p class="text-caption-strong text-brand">Column 1</p>
+          </div>
+          <div class="bg-accent-subtle border rounded-md p-4 text-center">
+            <p class="text-caption-strong text-accent">Column 2</p>
+          </div>
+          <div class="bg-success-subtle border rounded-md p-4 text-center">
+            <p class="text-caption-strong text-success">Column 3</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-12 gap-4">
+          <div class="col-span-full bg-surface-sunken border rounded-md p-3 text-center">
+            <p class="text-caption text-muted">col-span-full (12/12)</p>
+          </div>
+          <div class="col-span-6 bg-surface-sunken border rounded-md p-3 text-center">
+            <p class="text-caption text-muted">col-span-6</p>
+          </div>
+          <div class="col-span-6 bg-surface-sunken border rounded-md p-3 text-center">
+            <p class="text-caption text-muted">col-span-6</p>
+          </div>
+          <div class="col-span-4 bg-surface-sunken border rounded-md p-3 text-center">
+            <p class="text-caption text-muted">col-span-4</p>
+          </div>
+          <div class="col-span-4 bg-surface-sunken border rounded-md p-3 text-center">
+            <p class="text-caption text-muted">col-span-4</p>
+          </div>
+          <div class="col-span-4 bg-surface-sunken border rounded-md p-3 text-center">
+            <p class="text-caption text-muted">col-span-4</p>
+          </div>
+          <div class="col-span-3 bg-surface-sunken border rounded-md p-3 text-center">
+            <p class="text-caption text-muted">3</p>
+          </div>
+          <div class="col-span-3 bg-surface-sunken border rounded-md p-3 text-center">
+            <p class="text-caption text-muted">3</p>
+          </div>
+          <div class="col-span-3 bg-surface-sunken border rounded-md p-3 text-center">
+            <p class="text-caption text-muted">3</p>
+          </div>
+          <div class="col-span-3 bg-surface-sunken border rounded-md p-3 text-center">
+            <p class="text-caption text-muted">3</p>
+          </div>
+        </div>
+      </section>
+
+    </div><!-- /container -->
+  </main>
+
+  <!-- ======================================================
+       FOOTER
+       ====================================================== -->
+
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-inner">
+
+        <div class="footer-top">
+
+          <div class="footer-brand">
+            <div class="footer-brand-name">Aarogya</div>
+            <p class="footer-brand-desc">
+              Making affordable and verified generic medicines
+              accessible to everyone across India.
+            </p>
+          </div>
+
+          <div class="footer-links-group">
+            <nav class="footer-links-col" aria-label="Product links">
+              <span class="footer-links-title">Product</span>
+              <a href="#" class="footer-link">Search Medicines</a>
+              <a href="#" class="footer-link">Nearby Stores</a>
+              <a href="#" class="footer-link">Price Compare</a>
+              <a href="#" class="footer-link">Trust Passport</a>
+            </nav>
+            <nav class="footer-links-col" aria-label="About links">
+              <span class="footer-links-title">About</span>
+              <a href="#" class="footer-link">Mission</a>
+              <a href="#" class="footer-link">How It Works</a>
+              <a href="#" class="footer-link">Open Source</a>
+            </nav>
+          </div>
+
+        </div>
+
+        <div class="footer-bottom">
+          <p class="footer-copyright">
+            &copy; 2025 Aarogya. Built for affordable healthcare.
+          </p>
+          <div class="footer-bottom-links">
+            <a href="#" class="footer-bottom-link">Privacy</a>
+            <a href="#" class="footer-bottom-link">Terms</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts — loaded at end of body -->
+  <script src="js/main.js"></script>
+
+</body>
+</html>

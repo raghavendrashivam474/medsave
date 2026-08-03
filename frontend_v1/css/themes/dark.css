@@ -1,0 +1,96 @@
+﻿/* ============================================================
+   AAROGYA — DARK THEME
+   css/themes/dark.css
+
+   This is NOT a simple color inversion.
+   Colors are carefully chosen for:
+   - Eye comfort during extended use
+   - Sufficient contrast for accessibility
+   - Healthcare-appropriate visual hierarchy
+
+   Applied when <html data-theme="dark">
+   ============================================================ */
+
+[data-theme="dark"] {
+
+  /* Backgrounds — layered depth */
+  --color-background:      #0D1117;
+  --color-surface:         #161B22;
+  --color-surface-raised:  #1C2128;
+  --color-surface-overlay: #22272E;
+  --color-surface-sunken:  #090D12;
+
+  /* Text — softened whites (not harsh #FFF) */
+  --color-text-primary:   #E6EDF3;
+  --color-text-secondary: #8B949E;
+  --color-text-muted:     #6E7681;
+  --color-text-disabled:  #3D444D;
+  --color-text-inverse:   #0D1117;
+  --color-text-link:      #58A6FF;
+  --color-text-link-hover:#79C0FF;
+
+  /* Brand — slightly lightened for dark bg contrast */
+  --color-primary-green:        #4CAF50;
+  --color-primary-green-dark:   #388E3C;
+  --color-primary-green-light:  #81C784;
+  --color-primary-green-subtle: #1B2E1B;
+
+  --color-secondary-green:      #81C784;
+  --color-secondary-green-dark: #4CAF50;
+
+  --color-accent-blue:          #58A6FF;
+  --color-accent-blue-light:    #79C0FF;
+  --color-accent-blue-subtle:   #0D2137;
+
+  /* Semantic */
+  --color-success:        #4CAF50;
+  --color-success-light:  #81C784;
+  --color-success-subtle: #1B2E1B;
+
+  --color-warning:        #FFB300;
+  --color-warning-light:  #FFD54F;
+  --color-warning-subtle: #2E2410;
+
+  --color-error:        #EF5350;
+  --color-error-light:  #EF9A9A;
+  --color-error-subtle: #2E1010;
+
+  --color-info:        #29B6F6;
+  --color-info-light:  #80D8FF;
+  --color-info-subtle: #0D1E2E;
+
+  /* Borders */
+  --color-border:        #30363D;
+  --color-border-strong: #484F58;
+  --color-border-focus:  #58A6FF;
+  --color-border-error:  #EF5350;
+  --color-border-success:#4CAF50;
+
+  /* Shadows — subtle on dark bg */
+  --shadow-xs:  0 1px 2px rgba(0, 0, 0, 0.30);
+  --shadow-sm:  0 1px 4px rgba(0, 0, 0, 0.40);
+  --shadow-md:  0 4px 12px rgba(0, 0, 0, 0.50);
+  --shadow-lg:  0 8px 24px rgba(0, 0, 0, 0.60);
+  --shadow-xl:  0 16px 40px rgba(0, 0, 0, 0.70);
+
+  /* Header */
+  --color-header-bg:     #161B22;
+  --color-header-border: #30363D;
+
+  /* Input */
+  --color-input-bg:          #0D1117;
+  --color-input-bg-focus:    #161B22;
+  --color-input-placeholder: #6E7681;
+
+  /* Card */
+  --color-card-bg:     #161B22;
+  --color-card-border: #30363D;
+
+  /* Skeleton */
+  --color-skeleton-base:    #21262D;
+  --color-skeleton-shimmer: #30363D;
+
+  /* Scrollbar */
+  --color-scrollbar-track: #0D1117;
+  --color-scrollbar-thumb: #30363D;
+}

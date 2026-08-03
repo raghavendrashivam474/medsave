@@ -1,0 +1,361 @@
+﻿/* ============================================================
+   AAROGYA — SEARCH RESULTS PAGE STYLES
+   css/pages/search-results.css
+
+   Page-specific styles only.
+   All components (cards, buttons, badges, skeletons, states)
+   come from the Sprint 1 design system.
+   ============================================================ */
+
+/* ----------------------------------------------------------
+   PAGE-LEVEL SEARCH BAR
+   Persistent search bar at the top of the results page
+   ---------------------------------------------------------- */
+
+.results-search-section {
+  padding-block: var(--space-8) var(--space-6);
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  transition:
+    background-color var(--transition-theme),
+    border-color var(--transition-theme);
+}
+
+.results-search-wrapper {
+  max-width: 720px;
+  margin-inline: auto;
+}
+
+.results-search-box {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  background-color: var(--color-input-bg);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-full);
+  padding: var(--space-2) var(--space-2) var(--space-2) var(--space-5);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.results-search-box:focus-within {
+  border-color: var(--color-primary-green);
+  box-shadow: 0 0 0 4px var(--color-primary-green-subtle);
+}
+
+.results-search-icon {
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.results-search-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: var(--text-base);
+  color: var(--color-text-primary);
+  outline: none;
+  padding-block: var(--space-2);
+  min-width: 0;
+}
+
+.results-search-input::placeholder {
+  color: var(--color-input-placeholder);
+}
+
+@media (max-width: 479px) {
+  .results-search-box {
+    flex-wrap: wrap;
+    border-radius: var(--radius-xl);
+    padding: var(--space-3) var(--space-4);
+  }
+
+  .results-search-box .btn {
+    width: 100%;
+    margin-top: var(--space-2);
+    border-radius: var(--radius-lg);
+  }
+}
+
+/* ----------------------------------------------------------
+   RESULTS HEADER — query summary + count
+   ---------------------------------------------------------- */
+
+.results-header {
+  padding-block: var(--space-6) var(--space-4);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.results-title {
+  font-size: var(--text-xl);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-primary);
+  line-height: var(--leading-snug);
+}
+
+.results-title-query {
+  color: var(--color-primary-green);
+  font-weight: var(--weight-bold);
+}
+
+.results-count {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  font-weight: var(--weight-medium);
+}
+
+/* ----------------------------------------------------------
+   MEDICINE RESULTS GRID
+   ---------------------------------------------------------- */
+
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--space-5);
+  padding-block: var(--space-4) var(--space-16);
+}
+
+/* ----------------------------------------------------------
+   MEDICINE CARD
+   Built on the Sprint 1 .card-interactive base
+   ---------------------------------------------------------- */
+
+.medicine-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-6);
+  background-color: var(--color-card-bg);
+  border: 1.5px solid var(--color-card-border);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    transform var(--transition-fast);
+  text-align: left;
+  width: 100%;
+  font-family: inherit;
+}
+
+.medicine-card:hover {
+  border-color: var(--color-primary-green);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.medicine-card:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
+}
+
+.medicine-card:focus-visible {
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: 2px;
+}
+
+/* ---- Card Header ---- */
+
+.medicine-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.medicine-card-brand {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+  flex: 1;
+}
+
+.medicine-card-brand-name {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  color: var(--color-text-primary);
+  line-height: var(--leading-snug);
+  word-break: break-word;
+}
+
+.medicine-card-generic {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-snug);
+}
+
+/* ---- Meta pills (dosage / form) ---- */
+
+.medicine-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.medicine-meta-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-secondary);
+  background-color: var(--color-surface-sunken);
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-border);
+}
+
+/* ---- Price block ---- */
+
+.medicine-card-prices {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background-color: var(--color-surface-sunken);
+  border-radius: var(--radius-md);
+}
+
+.price-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.price-label {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-muted);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+.price-value {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  color: var(--color-text-primary);
+  line-height: var(--leading-tight);
+}
+
+.price-value.price-generic {
+  color: var(--color-primary-green);
+}
+
+.price-value.price-brand {
+  color: var(--color-text-secondary);
+  text-decoration: line-through;
+  text-decoration-thickness: 1.5px;
+  text-decoration-color: var(--color-text-muted);
+}
+
+/* ---- Savings badge row ---- */
+
+.medicine-card-savings {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--color-success-subtle);
+  border: 1px solid var(--color-success-light);
+  border-radius: var(--radius-md);
+}
+
+.savings-icon {
+  color: var(--color-success);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.savings-text {
+  font-size: var(--text-sm);
+  color: var(--color-success);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-normal);
+}
+
+.savings-percent {
+  font-weight: var(--weight-bold);
+}
+
+/* ---- Card Footer ---- */
+
+.medicine-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-top: auto;
+}
+
+.medicine-card-badges {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.medicine-card-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-primary-green);
+  transition: gap var(--transition-fast);
+}
+
+.medicine-card:hover .medicine-card-cta {
+  gap: var(--space-2);
+}
+
+/* ----------------------------------------------------------
+   STATE CONTAINERS — center empty/error states on the page
+   ---------------------------------------------------------- */
+
+.results-state {
+  padding-block: var(--space-16);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ----------------------------------------------------------
+   RESPONSIVE
+   ---------------------------------------------------------- */
+
+@media (max-width: 639px) {
+  .results-header {
+    padding-block: var(--space-4);
+  }
+
+  .results-title {
+    font-size: var(--text-lg);
+  }
+
+  .results-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+    padding-block: var(--space-3) var(--space-10);
+  }
+
+  .medicine-card {
+    padding: var(--space-5);
+  }
+
+  .medicine-card-prices {
+    padding: var(--space-3);
+  }
+
+  .price-value {
+    font-size: var(--text-base);
+  }
+}

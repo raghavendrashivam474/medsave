@@ -1,0 +1,193 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Medicine profile — Aarogya. View verified medicine information, price comparison, and available brands." />
+  <meta name="theme-color" content="#2E7D32" />
+
+  <title>Medicine — Aarogya</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Sprint 1 Design System -->
+  <link rel="stylesheet" href="../css/base/variables.css" />
+  <link rel="stylesheet" href="../css/base/reset.css" />
+  <link rel="stylesheet" href="../css/base/typography.css" />
+  <link rel="stylesheet" href="../css/themes/light.css" />
+  <link rel="stylesheet" href="../css/themes/dark.css" />
+  <link rel="stylesheet" href="../css/layout/grid.css" />
+  <link rel="stylesheet" href="../css/layout/utilities.css" />
+  <link rel="stylesheet" href="../css/components/buttons.css" />
+  <link rel="stylesheet" href="../css/components/inputs.css" />
+  <link rel="stylesheet" href="../css/components/cards.css" />
+  <link rel="stylesheet" href="../css/components/badges.css" />
+  <link rel="stylesheet" href="../css/components/navigation.css" />
+  <link rel="stylesheet" href="../css/components/dividers.css" />
+  <link rel="stylesheet" href="../css/components/skeleton.css" />
+  <link rel="stylesheet" href="../css/components/states.css" />
+
+  <!-- Sprint 4 page styles -->
+  <link rel="stylesheet" href="../css/pages/medicine.css" />
+
+  <!-- Sprint 5 — Trust Passport styles -->
+  <link rel="stylesheet" href="../css/pages/trust-passport.css" />
+
+  <!-- Theme initialised before paint -->
+  <script src="../js/theme.js"></script>
+</head>
+
+<body>
+
+  <a href="#main-content" class="sr-only">Skip to main content</a>
+
+  <!-- =========================================================
+       HEADER — reuses Sprint 1 navigation component
+       ========================================================= -->
+
+  <header class="header" role="banner">
+    <div class="container">
+      <div class="header-inner">
+
+        <a href="home.html" class="header-logo" aria-label="Aarogya — go to homepage">
+          <div class="header-logo-icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+            </svg>
+          </div>
+          <div>
+            <div class="header-logo-name">Aarogya</div>
+            <div class="header-logo-tagline">Trusted Medicine Information</div>
+          </div>
+        </a>
+
+        <nav class="header-nav" aria-label="Primary navigation">
+          <a href="home.html" class="nav-link">Home</a>
+          <a href="home.html#about" class="nav-link">About</a>
+        </nav>
+
+        <div class="header-actions">
+
+          <button
+            class="theme-toggle"
+            data-theme-toggle
+            aria-label="Switch to dark theme"
+            title="Toggle theme"
+          >
+            <svg class="theme-toggle-icon icon-moon" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round"
+              aria-hidden="true">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+            <svg class="theme-toggle-icon icon-sun" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round"
+              aria-hidden="true">
+              <circle cx="12" cy="12" r="5"/>
+              <line x1="12" y1="1"  x2="12" y2="3"/>
+              <line x1="12" y1="21" x2="12" y2="23"/>
+              <line x1="4.22"  y1="4.22"  x2="5.64"  y2="5.64"/>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+              <line x1="1"  y1="12" x2="3"  y2="12"/>
+              <line x1="21" y1="12" x2="23" y2="12"/>
+              <line x1="4.22"  y1="19.78" x2="5.64"  y2="18.36"/>
+              <line x1="18.36" y1="5.64"  x2="19.78" y2="4.22"/>
+            </svg>
+          </button>
+
+          <button
+            class="mobile-menu-toggle"
+            data-mobile-toggle
+            aria-label="Open navigation menu"
+            aria-expanded="false"
+            aria-controls="mobile-nav"
+          >
+            <span class="bar" aria-hidden="true"></span>
+            <span class="bar" aria-hidden="true"></span>
+            <span class="bar" aria-hidden="true"></span>
+          </button>
+
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <nav class="mobile-nav" id="mobile-nav" aria-label="Mobile navigation">
+    <a href="home.html" class="nav-link">Home</a>
+    <a href="home.html#about" class="nav-link">About</a>
+    <hr class="divider" />
+    <button class="btn btn-outline btn-full" data-theme-toggle>
+      Toggle Theme
+    </button>
+  </nav>
+
+  <!-- =========================================================
+       MAIN CONTENT — populated by js/medicine.js
+       ========================================================= -->
+
+  <main class="page-main" id="main-content">
+    <div id="medicine-page" aria-live="polite"></div>
+  </main>
+
+  <!-- =========================================================
+       FOOTER — reuses Sprint 1 footer
+       ========================================================= -->
+
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-inner">
+
+        <div class="footer-top">
+          <div class="footer-brand">
+            <div class="footer-brand-name">Aarogya</div>
+            <p class="footer-brand-desc">
+              Making affordable and verified generic medicines
+              accessible to everyone across India.
+            </p>
+          </div>
+
+          <div class="footer-links-group">
+            <nav class="footer-links-col" aria-label="Product links">
+              <span class="footer-links-title">Product</span>
+              <a href="home.html" class="footer-link">Search Medicines</a>
+              <a href="#" class="footer-link">Nearby Stores</a>
+            </nav>
+            <nav class="footer-links-col" aria-label="About links">
+              <span class="footer-links-title">About</span>
+              <a href="home.html#about" class="footer-link">Why Aarogya</a>
+              <a href="#" class="footer-link">How It Works</a>
+            </nav>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <p class="footer-copyright">
+            &copy; 2025 Aarogya &mdash; v0.5.0 &mdash; Built for affordable healthcare.
+          </p>
+          <div class="footer-bottom-links">
+            <a href="#" class="footer-bottom-link">Privacy</a>
+            <a href="#" class="footer-bottom-link">Terms</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../js/config.js"></script>
+  <script src="../js/main.js"></script>
+  <script src="../js/trust-passport.js"></script>
+  <script src="../js/medicine.js"></script>
+
+</body>
+</html>

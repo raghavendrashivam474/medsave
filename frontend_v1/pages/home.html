@@ -1,0 +1,472 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Aarogya — Search any medicine. Find trusted information, generic alternatives, and nearby Jan Aushadhi stores." />
+  <meta name="theme-color" content="#2E7D32" />
+
+  <title>Aarogya — Trusted Medicine Information</title>
+
+  <!-- Preconnect for Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Sprint 1 Design System — load order matters -->
+  <link rel="stylesheet" href="../css/base/variables.css" />
+  <link rel="stylesheet" href="../css/base/reset.css" />
+  <link rel="stylesheet" href="../css/base/typography.css" />
+  <link rel="stylesheet" href="../css/themes/light.css" />
+  <link rel="stylesheet" href="../css/themes/dark.css" />
+  <link rel="stylesheet" href="../css/layout/grid.css" />
+  <link rel="stylesheet" href="../css/layout/utilities.css" />
+  <link rel="stylesheet" href="../css/components/buttons.css" />
+  <link rel="stylesheet" href="../css/components/inputs.css" />
+  <link rel="stylesheet" href="../css/components/cards.css" />
+  <link rel="stylesheet" href="../css/components/badges.css" />
+  <link rel="stylesheet" href="../css/components/navigation.css" />
+  <link rel="stylesheet" href="../css/components/dividers.css" />
+  <link rel="stylesheet" href="../css/components/skeleton.css" />
+  <link rel="stylesheet" href="../css/components/states.css" />
+
+  <!-- Sprint 2 — Homepage page-level styles only -->
+  <link rel="stylesheet" href="../css/pages/home.css" />
+
+  <!-- Theme initialised before paint to prevent flash -->
+  <script src="../js/theme.js"></script>
+</head>
+
+<body>
+
+  <!-- Skip to main content — accessibility -->
+  <a href="#main-content" class="sr-only">Skip to main content</a>
+
+  <!-- ===========================================================
+       HEADER — reuses Sprint 1 navigation component exactly
+       =========================================================== -->
+
+  <header class="header" role="banner">
+    <div class="container">
+      <div class="header-inner">
+
+        <!-- Logo -->
+        <a href="home.html" class="header-logo" aria-label="Aarogya — go to homepage">
+          <div class="header-logo-icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+            </svg>
+          </div>
+          <div>
+            <div class="header-logo-name">Aarogya</div>
+            <div class="header-logo-tagline">Trusted Medicine Information</div>
+          </div>
+        </a>
+
+        <!-- Desktop Nav -->
+        <nav class="header-nav" aria-label="Primary navigation">
+          <a href="home.html" class="nav-link active" aria-current="page">Home</a>
+          <a href="#about" class="nav-link">About</a>
+        </nav>
+
+        <!-- Actions -->
+        <div class="header-actions">
+
+          <!-- Theme Toggle -->
+          <button
+            class="theme-toggle"
+            data-theme-toggle
+            aria-label="Switch to dark theme"
+            title="Toggle theme"
+          >
+            <svg class="theme-toggle-icon icon-moon" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round"
+              aria-hidden="true">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+            <svg class="theme-toggle-icon icon-sun" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round"
+              aria-hidden="true">
+              <circle cx="12" cy="12" r="5"/>
+              <line x1="12" y1="1"  x2="12" y2="3"/>
+              <line x1="12" y1="21" x2="12" y2="23"/>
+              <line x1="4.22"  y1="4.22"  x2="5.64"  y2="5.64"/>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+              <line x1="1"  y1="12" x2="3"  y2="12"/>
+              <line x1="21" y1="12" x2="23" y2="12"/>
+              <line x1="4.22"  y1="19.78" x2="5.64"  y2="18.36"/>
+              <line x1="18.36" y1="5.64"  x2="19.78" y2="4.22"/>
+            </svg>
+          </button>
+
+          <!-- Mobile Menu Toggle -->
+          <button
+            class="mobile-menu-toggle"
+            data-mobile-toggle
+            aria-label="Open navigation menu"
+            aria-expanded="false"
+            aria-controls="mobile-nav"
+          >
+            <span class="bar" aria-hidden="true"></span>
+            <span class="bar" aria-hidden="true"></span>
+            <span class="bar" aria-hidden="true"></span>
+          </button>
+
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Navigation Drawer -->
+  <nav class="mobile-nav" id="mobile-nav" aria-label="Mobile navigation">
+    <a href="home.html" class="nav-link active" aria-current="page">Home</a>
+    <a href="#about" class="nav-link">About</a>
+    <hr class="divider" />
+    <button class="btn btn-outline btn-full" data-theme-toggle>
+      Toggle Theme
+    </button>
+  </nav>
+
+  <!-- ===========================================================
+       MAIN CONTENT
+       =========================================================== -->
+
+  <main class="page-main" id="main-content">
+
+    <!-- =========================================================
+         SECTION 1 — HERO + SEARCH
+         The most important section. User should immediately
+         understand: "I can search any medicine here."
+         ========================================================= -->
+
+    <section class="hero" aria-labelledby="hero-heading">
+      <div class="container">
+        <div class="hero-inner">
+
+          <!-- Eyebrow badge -->
+          <div class="hero-eyebrow fade-in">
+            <span class="badge badge-primary">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="3"
+                stroke-linecap="round" stroke-linejoin="round"
+                aria-hidden="true">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+              Trusted &amp; Verified
+            </span>
+          </div>
+
+          <!-- Main heading -->
+          <h1 class="hero-heading fade-in fade-in-delay-1" id="hero-heading">
+            Trusted Medicine<br />
+            <span class="hero-heading-accent">Information</span>
+          </h1>
+
+          <!-- Supporting text -->
+          <p class="hero-subtext fade-in fade-in-delay-2">
+            Search any medicine by name. Find verified information,
+            affordable generic alternatives, and nearby Jan Aushadhi stores.
+          </p>
+
+          <!-- Search bar -->
+          <div class="hero-search-wrapper fade-in fade-in-delay-3">
+            <form
+              id="hero-search-form"
+              role="search"
+              aria-label="Search medicines"
+              autocomplete="off"
+            >
+              <div class="hero-search-box">
+
+                <!-- Search icon -->
+                <span class="hero-search-icon" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="m21 21-4.35-4.35"/>
+                  </svg>
+                </span>
+
+                <!-- Input -->
+                <input
+                  type="search"
+                  id="hero-search-input"
+                  name="q"
+                  class="hero-search-input"
+                  placeholder="Search medicines, e.g. Paracetamol..."
+                  aria-label="Search medicines"
+                  spellcheck="false"
+                  autocorrect="off"
+                />
+
+                <!-- Submit -->
+                <button
+                  type="submit"
+                  class="btn btn-primary btn-md btn-pill hero-search-btn"
+                  data-search-submit
+                  aria-label="Search"
+                >
+                  Search
+                </button>
+
+              </div>
+            </form>
+          </div>
+
+          <!-- Popular medicines chips -->
+          <div
+            class="popular-medicines fade-in fade-in-delay-4"
+            aria-label="Popular medicine searches"
+          >
+            <span class="popular-label" aria-hidden="true">Popular:</span>
+
+            <button
+              class="medicine-chip"
+              data-medicine-chip="Paracetamol"
+              aria-label="Search for Paracetamol"
+              tabindex="0"
+            >Paracetamol</button>
+
+            <button
+              class="medicine-chip"
+              data-medicine-chip="Crocin"
+              aria-label="Search for Crocin"
+              tabindex="0"
+            >Crocin</button>
+
+            <button
+              class="medicine-chip"
+              data-medicine-chip="Dolo 650"
+              aria-label="Search for Dolo 650"
+              tabindex="0"
+            >Dolo 650</button>
+
+            <button
+              class="medicine-chip"
+              data-medicine-chip="Azithromycin"
+              aria-label="Search for Azithromycin"
+              tabindex="0"
+            >Azithromycin</button>
+
+            <button
+              class="medicine-chip"
+              data-medicine-chip="Cetirizine"
+              aria-label="Search for Cetirizine"
+              tabindex="0"
+            >Cetirizine</button>
+
+            <button
+              class="medicine-chip"
+              data-medicine-chip="Metformin"
+              aria-label="Search for Metformin"
+              tabindex="0"
+            >Metformin</button>
+
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         SECTION 2 — QUICK ACTIONS
+         Entry points for core product features.
+         Placeholders for future pages (Sprint 3+).
+         ========================================================= -->
+
+    <section class="section-gap-sm" aria-labelledby="quick-actions-heading">
+      <div class="container">
+
+        <h2 class="sr-only" id="quick-actions-heading">Quick Actions</h2>
+
+        <div class="quick-actions-grid">
+
+          <!-- Browse Medicines -->
+          <a
+            href="#"
+            class="quick-action-card"
+            data-quick-action="browse"
+            aria-label="Browse all medicines"
+            tabindex="0"
+          >
+            <div class="quick-action-icon quick-action-icon-green" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+              </svg>
+            </div>
+            <div class="quick-action-text">
+              <span class="quick-action-title">Browse Medicines</span>
+              <span class="quick-action-desc">Explore our full medicine catalogue</span>
+            </div>
+            <span class="quick-action-arrow" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </span>
+          </a>
+
+          <!-- Find Nearby Jan Aushadhi -->
+          <a
+            href="#"
+            class="quick-action-card"
+            data-quick-action="stores"
+            aria-label="Find nearby Jan Aushadhi stores"
+            tabindex="0"
+          >
+            <div class="quick-action-icon quick-action-icon-blue" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+            </div>
+            <div class="quick-action-text">
+              <span class="quick-action-title">Find Nearby Jan Aushadhi</span>
+              <span class="quick-action-desc">Locate affordable stores near you</span>
+            </div>
+            <span class="quick-action-arrow" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </span>
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+    <div class="container"><hr class="divider" /></div>
+
+    <!-- =========================================================
+         SECTION 3 — WHY AAROGYA
+         Short, honest value proposition. Three cards.
+         ========================================================= -->
+
+    <section
+      class="section-gap"
+      id="about"
+      aria-labelledby="why-heading"
+    >
+      <div class="container">
+
+        <!-- Section header -->
+        <div class="mb-10">
+          <span class="section-eyebrow">Why Aarogya</span>
+          <h2 class="section-heading" id="why-heading">
+            Medicine information you can trust
+          </h2>
+          <p class="section-subtext">
+            Built to make quality healthcare information accessible
+            to every person in India, not just those who can afford it.
+          </p>
+        </div>
+
+        <!-- Three value cards -->
+        <div class="why-cards-grid">
+
+          <!-- Card 1 -->
+          <article class="why-card">
+            <span class="why-card-emoji" aria-hidden="true">🛡️</span>
+            <h3 class="why-card-title">Trusted Information</h3>
+            <p class="why-card-desc">
+              Every medicine in our database is sourced from verified
+              pharmaceutical records. No misinformation. No guesswork.
+            </p>
+          </article>
+
+          <!-- Card 2 -->
+          <article class="why-card">
+            <span class="why-card-emoji" aria-hidden="true">💰</span>
+            <h3 class="why-card-title">Affordable Alternatives</h3>
+            <p class="why-card-desc">
+              Discover generic equivalents that are equally effective
+              and significantly cheaper than branded medicines.
+            </p>
+          </article>
+
+          <!-- Card 3 -->
+          <article class="why-card">
+            <span class="why-card-emoji" aria-hidden="true">📍</span>
+            <h3 class="why-card-title">Nearby Jan Aushadhi</h3>
+            <p class="why-card-desc">
+              Find government-verified Jan Aushadhi stores near you
+              that stock affordable generic medicines.
+            </p>
+          </article>
+
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===========================================================
+       FOOTER — reuses Sprint 1 footer component exactly
+       =========================================================== -->
+
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-inner">
+
+        <div class="footer-top">
+
+          <div class="footer-brand">
+            <div class="footer-brand-name">Aarogya</div>
+            <p class="footer-brand-desc">
+              Making affordable and verified generic medicines
+              accessible to everyone across India.
+            </p>
+          </div>
+
+          <div class="footer-links-group">
+            <nav class="footer-links-col" aria-label="Product links">
+              <span class="footer-links-title">Product</span>
+              <a href="#" class="footer-link">Search Medicines</a>
+              <a href="#" class="footer-link">Nearby Stores</a>
+            </nav>
+            <nav class="footer-links-col" aria-label="About links">
+              <span class="footer-links-title">About</span>
+              <a href="#about" class="footer-link">Why Aarogya</a>
+              <a href="#" class="footer-link">How It Works</a>
+            </nav>
+          </div>
+
+        </div>
+
+        <div class="footer-bottom">
+          <p class="footer-copyright">
+            &copy; 2025 Aarogya &mdash; v0.2.0 &mdash; Built for affordable healthcare.
+          </p>
+          <div class="footer-bottom-links">
+            <a href="#" class="footer-bottom-link">Privacy</a>
+            <a href="#" class="footer-bottom-link">Terms</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <!-- theme.js already loaded in <head> -->
+  <script src="../js/main.js"></script>
+  <script src="../js/home.js"></script>
+
+</body>
+</html>

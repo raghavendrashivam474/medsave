@@ -1,0 +1,170 @@
+﻿/* ============================================================
+   AAROGYA — INPUT COMPONENTS
+   css/components/inputs.css
+
+   All input field variants and states.
+   ============================================================ */
+
+/* ----------------------------------------------------------
+   INPUT WRAPPER — handles label + input + helper text
+   ---------------------------------------------------------- */
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.input-label {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-secondary);
+  line-height: var(--leading-normal);
+}
+
+.input-label-required::after {
+  content: ' *';
+  color: var(--color-error);
+}
+
+.input-helper {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  line-height: var(--leading-normal);
+}
+
+.input-error-text {
+  font-size: var(--text-xs);
+  color: var(--color-error);
+  line-height: var(--leading-normal);
+}
+
+/* ----------------------------------------------------------
+   BASE INPUT
+   ---------------------------------------------------------- */
+
+.input {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-base);
+  font-weight: var(--weight-regular);
+  color: var(--color-text-primary);
+  background-color: var(--color-input-bg);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  line-height: var(--leading-normal);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    background-color var(--transition-fast);
+  outline: none;
+}
+
+.input::placeholder {
+  color: var(--color-input-placeholder);
+}
+
+.input:hover:not(:disabled):not(.input-error-state) {
+  border-color: var(--color-border-strong);
+}
+
+.input:focus:not(:disabled):not(.input-error-state) {
+  border-color: var(--color-border-focus);
+  background-color: var(--color-input-bg-focus);
+  box-shadow: 0 0 0 3px var(--color-accent-blue-subtle);
+}
+
+/* ----------------------------------------------------------
+   INPUT STATES
+   ---------------------------------------------------------- */
+
+.input-error-state {
+  border-color: var(--color-border-error);
+}
+
+.input-error-state:focus {
+  box-shadow: 0 0 0 3px var(--color-error-subtle);
+}
+
+.input-success-state {
+  border-color: var(--color-border-success);
+}
+
+.input-success-state:focus {
+  box-shadow: 0 0 0 3px var(--color-success-subtle);
+}
+
+.input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: var(--color-surface-sunken);
+  border-color: var(--color-border);
+}
+
+/* ----------------------------------------------------------
+   SEARCH INPUT
+   ---------------------------------------------------------- */
+
+.input-search-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.input-search-wrapper .input-icon-left {
+  position: absolute;
+  left: var(--space-4);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-muted);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+}
+
+.input-search-wrapper .input-icon-right {
+  position: absolute;
+  right: var(--space-4);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.input-search {
+  padding-left: var(--space-10);
+  padding-right: var(--space-10);
+  border-radius: var(--radius-full);
+  background-color: var(--color-surface-sunken);
+  border-color: transparent;
+}
+
+.input-search:focus {
+  background-color: var(--color-input-bg-focus);
+  border-color: var(--color-border-focus);
+  border-radius: var(--radius-full);
+}
+
+/* ----------------------------------------------------------
+   INPUT SIZES
+   ---------------------------------------------------------- */
+
+.input-sm {
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-sm);
+  border-radius: var(--radius-sm);
+}
+
+.input-lg {
+  padding: var(--space-4) var(--space-5);
+  font-size: var(--text-md);
+  border-radius: var(--radius-lg);
+}
+
+/* ----------------------------------------------------------
+   INPUT WITH ICON PADDING
+   ---------------------------------------------------------- */
+
+.input-with-icon-left  { padding-left: var(--space-10); }
+.input-with-icon-right { padding-right: var(--space-10); }

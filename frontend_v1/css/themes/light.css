@@ -1,0 +1,60 @@
+﻿/* ============================================================
+   AAROGYA — LIGHT THEME
+   css/themes/light.css
+
+   Overrides surface and text variables for light mode.
+   Applied when <html> has no data-theme attribute
+   or data-theme="light"
+   ============================================================ */
+
+[data-theme="light"],
+:root {
+
+  /* Backgrounds */
+  --color-background:      #F5F7FA;
+  --color-surface:         #FFFFFF;
+  --color-surface-raised:  #FFFFFF;
+  --color-surface-overlay: #FFFFFF;
+  --color-surface-sunken:  #ECEEF2;
+
+  /* Text */
+  --color-text-primary:   #1A1A2E;
+  --color-text-secondary: #4A4A6A;
+  --color-text-muted:     #8A8AA0;
+  --color-text-disabled:  #BCBCD0;
+  --color-text-inverse:   #FFFFFF;
+  --color-text-link:      #1565C0;
+  --color-text-link-hover:#0D47A1;
+
+  /* Borders */
+  --color-border:       #DDE1E7;
+  --color-border-strong:#B0B8C4;
+
+  /* Shadows — more visible on light */
+  --shadow-xs:  0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-sm:  0 1px 4px rgba(0, 0, 0, 0.08);
+  --shadow-md:  0 4px 12px rgba(0, 0, 0, 0.10);
+  --shadow-lg:  0 8px 24px rgba(0, 0, 0, 0.12);
+  --shadow-xl:  0 16px 40px rgba(0, 0, 0, 0.14);
+
+  /* Header */
+  --color-header-bg:     #FFFFFF;
+  --color-header-border: #DDE1E7;
+
+  /* Input */
+  --color-input-bg:          #FFFFFF;
+  --color-input-bg-focus:    #FFFFFF;
+  --color-input-placeholder: #8A8AA0;
+
+  /* Card */
+  --color-card-bg:     #FFFFFF;
+  --color-card-border: #DDE1E7;
+
+  /* Skeleton */
+  --color-skeleton-base:     #E8EAED;
+  --color-skeleton-shimmer:  #F5F7FA;
+
+  /* Scrollbar */
+  --color-scrollbar-track:  #F5F7FA;
+  --color-scrollbar-thumb:  #DDE1E7;
+}
