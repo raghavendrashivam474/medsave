@@ -1,33 +1,36 @@
 ﻿# MedSave
 # PHASE_1_CHECKLIST.md
 
-**Version:** 1.1  
-**Status:** 🟡 Active  
+**Version:** 2.0
+**Status:** 🟡 Active
 **Phase:** Phase 1
 
 ---
 
 # Phase 1 Master Checklist
 
-This checklist tracks the execution of Phase 1. Unlike `PHASE_1_PLAN.md`, which defines the strategy and governance, this document tracks day-to-day implementation progress.
+This checklist tracks the execution of Phase 1. Unlike `PHASE_1_PLAN.md`, which defines the strategy and governance, this document tracks implementation progress until the Phase 1 hackathon build is complete.
 
 ---
 
-## 1. Phase Planning
+# 1. Phase Planning
 
 - [x] Finalize `PHASE_1_PLAN.md`
 - [x] Lock Phase 1 objectives
 - [x] Define milestones and constraints
+- [x] Lock frontend dual-track strategy (Team v2 + Personal v1)
+- [x] Lock Hybrid Decision Engine architecture
+- [x] Freeze Phase 1 architecture decisions
 
 ---
 
-## 2. README
+# 2. README
 
 - [x] Professional project overview
 - [x] Features
 - [x] Architecture
 - [x] Technology stack
-- [x] Installation and setup guide
+- [x] Installation & setup
 - [ ] Screenshots
 - [x] Roadmap
 - [x] Contributors
@@ -35,28 +38,28 @@ This checklist tracks the execution of Phase 1. Unlike `PHASE_1_PLAN.md`, which 
 
 ---
 
-## 3. Repository Structure
+# 3. Repository Structure
 
-- [x] Organize repository structure
-- [x] Create `docs/` hierarchy
-- [x] Move documentation into appropriate folders
-- [x] Remove unnecessary files
+- [x] Organize repository
+- [x] Create documentation hierarchy
 - [x] Improve naming consistency
+- [x] Remove unnecessary files
+- [x] Repository cleanup
 
 ---
 
-## 4. Technical Documentation
+# 4. Technical Documentation
 
 - [x] Architecture documentation
 - [ ] API documentation
 - [x] Database documentation
-- [ ] AI documentation
+- [ ] Hybrid Decision Engine documentation
 - [x] ETL documentation
 - [ ] Deployment documentation
 
 ---
 
-## 5. Data Strategy
+# 5. Data Strategy
 
 - [x] Review medicine datasets
 - [x] Validate data quality
@@ -65,54 +68,95 @@ This checklist tracks the execution of Phase 1. Unlike `PHASE_1_PLAN.md`, which 
 
 ---
 
-## 6. Database
+# 6. Database
 
-- [x] Review database schema
+- [x] Review schema
 - [x] Improve relationships
 - [x] Optimize queries
-- [x] Update database documentation
+- [x] Update documentation
 
 ---
 
-## 7. Backend
+# 7. Backend
 
-- [x] Review API architecture
-- [x] Refactor where necessary
+## Backend Engineering
+
+- [x] Backend architecture finalized
+- [x] Repository inspection completed
+- [x] Configuration inspection completed
+- [x] API inspection completed
+- [x] Database inspection completed
+- [x] Security inspection completed
+- [x] Logging inspection completed
+- [x] Testing inspection completed
+
+## Backend Development
+
+- [x] Core APIs implemented
 - [x] Improve error handling
 - [x] Improve code quality
 - [x] Remove dead code
+- [ ] Complete remaining backend implementation tasks
+- [ ] Backend stabilization after frontend integration
 
 ---
 
-## 8. Frontend
+# 8. Frontend
 
-- [ ] Improve UI
-- [ ] Improve UX
-- [ ] Improve responsiveness
-- [ ] Improve consistency
-- [ ] Improve navigation
+## Team Frontend (v2)
+
+- [ ] Finalize UI/UX
+- [ ] Finalize design system
+- [ ] Implement frontend
+- [ ] Connect backend APIs
+- [ ] Responsive testing
+- [ ] UI refinement
+
+## Personal Frontend (v1)
+
+- [x] Baseline freeze
+- [x] Live Stores integration
+- [ ] Continue frontend_v1 roadmap
+- [ ] Remaining API integrations
+- [ ] UI refinement & stabilization
 
 ---
 
-## 9. AI Module
+# 9. Decision Engine (Hybrid)
 
-- [ ] Improve recommendations
-- [ ] Improve prompting logic
-- [ ] Improve confidence
+> Phase 1 follows a Rule-First Hybrid Architecture.
+
+## Rule Engine
+
+- [ ] Implement Decision Engine
+- [ ] Implement Rule Provider
+- [ ] Implement recommendation rules
 - [ ] Handle edge cases
 
+## AI Integration
+
+- [ ] Define AI Provider interface
+- [ ] Implement provider abstraction
+- [ ] Runtime provider selection
+- [ ] Graceful fallback to Rule Engine
+
+> External AI providers (OpenAI, Gemini, Ollama, etc.) are **not required** during Phase 1.
+
 ---
 
-## 10. Maps Module
+# 10. Maps Module
 
-- [ ] Improve nearby pharmacy search
-- [ ] Improve routing
-- [ ] Improve marker information
-- [ ] Improve map experience
+- [x] Backend store APIs
+- [x] Frontend live store integration
+- [ ] Nearby pharmacy improvements
+- [ ] Geolocation integration
+- [ ] Distance calculation
+- [ ] Routing
+- [ ] Interactive map experience
 
 ---
 
-## 11. ETL Pipeline
+# 11. ETL Pipeline
 
 - [x] Review ingestion pipeline
 - [x] Improve validation
@@ -122,60 +166,95 @@ This checklist tracks the execution of Phase 1. Unlike `PHASE_1_PLAN.md`, which 
 
 ---
 
-## 12. Pilot Validation
+# 12. Integration & Validation
 
-- [ ] Prepare realistic dataset
-- [ ] Perform end-to-end testing
-- [ ] Validate workflows
+- [ ] Backend ↔ Frontend integration
+- [ ] End-to-end testing
+- [ ] Validate user workflows
 - [ ] Fix critical issues
+- [ ] Regression testing
 
 ---
 
-## 13. Presentation
+# 13. Presentation
 
 - [ ] Prepare presentation
-- [ ] Prepare demonstration flow
-- [ ] Create architecture diagrams
-- [ ] Prepare feature walkthrough
-- [ ] Prepare impact slides
+- [ ] Architecture diagrams
+- [ ] Demo flow
+- [ ] Feature walkthrough
+- [ ] Impact slides
 
 ---
 
-## 14. Judge Preparation
+# 14. Judge Preparation
 
-- [ ] Prepare FAQ
-- [ ] Prepare technical questions
-- [ ] Prepare business questions
-- [ ] Prepare innovation questions
-- [ ] Conduct mock presentation
+- [ ] Technical FAQ
+- [ ] Business FAQ
+- [ ] Innovation FAQ
+- [ ] Mock presentation
+- [ ] Team rehearsal
 
 ---
 
-# Completion Criteria
+# Phase 1 Completion Criteria
 
-Phase 1 is complete when:
+## Engineering
 
 - [x] Repository is professional
-- [x] Documentation is complete
-- [x] Architecture is documented
-- [ ] Stable demonstration is available
-- [x] Dataset is validated
-- [ ] Presentation is complete
-- [ ] Judge FAQ is prepared
-- [ ] Team has rehearsed the presentation
-- [ ] MedSave is officially selected by the college for SIH
+- [x] Architecture is stabilized
+- [x] Backend inspection completed
+- [x] Dataset validated
+- [ ] Backend implementation complete
+- [ ] Team Frontend complete
+- [ ] Personal Frontend roadmap complete
+- [ ] Rule-Based Decision Engine operational
+- [ ] Backend ↔ Frontend fully integrated
+- [ ] Stable end-to-end demonstration
+
+## Documentation
+
+- [ ] API documentation complete
+- [ ] Hybrid Decision Engine documented
+- [ ] Deployment documentation complete
+- [ ] README finalized
+
+## Delivery
+
+- [ ] Presentation complete
+- [ ] Judge preparation complete
+- [ ] Team rehearsal completed
+- [ ] Demo package finalized
+- [ ] MedSave submitted for SIH
+
+---
+
+# Locked Phase 1 Decisions
+
+- Backend architecture is frozen.
+- Frontend development continues in parallel:
+  - Team Frontend (v2)
+  - Personal Frontend (v1)
+- Hybrid Decision Engine is the official intelligence architecture.
+- Rule Engine is the default implementation.
+- AI is an optional enhancement through provider abstraction.
+- No external AI APIs are required for Phase 1.
+- Major architectural redesigns are deferred until Phase 2.
 
 ---
 
 # Progress
 
 | Category | Status |
-|----------|--------|
-| Overall Progress | ~55% |
-| Current Milestone | Frontend MVP |
-| Next Milestone | Frontend Development |
-| Last Updated | 02 Aug 2026 |
+|-----------|--------|
+| Architecture & Planning | ✅ Complete |
+| Backend Engineering | 🟢 ~95% |
+| Frontend (Team v2) | 🟡 In Progress |
+| Frontend (Personal v1) | 🟡 In Progress |
+| Decision Engine | 🟡 Architecture Locked |
+| Integration | ⏳ Pending |
+| Presentation | ⏳ Pending |
+| Overall Progress | ~70–75% |
 
 ---
 
-> **This checklist should be updated continuously throughout Phase 1 until all completion criteria are satisfied.**
+> **Phase 1 is now execution-focused. Major architectural decisions are frozen. Remaining work primarily consists of implementation, integration, testing, documentation, and presentation.**
