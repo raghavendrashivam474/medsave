@@ -20,8 +20,8 @@ How to Add a Provider:
     2. Subclass AIProviderBase and implement the query() method.
 
     3. Pass your provider instance to DecisionEngine() at startup:
-           from decision_engine import DecisionEngine
-           from decision_engine.providers.ollama_provider import OllamaProvider
+           from backend.decision_engine import DecisionEngine
+           from backend.decision_engine.providers.ollama_provider import OllamaProvider
 
            engine = DecisionEngine(ai_provider=OllamaProvider())
 
@@ -60,23 +60,23 @@ class AIProviderBase(ABC):
     @abstractmethod
     def query(self, request: dict) -> dict:
         """
-        Send a request to the AI provider and return a structured response.
+        Process a decision request and return a structured result.
 
-        Args:
-            request (dict): The decision request payload.
-                Expected keys:
-                    - "type"    : str  — The decision type.
-                    - "context" : dict — Supporting data.
-                    - "query"   : str  — Optional natural language query.
+        Parameters
+        ----------
+        request : dict
+            The same request dict passed to DecisionEngine.process().
+            Must contain at least a "type" key.
 
-        Returns:
-            dict: Must contain:
-                - "result"   : any  — The AI provider's answer.
-                - "confident": bool — Whether the provider is confident.
-                - "message"  : str  — Human-readable explanation.
-
-        Raises:
-            NotImplementedError: If the subclass does not implement this method.
+        Returns
+        -------
+        dict
+            Must contain:
+                result    : The recommendation or decision output.
+                confident : bool — whether the provider is confident.
+            May contain:
+                message   : Human-readable explanation.
+                source    : Will be set by the Decision Engine.
         """
         raise NotImplementedError(
             f"{type(self).__name__} must implement the query() method."
@@ -84,13 +84,10 @@ class AIProviderBase(ABC):
 
     def health_check(self) -> bool:
         """
-        Optional health check to verify the provider is reachable.
+        Return True if the provider is reachable and operational.
 
-        Override this method in your provider to implement a real check.
-        Default implementation returns False (provider not configured).
-
-        Returns:
-            bool: True if the provider is reachable and ready, False otherwise.
+        Default implementation returns False.
+        Concrete providers should override this.
         """
         logger.debug(
             "%s.health_check() called — default implementation returns False.",
@@ -114,22 +111,13 @@ class UnreachableAIProvider(AIProviderBase):
     """
 
     def query(self, request: dict) -> dict:
-        """
-        Return a graceful unavailable response.
-
-        Args:
-            request (dict): Ignored. No AI provider is available.
-
-        Returns:
-            dict: A safe, low-confidence unavailable response.
-        """
         logger.warning(
             "UnreachableAIProvider queried — no real AI provider is configured."
         )
         return {
-            "result": None,
+            "result":    None,
             "confident": False,
-            "message": (
+            "message":   (
                 "No AI provider is currently configured. "
                 "The system is operating in rule-only mode. "
                 "Configure an AI provider to enable intelligent escalation."
