@@ -44,7 +44,7 @@
     if (value === null || value === undefined) return '—';
     const num = Number(value);
     if (Number.isNaN(num)) return '—';
-    return `₹${num.toFixed(2)}`;
+    return `?${num.toFixed(2)}`;
   }
 
   function isPresent(value) {
@@ -505,47 +505,130 @@
   // RENDER — NEARBY STORES (Placeholder)
   // ============================================================
 
-  function renderStores() {
-    const stores = [
-      { name: 'Jan Aushadhi Kendra — Sector 12', address: 'Near Bus Stand', distance: '0.8 km' },
-      { name: 'Jan Aushadhi Store — Central Market', address: 'Main Road', distance: '1.4 km' },
-      { name: 'PMBJP Kendra — Civil Lines',    address: 'Opp. Post Office', distance: '2.1 km' },
-    ];
+  // ── fetchStores ─────────────────────────────────────────────────────────────
+  // Fetches live store data from the backend.
+  // Returns a store array on success, empty array on any failure.
+  // Does not touch the DOM — rendering is handled by renderStores().
 
-    const cards = stores.map((s) => `
-      <div class="store-card">
-        <div class="store-icon" aria-hidden="true">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
-            <circle cx="12" cy="10" r="3"/>
-          </svg>
+  async function fetchStores() {
+    try {
+      const url = window.AarogyaConfig.url(
+        window.AarogyaConfig.endpoints.stores()
+      );
+
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: { 'Accept': 'application/json' },
+      });
+
+      if (!response.ok) {
+        console.warn(`[MedSave] Stores API responded with status ${response.status}`);
+        return [];
+      }
+
+      const json = await response.json();
+
+      if (!json.success || !Array.isArray(json.data)) {
+        console.warn('[MedSave] Stores API returned unexpected shape:', json);
+        return [];
+      }
+
+      return json.data;
+
+    } catch (error) {
+      console.warn('[MedSave] Stores fetch failed:', error.message);
+      return [];
+    }
+  }
+
+  // ── renderStores ─────────────────────────────────────────────────────────────
+  // Receives live store array from fetchStores().
+  // Preserves existing card layout and CSS classes.
+
+  function renderStores(stores) {
+
+    // ── Empty state ───────────────────────────────────────────────────────────
+    if (!stores || stores.length === 0) {
+      return `
+        <section class="med-section" aria-labelledby="stores-heading">
+          <div class="med-section-header">
+            <div>
+              <h2 class="med-section-title" id="stores-heading">Nearby Jan Aushadhi</h2>
+              <p class="med-section-subtitle">Jan Aushadhi store locations.</p>
+            </div>
+          </div>
+          <div class="store-list">
+            <div class="store-card">
+              <div class="store-info">
+                <div class="store-name">No stores found</div>
+                <div class="store-address">
+                  Visit
+                  <a href="https://janaushadhi.gov.in" target="_blank" rel="noopener">
+                    janaushadhi.gov.in
+                  </a>
+                  to locate your nearest store.
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    // ── Store cards ───────────────────────────────────────────────────────────
+    const cards = stores.map((s) => {
+      const name    = s.name    || 'Jan Aushadhi Store';
+      const address = s.address || '';
+      const city    = s.city    || '';
+      const state   = s.state   || '';
+      const pincode = s.pincode || '';
+
+      const locationParts = [city, state, pincode].filter(Boolean);
+      const locationLine  = locationParts.length > 0
+        ? locationParts.join(', ')
+        : '';
+
+      const fullAddress = [address, locationLine].filter(Boolean).join(', ');
+
+      const distanceText = (s.distance_km !== null && s.distance_km !== undefined)
+        ? `${Number(s.distance_km).toFixed(1)} km`
+        : '';
+
+      return `
+        <div class="store-card">
+          <div class="store-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+          </div>
+          <div class="store-info">
+            <div class="store-name">${escapeHtml(name)}</div>
+            <div class="store-address">${escapeHtml(fullAddress)}</div>
+          </div>
+          ${distanceText
+            ? `<span class="store-distance">${escapeHtml(distanceText)}</span>`
+            : ''}
         </div>
-        <div class="store-info">
-          <div class="store-name">${escapeHtml(s.name)}</div>
-          <div class="store-address">${escapeHtml(s.address)}</div>
-        </div>
-        <span class="store-distance">${escapeHtml(s.distance)}</span>
-      </div>
-    `).join('');
+      `;
+    }).join('');
 
     return `
       <section class="med-section" aria-labelledby="stores-heading">
         <div class="med-section-header">
           <div>
             <h2 class="med-section-title" id="stores-heading">Nearby Jan Aushadhi</h2>
-            <p class="med-section-subtitle">Sample locations. Real data coming soon.</p>
+            <p class="med-section-subtitle">
+              ${stores.length} ${stores.length === 1 ? 'store' : 'stores'} listed.
+            </p>
           </div>
         </div>
 
         <div class="store-list">
           ${cards}
         </div>
-
-        <p class="store-placeholder-note">
-          Location-based store search will be enabled in a future release.
-        </p>
       </section>
     `;
   }
@@ -622,7 +705,7 @@
   // RENDER — FULL PAGE
   // ============================================================
 
-  function renderPage(payload) {
+  function renderPage(payload, stores = []) {
     const { medicine, brands = [] } = payload;
 
     const avgBrand       = averageBrandPrice(brands);
@@ -650,7 +733,7 @@
 
           <aside class="med-sidebar" aria-label="Additional information">
             ${renderTrust()}
-            ${renderStores()}
+            ${renderStores(stores)}
             ${renderRelated()}
           </aside>
         </div>
@@ -716,8 +799,11 @@
     renderLoading();
 
     try {
-      const payload = await fetchMedicine(id);
-      renderPage(payload);
+      const [payload, stores] = await Promise.all([
+        fetchMedicine(id),
+        fetchStores(),
+      ]);
+      renderPage(payload, stores);
     } catch (error) {
       console.error('[Aarogya] Medicine load failed:', error);
       if (error.code === 'NOT_FOUND') {
