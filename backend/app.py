@@ -29,7 +29,6 @@ FRONTEND_DIR = BASE_DIR / "frontend"
 app = Flask(
     __name__,
     static_folder=str(FRONTEND_DIR),
-    static_url_path="",
 )
 
 CORS(app)
@@ -44,16 +43,16 @@ app.register_blueprint(stores_bp)
 @app.route("/")
 def serve_index():
     """Serve the root frontend application."""
-    return send_from_directory(app.static_folder, "index.html")
+    return send_from_directory(FRONTEND_DIR, "index.html")
 
 
 @app.route("/<path:path>")
 def serve_static(path):
     """Serve static frontend assets with fallback to index.html."""
-    file_path = FRONTEND_DIR / path
-    if file_path.exists() and file_path.is_file():
-        return send_from_directory(app.static_folder, path)
-    return send_from_directory(app.static_folder, "index.html")
+    target_file = FRONTEND_DIR / path
+    if target_file.exists() and target_file.is_file():
+        return send_from_directory(FRONTEND_DIR, path)
+    return send_from_directory(FRONTEND_DIR, "index.html")
 
 
 if __name__ == "__main__":
