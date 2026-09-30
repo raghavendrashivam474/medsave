@@ -1,4 +1,4 @@
-const API_BASE = 'https://medsave-bqf3.onrender.com/api';
+﻿const API_BASE = 'https://medsave-bqf3.onrender.com/api';
 
 const searchInput = document.getElementById('searchInput');
 const resultsContainer = document.getElementById('results');
@@ -12,202 +12,90 @@ let debounceTimer;
 const themeToggle = document.getElementById('themeToggle');
 const body = document.body;
 
-themeToggle.addEventListener('click', () => {
-    body.classList.toggle('light-theme');
-    const isLight = body.classList.contains('light-theme');
-    themeToggle.innerHTML = isLight ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-});
+if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+        body.classList.toggle('light-theme');
+        const isLight = body.classList.contains('light-theme');
+        themeToggle.innerHTML = isLight ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+    });
+}
 
 // Medicine Search Logic
-searchInput.addEventListener('input', (e) => {
-    clearTimeout(debounceTimer);
-    const query = e.target.value.trim();
-    
-    if (query.length < 2) {
-        if (query.length === 0) {
+if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+        clearTimeout(debounceTimer);
+        const query = e.target.value.trim();
+        
+        if (query.length < 1) {
             resultsContainer.innerHTML = `
                 <div class="empty-state">
-                    <i class="fas fa-pills" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                    <i class="fas fa-pills" style="font-size: 2.5rem; margin-bottom: 1rem; color: var(--text-secondary);"></i>
                     <p>Enter a medicine name to start comparing prices</p>
-                </div>
-            `;
+                </div>`;
+            return;
         }
-        return;
-    }
 
-    debounceTimer = setTimeout(() => {
-        performSearch(query);
-    }, 400);
-});
+        resultsContainer.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Searching database...</div>';
 
-async function performSearch(query) {
-    resultsContainer.innerHTML = '<div class="loading">Searching verified database...</div>';
-    
+        debounceTimer = setTimeout(() => {
+            fetchMedicines(query);
+        }, 300);
+    });
+}
+
+async function fetchMedicines(query) {
     try {
         const response = await fetch(`${API_BASE}/search?q=${encodeURIComponent(query)}`);
         const data = await response.json();
-        
-        displayResults(data);
+        displayMedicines(data);
     } catch (error) {
-        console.error('Search failed:', error);
-        resultsContainer.innerHTML = '<div class="empty-state" style="color: var(--red);">API Connection failed. Please check if the backend is running.</div>';
+        console.error('Search error:', error);
+        resultsContainer.innerHTML = '<div class="empty-state" style="color: var(--red);">Error loading medicines. Please try again.</div>';
     }
 }
 
-function displayResults(results) {
-    if (results.length === 0) {
-        resultsContainer.innerHTML = '<div class="empty-state">No matching medicines found. Try another name.</div>';
+function displayMedicines(medicines) {
+    if (!medicines || medicines.length === 0) {
+        resultsContainer.innerHTML = '<div class="empty-state">No matching medicines found. Try searching for "Paracetamol", "Atorvastatin", or "Metformin".</div>';
         return;
     }
 
-    resultsContainer.innerHTML = results.map((item, index) => `
-        <div class="card" style="animation-delay: ${index * 0.1}s" id="med-${index}">
-            <div class="card-header">
+    resultsContainer.innerHTML = medicines.map(med => {
+        const savings = (med.brand_price - med.generic_price).toFixed(2);
+        return `
+        <div class="card medicine-card" style="margin-bottom: 1.5rem; padding: 1.5rem; background: var(--bg-card); border-radius: 12px; border: 1px solid var(--border-color);">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
                 <div>
-                    <div class="brand-name">${item.brand_name}</div>
-                    <div style="font-size: 0.9rem; color: var(--text-secondary);">${item.form} • ${item.dosage}</div>
-                </div>
-                <div class="savings-badge">SAVE ${item.savings_percent}%</div>
-            </div>
-            
-            <div class="card-body">
-                <div class="info-group">
-                    <label>Salt / Composition</label>
-                    <span>${item.salt}</span>
-                </div>
-                <div class="info-group">
-                    <label>Generic Alternative</label>
-                    <span class="generic-highlight">${item.generic_name}</span>
-                </div>
-            </div>
-
-            <div class="chart-container">
-                <canvas id="chart-${index}"></canvas>
-            </div>
-
-            <div class="price-comparison">
-                <div class="price-box">
-                    <div class="price-label">BRANDED PRICE</div>
-                    <div class="price-val" style="color: var(--text-secondary);">₹${item.brand_price}</div>
-                </div>
-                <div style="font-size: 1.5rem; color: var(--text-secondary); opacity: 0.3;">
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-                <div class="price-box">
-                    <div class="price-label">GENERIC PRICE</div>
-                    <div class="price-val" style="color: var(--accent);">₹${item.generic_price}</div>
-                </div>
-                <div class="price-box">
-                    <div class="price-label">YOUR SAVINGS</div>
-                    <div class="save-amount">₹${(item.brand_price - item.generic_price).toFixed(1)}</div>
-                </div>
-            </div>
-
-            <button class="calculator-toggle" onclick="toggleCalculator(${index})">
-                <i class="fas fa-calculator"></i> Calculate My Monthly Savings
-            </button>
-
-            <div class="calculator-panel" id="calc-panel-${index}">
-                <div class="calc-grid">
-                    <div class="calc-input-group">
-                        <label>Tablets per day</label>
-                        <input type="number" value="1" min="1" oninput="updateCalculation(${index}, ${item.brand_price}, ${item.generic_price})">
+                    <div style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent); font-weight: 700; margin-bottom: 0.3rem;">
+                        ${med.match_type === 'generic' ? 'GENERIC SALT' : 'BRANDED ALTERNATIVE'}
                     </div>
-                    <div class="calc-input-group">
-                        <label>Days per month</label>
-                        <input type="number" value="30" min="1" oninput="updateCalculation(${index}, ${item.brand_price}, ${item.generic_price})">
-                    </div>
-                    <div class="calc-result">
-                        <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.2rem;">ESTIMATED MONTHLY SAVINGS</div>
-                        <div class="big-save" id="calc-save-${index}">₹${((item.brand_price - item.generic_price) * 3).toFixed(1)}</div>
-                    </div>
+                    <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.2rem;">${med.brand_name}</h3>
+                    <p style="font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 0.5rem;">Generic: <strong>${med.generic_name}</strong> (${med.dosage || ''} ${med.form || ''})</p>
                 </div>
-            </div>
-            
-            <div style="margin-top: 1rem; font-size: 0.8rem; color: var(--accent);">
-                <i class="fas fa-check-circle"></i> Equivalent to Jan Aushadhi standards
+                <div style="text-align: right;">
+                    <div style="font-size: 0.85rem; color: var(--text-secondary); text-decoration: line-through;">Branded: ₹${med.brand_price}</div>
+                    <div style="font-size: 1.3rem; font-weight: 800; color: var(--accent);">Generic: ₹${med.generic_price}</div>
+                    <div style="font-size: 0.85rem; color: #22c55e; font-weight: 700; margin-top: 0.2rem;">Save ${med.savings_percent}% (₹${savings})</div>
+                </div>
             </div>
         </div>
-    `).join('');
-
-    // Initialize Charts
-    results.forEach((item, index) => {
-        initChart(index, item.brand_name, item.brand_price, item.generic_name, item.generic_price);
-    });
+        `;
+    }).join('');
 }
-
-function initChart(index, brandLabel, brandPrice, genericLabel, genericPrice) {
-    const ctx = document.getElementById(`chart-${index}`).getContext('2d');
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['Branded', 'Generic'],
-            datasets: [{
-                data: [brandPrice, genericPrice],
-                backgroundColor: [
-                    'rgba(148, 163, 184, 0.4)', // Slate
-                    'rgba(34, 197, 94, 0.6)'    // Accent
-                ],
-                borderColor: [
-                    'rgba(148, 163, 184, 1)',
-                    'rgba(34, 197, 94, 1)'
-                ],
-                borderWidth: 1,
-                borderRadius: 4
-            }]
-        },
-        options: {
-            indexAxis: 'y',
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { display: false },
-                tooltip: { enabled: true }
-            },
-            scales: {
-                x: {
-                    grid: { display: false },
-                    ticks: { color: '#94a3b8' }
-                },
-                y: {
-                    grid: { display: false },
-                    ticks: { color: '#f8fafc' }
-                }
-            }
-        }
-    });
-}
-
-window.toggleCalculator = (index) => {
-    const panel = document.getElementById(`calc-panel-${index}`);
-    panel.classList.toggle('active');
-};
-
-window.updateCalculation = (index, brandPrice, genericPrice) => {
-    const panels = document.getElementById(`calc-panel-${index}`);
-    const inputs = panels.querySelectorAll('input');
-    const daily = parseFloat(inputs[0].value) || 0;
-    const days = parseFloat(inputs[1].value) || 0;
-    
-    // Assuming brandPrice/genericPrice is for a pack of 10 for simplicity in this demo calculation
-    // Let's assume price is per unit for now.
-    const unitSav = brandPrice - genericPrice;
-    const monthlySav = daily * days * unitSav;
-    
-    document.getElementById(`calc-save-${index}`).innerText = `₹${monthlySav.toFixed(1)}`;
-};
 
 // Store Lookup Logic
-findStoresBtn.addEventListener('click', () => {
-    const pincode = pincodeInput.value.trim();
-    fetchStores(pincode);
-});
+if (findStoresBtn) {
+    findStoresBtn.addEventListener('click', () => {
+        const pincode = pincodeInput ? pincodeInput.value.trim() : '';
+        fetchStores(pincode);
+    });
+}
 
 // Geolocation Support
-if ("geolocation" in navigator) {
+if ("geolocation" in navigator && pincodeInput) {
     const geoBtn = document.createElement('button');
     geoBtn.innerHTML = '<i class="fas fa-location-arrow"></i> Use Location';
-    geoBtn.style.cssText = "padding: 0.8rem; border-radius: 12px; background: rgba(34, 197, 94, 0.2); color: var(--accent); border: 1px solid var(--accent); cursor: pointer; font-weight: 600;";
+    geoBtn.style.cssText = "padding: 0.8rem 1rem; border-radius: 12px; background: rgba(34, 197, 94, 0.2); color: var(--accent); border: 1px solid var(--accent); cursor: pointer; font-weight: 600; font-size: 0.9rem;";
     geoBtn.onclick = () => {
         navigator.geolocation.getCurrentPosition((pos) => {
             fetchStores('', pos.coords.latitude, pos.coords.longitude);
@@ -215,21 +103,22 @@ if ("geolocation" in navigator) {
             alert("Unable to get location. Please enter pincode.");
         });
     };
-    pincodeInput.parentNode.appendChild(geoBtn);
+    if (pincodeInput.parentNode) {
+        pincodeInput.parentNode.appendChild(geoBtn);
+    }
 }
 
 async function fetchStores(pincode = '', lat = '', lng = '') {
-    const storeResults = document.getElementById('storeResults');
     if (!storeResults) return;
-    storeResults.innerHTML = '<div class="loading">Locating stores...</div>';
+    storeResults.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Locating stores...</div>';
     
     try {
         let url = `${API_BASE}/stores?pincode=${pincode}`;
         if (lat && lng) url = `${API_BASE}/stores?lat=${lat}&lng=${lng}`;
-        
+
         const response = await fetch(url);
         const json = await response.json();
-        
+
         const storesList = Array.isArray(json) ? json : (json.data || []);
         displayStores(storesList);
     } catch (error) {
@@ -239,7 +128,6 @@ async function fetchStores(pincode = '', lat = '', lng = '') {
 }
 
 function displayStores(stores) {
-    const storeResults = document.getElementById('storeResults');
     if (!storeResults) return;
 
     if (!Array.isArray(stores) || stores.length === 0) {
@@ -254,17 +142,17 @@ function displayStores(stores) {
         const phone = store.phone ? `<div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.2rem;"><i class="fas fa-phone-alt"></i> ${store.phone}</div>` : '';
 
         return `
-        <div class="card store-card" style="margin-bottom: 1rem;">
+        <div class="card store-card" style="margin-bottom: 1rem; padding: 1.2rem; background: var(--bg-card); border-radius: 12px; border: 1px solid var(--border-color);">
             <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem;">
                 <div>
-                    <div style="font-weight: 700; font-size: 1.05rem; margin-bottom: 0.3rem;">${store.name}</div>
+                    <div style="font-weight: 700; font-size: 1.05rem; margin-bottom: 0.3rem; color: var(--text-primary);">${store.name}</div>
                     <div style="font-size: 0.9rem; color: var(--text-secondary);"><i class="fas fa-map-marker-alt"></i> ${store.address}, ${store.city}, ${store.state || ''}</div>
                     <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.2rem;">Pincode: ${store.pincode}</div>
                     ${phone}
                     ${dist ? `<div style="font-size: 0.8rem; color: var(--accent); margin-top: 0.4rem; font-weight: 600;">Approx. ${Number(dist).toFixed(1)} km away</div>` : ''}
                 </div>
                 <a href="https://www.google.com/maps?q=${lat},${lng}" target="_blank"
-                   style="background: rgba(59, 130, 246, 0.2); color: var(--blue); padding: 0.5rem 0.8rem; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.8rem; white-space: nowrap;">
+                   style="background: rgba(59, 130, 246, 0.2); color: var(--blue); padding: 0.5rem 0.9rem; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 0.8rem; white-space: nowrap;">
                     DIRECTIONS ↗
                 </a>
             </div>
