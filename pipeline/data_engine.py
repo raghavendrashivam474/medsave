@@ -2,16 +2,23 @@
 pipeline/data_engine.py
 
 Entry point for the MedSave Data Engine.
+
 Orchestrates the full ingestion pipeline.
 
 Pipeline stages executed in order:
-    1. Source     — Acquire raw data
-    2. Parser     — Convert raw data into entities
-    3. Normalizer — Standardize entity values
-    4. Validator  — Apply business rules before persistence
-    5. Loader     — Persist validated entities into the database
+
+    1. Source      — Acquire raw data
+
+    2. Parser      — Convert raw data into entities
+
+    3. Normalizer  — Standardize entity values
+
+    4. Validator   — Apply business rules before persistence
+
+    5. Loader      — Persist validated entities into the database
 
 Usage:
+
     python -m pipeline.data_engine
 """
 
@@ -41,6 +48,7 @@ def print_banner(version: str) -> None:
 
 def initialize_pipeline(logger) -> None:
     cfg = load_config()
+
     logger.info("Configuration loaded.")
     logger.info("  DATABASE_URL  : %s", cfg.database_url)
     logger.info("  RAW_DIR       : %s", cfg.raw_dir)
@@ -60,6 +68,7 @@ def main() -> None:
     logger = get_logger(__name__)
 
     print_banner(version="0.3 Sprint 2.3")
+
     initialize_pipeline(logger)
 
     logger.info("Starting full ingestion pipeline")
@@ -67,6 +76,7 @@ def main() -> None:
     # Stage 1 — Source
     source = KaggleSource()
     logger.info("Using source: %s", source.get_source_name())
+
     path = source.fetch()
 
     # Stage 2 — Parser
@@ -75,15 +85,22 @@ def main() -> None:
 
     # Stage 3 — Normalizer
     normalizer = MedicineNormalizer()
-    medicines, brands = normalizer.normalize_all(medicines, brands)
+    medicines, brands = normalizer.normalize_all(
+        medicines,
+        brands,
+    )
 
     # Stage 4 — Validator
     validator = PipelineValidator()
-    medicines, brands = validator.validate_all(medicines, brands)
+    medicines, brands = validator.validate_all(
+        medicines,
+        brands,
+    )
 
     # Stage 5 — Loader
     loader = PostgresLoader(config.database_url)
     loader.connect()
+
     try:
         loader.load_medicines(medicines)
         loader.load_brands(brands)
@@ -97,6 +114,7 @@ def main() -> None:
     print(f"  Medicines Loaded : {len(medicines)}")
     print(f"  Brands Loaded    : {len(brands)}")
     print()
+
     logger.info("Ingestion completed successfully")
 
 

@@ -22,9 +22,10 @@ class MedicineNormalizer:
 
     def normalize_brand(self, brand: Brand) -> Brand:
         return Brand(
-            brand_name = self.normalize_name(brand.brand_name),
-            generic_name = self.normalize_name(brand.generic_name),
-            mrp = round(brand.mrp, 2)
+            brand_name=self.normalize_name(brand.brand_name),
+            generic_name=self.normalize_name(brand.generic_name),
+            dosage=brand.dosage.upper().strip(),
+            mrp=round(brand.mrp, 2)
         )
 
     def normalize_name(self, name: str) -> str:

@@ -45,9 +45,10 @@ class CsvParser:
                         jan_price=float(row["jan_price"]),
                     )
                     brand = Brand(
-                        brand_name=row["brand_name"].strip(),
-                        generic_name=row["name"].strip(),
-                        mrp=float(row["mrp"]),
+                    brand_name=row["brand_name"].strip(),
+                    generic_name=row["name"].strip(),
+                    dosage=row["dosage"].strip(),
+                    mrp=float(row["mrp"]),
                     )
                     medicines.append(medicine)
                     brands.append(brand)
