@@ -148,7 +148,6 @@ function displayStores(storesInput) {
     const el = document.getElementById('storeResults');
     if (!el) return;
 
-    // Ultra-defensive extraction: handles raw array, {data: [...]}, {stores: [...]}, or raw object
     let list = storesInput;
     if (!Array.isArray(list)) {
         if (list && Array.isArray(list.data)) {
@@ -200,7 +199,7 @@ function displayStores(storesInput) {
 // Initial store load
 fetchStores();
 
-// Register Service Worker
+// Register Service Worker securely
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js').then(reg => {

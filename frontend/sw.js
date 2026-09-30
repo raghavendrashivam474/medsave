@@ -1,28 +1,31 @@
-﻿const CACHE_NAME = 'medsave-v2';
+﻿const CACHE_NAME = 'medsave-v3';
+
+// Only cache files that actually exist
 const ASSETS = [
     './',
     './index.html',
     './style.css',
-    './main.js',
-    './icon.png'
+    './main.js'
 ];
 
-// Install Event - cache assets
 self.addEventListener('install', (event) => {
     self.skipWaiting();
     event.waitUntil(
-        caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
+        caches.open(CACHE_NAME).then((cache) => {
+            return Promise.allSettled(
+                ASSETS.map(asset => cache.add(asset).catch(err => console.log('SW cache skip:', asset)))
+            );
+        })
     );
 });
 
-// Activate Event - delete old caches (e.g. medsave-v1)
 self.addEventListener('activate', (event) => {
     event.waitUntil(
         caches.keys().then((cacheNames) => {
             return Promise.all(
                 cacheNames.map((cache) => {
                     if (cache !== CACHE_NAME) {
-                        console.log('SW: Deleting old cache:', cache);
+                        console.log('SW: Purging old cache:', cache);
                         return caches.delete(cache);
                     }
                 })
@@ -31,27 +34,17 @@ self.addEventListener('activate', (event) => {
     );
 });
 
-// Fetch Event - Network First for JS / API, Cache Fallback for offline
+// Always fetch JS and API directly from network
 self.addEventListener('fetch', (event) => {
     const url = new URL(event.request.url);
 
-    // Network-first strategy for JS scripts and API requests
     if (url.pathname.endsWith('.js') || url.pathname.includes('/api/')) {
         event.respondWith(
-            fetch(event.request)
-                .then((networkResponse) => {
-                    if (networkResponse && networkResponse.status === 200 && !url.pathname.includes('/api/')) {
-                        const responseClone = networkResponse.clone();
-                        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseClone));
-                    }
-                    return networkResponse;
-                })
-                .catch(() => caches.match(event.request))
+            fetch(event.request).catch(() => caches.match(event.request))
         );
         return;
     }
 
-    // Default Cache-First strategy for static assets
     event.respondWith(
         caches.match(event.request).then((response) => response || fetch(event.request))
     );
