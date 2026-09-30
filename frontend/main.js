@@ -58,12 +58,13 @@ async function fetchMedicines(query) {
 
 function displayMedicines(medicines) {
     if (!resultsContainer) return;
-    if (!medicines || !Array.isArray(medicines) || medicines.length === 0) {
+    const list = Array.isArray(medicines) ? medicines : (medicines && medicines.data ? medicines.data : []);
+    if (list.length === 0) {
         resultsContainer.innerHTML = '<div class="empty-state">No matching medicines found. Try searching for "Paracetamol", "Atorvastatin", or "Metformin".</div>';
         return;
     }
 
-    resultsContainer.innerHTML = medicines.map(med => {
+    resultsContainer.innerHTML = list.map(med => {
         const savings = (med.brand_price && med.generic_price) ? (med.brand_price - med.generic_price).toFixed(2) : '0.00';
         return `
         <div class="card medicine-card" style="margin-bottom: 1.5rem; padding: 1.5rem; background: var(--bg-card); border-radius: 12px; border: 1px solid var(--border-color);">
@@ -136,24 +137,35 @@ async function fetchStores(pincode = '', lat = '', lng = '') {
     }
 
     try {
-        const storesList = Array.isArray(json) ? json : (json && json.data ? json.data : []);
-        displayStores(storesList);
+        displayStores(json);
     } catch (renderErr) {
         console.error('Store render error:', renderErr);
         el.innerHTML = '<div class="empty-state" style="color: var(--red);">Error displaying store data.</div>';
     }
 }
 
-function displayStores(stores) {
+function displayStores(storesInput) {
     const el = document.getElementById('storeResults');
     if (!el) return;
 
-    if (!Array.isArray(stores) || stores.length === 0) {
+    // Ultra-defensive extraction: handles raw array, {data: [...]}, {stores: [...]}, or raw object
+    let list = storesInput;
+    if (!Array.isArray(list)) {
+        if (list && Array.isArray(list.data)) {
+            list = list.data;
+        } else if (list && Array.isArray(list.stores)) {
+            list = list.stores;
+        } else {
+            list = [];
+        }
+    }
+
+    if (list.length === 0) {
         el.innerHTML = '<div class="empty-state">No Jan Aushadhi Kendras found for this query.</div>';
         return;
     }
 
-    el.innerHTML = stores.map(store => {
+    el.innerHTML = list.map(store => {
         const name = store.name || 'Jan Aushadhi Kendra';
         const address = store.address || '';
         const city = store.city || '';
