@@ -1,4 +1,4 @@
-"""
+﻿"""
 backend/app.py
 
 MedSave Flask application entry point.
@@ -6,18 +6,14 @@ MedSave Flask application entry point.
 Responsibilities:
     - Initialize the Flask application
     - Register all API blueprints
-    - Serve the frontend static files
+    - Serve the frontend static files and root index.html
     - Provide a local development entry point
-
-All route logic lives inside backend/api/.
-All database connection logic lives inside backend/database/connection.py.
-This file is intentionally thin.
 """
 
 import os
-
+from pathlib import Path
 from dotenv import load_dotenv
-from flask import Flask
+from flask import Flask, send_from_directory
 from flask_cors import CORS
 
 from backend.api.health   import health_bp
@@ -27,9 +23,12 @@ from backend.api.stores   import stores_bp
 
 load_dotenv()
 
+BASE_DIR = Path(__file__).resolve().parent.parent
+FRONTEND_DIR = BASE_DIR / "frontend"
+
 app = Flask(
     __name__,
-    static_folder="../frontend",
+    static_folder=str(FRONTEND_DIR),
     static_url_path="",
 )
 
@@ -40,6 +39,21 @@ app.register_blueprint(health_bp)
 app.register_blueprint(medicine_bp)
 app.register_blueprint(search_bp)
 app.register_blueprint(stores_bp)
+
+
+@app.route("/")
+def serve_index():
+    """Serve the root frontend application."""
+    return send_from_directory(app.static_folder, "index.html")
+
+
+@app.route("/<path:path>")
+def serve_static(path):
+    """Serve static frontend assets with fallback to index.html."""
+    file_path = FRONTEND_DIR / path
+    if file_path.exists() and file_path.is_file():
+        return send_from_directory(app.static_folder, path)
+    return send_from_directory(app.static_folder, "index.html")
 
 
 if __name__ == "__main__":
