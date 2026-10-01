@@ -61,58 +61,103 @@
             </div>
             <div id="storeResults"></div>
         </section>
-        <!-- Detailed Medicine Modal -->
-    <div id="medicineModal" class="modal-overlay">
-        <div class="modal-content">
+    <!-- Detailed Medicine Modal -->
+    <div id="medicineModal" class="modal-overlay" aria-hidden="true">
+        <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modalBrandName">
             <button class="modal-close" id="closeModal" aria-label="Close">
                 <i class="fas fa-times"></i>
             </button>
+
             <div class="modal-header">
-                <span class="modal-badge">Brand vs Generic Analysis</span>
+                <div class="modal-badge-row">
+                    <span class="modal-badge">Brand vs Generic Analysis</span>
+                    <span class="modal-save-pill" id="modalSavePill">Save 0%</span>
+                </div>
                 <h2 id="modalBrandName">Medicine Name</h2>
                 <p id="modalGenericName" class="modal-subtitle">Composition</p>
             </div>
+
             <div class="modal-body">
+                <!-- Hero savings -->
+                <div class="modal-hero-save">
+                    <div class="hero-save-label">You could save</div>
+                    <div class="hero-save-value" id="modalHeroSave">₹0</div>
+                    <div class="hero-save-sub">per pack · Jan Aushadhi certified generic</div>
+                </div>
+
+                <!-- Price comparison -->
                 <div class="modal-price-comparison">
                     <div class="modal-price-box branded">
-                        <span class="price-label">Branded Price</span>
+                        <span class="price-label">Branded MRP</span>
                         <span class="price-val" id="modalBrandPrice">₹0</span>
+                        <span class="price-tag">Market price</span>
                     </div>
                     <div class="vs-circle">VS</div>
                     <div class="modal-price-box generic">
                         <span class="price-label">Jan Aushadhi</span>
-                        <span class="price-val highlight" id="modalGenericPrice" style="color: var(--accent);">₹0</span>
+                        <span class="price-val" id="modalGenericPrice">₹0</span>
+                        <span class="price-tag accent-tag">Generic price</span>
                     </div>
                 </div>
-                
+
+                <!-- Calculator -->
                 <div class="savings-calculator">
-                    <h3><i class="fas fa-calculator" style="color: var(--blue);"></i> Calculate Monthly Savings</h3>
+                    <div class="calc-header">
+                        <h3><i class="fas fa-calculator"></i> Savings Projector</h3>
+                        <p>Adjust dose &amp; duration to see long-term savings</p>
+                    </div>
+
                     <div class="calc-inputs">
                         <div class="input-group">
-                            <label>Units per day (Tabs/Syrup)</label>
-                            <input type="number" id="calcUnits" value="1" min="1">
+                            <label for="calcUnits">Units per day</label>
+                            <div class="stepper">
+                                <button type="button" class="step-btn" id="unitsMinus" aria-label="Decrease">−</button>
+                                <input type="number" id="calcUnits" value="1" min="1" step="1">
+                                <button type="button" class="step-btn" id="unitsPlus" aria-label="Increase">+</button>
+                            </div>
                         </div>
                         <div class="input-group">
-                            <label>Duration (Days)</label>
-                            <input type="number" id="calcDays" value="30" min="1">
+                            <label for="calcDays">Duration (days)</label>
+                            <div class="stepper">
+                                <button type="button" class="step-btn" id="daysMinus" aria-label="Decrease">−</button>
+                                <input type="number" id="calcDays" value="30" min="1" step="1">
+                                <button type="button" class="step-btn" id="daysPlus" aria-label="Increase">+</button>
+                            </div>
                         </div>
                     </div>
+
+                    <div class="calc-presets">
+                        <button type="button" class="preset-btn" data-days="7">1 Week</button>
+                        <button type="button" class="preset-btn active" data-days="30">1 Month</button>
+                        <button type="button" class="preset-btn" data-days="90">3 Months</button>
+                        <button type="button" class="preset-btn" data-days="365">1 Year</button>
+                    </div>
+
                     <div class="calc-results-box">
                         <div class="result-row">
-                            <span>Estimated Branded Cost:</span>
+                            <span>Branded cost</span>
                             <span id="calcBrandTotal" class="strikethrough">₹0</span>
                         </div>
                         <div class="result-row">
-                            <span>Estimated Generic Cost:</span>
+                            <span>Generic cost</span>
                             <span id="calcGenericTotal">₹0</span>
                         </div>
-                        <hr style="border-color: var(--glass-border); margin: 10px 0;">
+                        <div class="result-divider"></div>
                         <div class="result-row highlight-row">
-                            <span>Total Estimated Savings:</span>
+                            <span>Total savings</span>
                             <span id="calcTotalSavings" class="big-save">₹0</span>
                         </div>
+                        <div class="savings-bar-track">
+                            <div class="savings-bar-fill" id="savingsBarFill"></div>
+                        </div>
+                        <p class="savings-bar-caption" id="savingsBarCaption">You're saving 0% vs branded</p>
                     </div>
                 </div>
+
+                <p class="modal-disclaimer"><i class="fas fa-info-circle"></i> Informational only. Consult your doctor before switching medicines.</p>
+            </div>
+        </div>
+    </div>
             </div>
         </div>
     </div>
@@ -126,8 +171,10 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="main.js?v=20261001_modal2"></script>
+    <script src="main.js?v=20261001_modalUI"></script>
 </body>
 </html>
+
+
 
 

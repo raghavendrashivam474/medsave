@@ -241,38 +241,51 @@ let currentGenericPrice = 0;
 
 function openMedicineModal(card) {
     const modal = document.getElementById('medicineModal');
-    if (!modal) {
-        console.error('MedSave: #medicineModal not found');
-        return;
-    }
+    if (!modal) { console.error('MedSave: #medicineModal missing'); return; }
+
+    currentBrandPrice = parseFloat(card.getAttribute('data-brand-price')) || 0;
+    currentGenericPrice = parseFloat(card.getAttribute('data-generic-price')) || 0;
 
     const brand = card.getAttribute('data-brand') || 'Medicine';
     const generic = card.getAttribute('data-generic') || '';
     const dosage = card.getAttribute('data-dosage') || '';
     const form = card.getAttribute('data-form') || '';
-    currentBrandPrice = parseFloat(card.getAttribute('data-brand-price')) || 0;
-    currentGenericPrice = parseFloat(card.getAttribute('data-generic-price')) || 0;
 
     const nameEl = document.getElementById('modalBrandName');
     const subEl = document.getElementById('modalGenericName');
-    const bPriceEl = document.getElementById('modalBrandPrice');
-    const gPriceEl = document.getElementById('modalGenericPrice');
+    const bp = document.getElementById('modalBrandPrice');
+    const gp = document.getElementById('modalGenericPrice');
+    const pill = document.getElementById('modalSavePill');
+    const hero = document.getElementById('modalHeroSave');
 
     if (nameEl) nameEl.textContent = brand;
-    if (subEl) {
-        const extra = (dosage + ' ' + form).trim();
-        subEl.textContent = 'Generic: ' + generic + (extra ? ' (' + extra + ')' : '');
-    }
-    if (bPriceEl) bPriceEl.textContent = '₹' + currentBrandPrice;
-    if (gPriceEl) gPriceEl.textContent = '₹' + currentGenericPrice;
 
-    const unitsInput = document.getElementById('calcUnits');
-    const daysInput = document.getElementById('calcDays');
-    if (unitsInput) unitsInput.value = 1;
-    if (daysInput) daysInput.value = 30;
+    // Clean subtitle — avoid duplicated dosage text
+    if (subEl) {
+        let bits = [];
+        if (generic) bits.push(generic);
+        const df = (dosage + ' ' + form).trim();
+        if (df) bits.push(df);
+        subEl.textContent = bits.length ? bits.join(' · ') : 'Generic alternative';
+    }
+
+    if (bp) bp.textContent = '₹' + formatNum(currentBrandPrice);
+    if (gp) gp.textContent = '₹' + formatNum(currentGenericPrice);
+
+    const packSave = Math.max(0, currentBrandPrice - currentGenericPrice);
+    const pct = currentBrandPrice > 0 ? Math.round((packSave / currentBrandPrice) * 1000) / 10 : 0;
+    if (pill) pill.textContent = 'Save ' + pct + '%';
+    if (hero) hero.textContent = '₹' + formatNum(packSave);
+
+    const u = document.getElementById('calcUnits');
+    const d = document.getElementById('calcDays');
+    if (u) u.value = 1;
+    if (d) d.value = 30;
+    setPresetActive(30);
 
     updateCalculator();
     modal.classList.add('active');
+    modal.style.display = 'flex';
     modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
 }
@@ -281,70 +294,119 @@ function closeMedicineModal() {
     const modal = document.getElementById('medicineModal');
     if (!modal) return;
     modal.classList.remove('active');
+    modal.style.display = 'none';
     modal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
 }
 
-function updateCalculator() {
-    const unitsEl = document.getElementById('calcUnits');
-    const daysEl = document.getElementById('calcDays');
-    const units = Math.max(0, parseFloat(unitsEl && unitsEl.value) || 0);
-    const days = Math.max(0, parseFloat(daysEl && daysEl.value) || 0);
-    const totalUnits = units * days;
-
-    const brandTotal = (currentBrandPrice * totalUnits).toFixed(2);
-    const genericTotal = (currentGenericPrice * totalUnits).toFixed(2);
-    const savings = (brandTotal - genericTotal).toFixed(2);
-
-    const elBrand = document.getElementById('calcBrandTotal');
-    const elGeneric = document.getElementById('calcGenericTotal');
-    const elSave = document.getElementById('calcTotalSavings');
-    if (elBrand) elBrand.textContent = '₹' + brandTotal;
-    if (elGeneric) elGeneric.textContent = '₹' + genericTotal;
-    if (elSave) elSave.textContent = '₹' + savings;
+function formatNum(n) {
+    const x = Number(n) || 0;
+    return Number.isInteger(x) ? String(x) : x.toFixed(2);
 }
 
-// Event delegation — works for every search result, every time
+function updateCalculator() {
+    const u = document.getElementById('calcUnits');
+    const d = document.getElementById('calcDays');
+    const units = Math.max(0, parseFloat(u && u.value) || 0);
+    const days = Math.max(0, parseFloat(d && d.value) || 0);
+    const n = units * days;
+
+    const bt = currentBrandPrice * n;
+    const gt = currentGenericPrice * n;
+    const sv = Math.max(0, bt - gt);
+    const pct = bt > 0 ? Math.round((sv / bt) * 1000) / 10 : 0;
+
+    const eb = document.getElementById('calcBrandTotal');
+    const eg = document.getElementById('calcGenericTotal');
+    const es = document.getElementById('calcTotalSavings');
+    const bar = document.getElementById('savingsBarFill');
+    const cap = document.getElementById('savingsBarCaption');
+
+    if (eb) eb.textContent = '₹' + bt.toFixed(2);
+    if (eg) eg.textContent = '₹' + gt.toFixed(2);
+    if (es) es.textContent = '₹' + sv.toFixed(2);
+    if (bar) bar.style.width = Math.min(100, pct) + '%';
+    if (cap) cap.textContent = pct > 0
+        ? ("You're saving " + pct + "% vs branded")
+        : 'Adjust values to project savings';
+}
+
+function bumpInput(id, delta) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const next = Math.max(1, (parseFloat(el.value) || 1) + delta);
+    el.value = next;
+    if (id === 'calcDays') setPresetActive(next);
+    updateCalculator();
+}
+
+function setPresetActive(days) {
+    document.querySelectorAll('.preset-btn').forEach(btn => {
+        const d = parseInt(btn.getAttribute('data-days'), 10);
+        btn.classList.toggle('active', d === days);
+    });
+}
+
+// Event delegation on results
 if (resultsContainer) {
     resultsContainer.addEventListener('click', function (e) {
         const card = e.target.closest('.medicine-card');
         if (card) openMedicineModal(card);
     });
     resultsContainer.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter' || e.key === ' ') {
-            const card = e.target.closest('.medicine-card');
-            if (card) {
-                e.preventDefault();
-                openMedicineModal(card);
-            }
-        }
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        const card = e.target.closest('.medicine-card');
+        if (!card) return;
+        e.preventDefault();
+        openMedicineModal(card);
     });
 }
 
-(function initMedicineModal() {
-    const closeBtn = document.getElementById('closeModal');
+(function initModalChrome() {
     const modal = document.getElementById('medicineModal');
-    const unitsInput = document.getElementById('calcUnits');
-    const daysInput = document.getElementById('calcDays');
-
-    if (closeBtn) closeBtn.addEventListener('click', function (e) {
-        e.stopPropagation();
-        closeMedicineModal();
-    });
+    const closeBtn = document.getElementById('closeModal');
 
     if (modal) {
+        modal.style.display = 'none';
         modal.addEventListener('click', function (e) {
             if (e.target === modal) closeMedicineModal();
         });
     }
-
+    if (closeBtn) {
+        closeBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            closeMedicineModal();
+        });
+    }
     document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape') closeMedicineModal();
     });
 
-    if (unitsInput) unitsInput.addEventListener('input', updateCalculator);
-    if (daysInput) daysInput.addEventListener('input', updateCalculator);
+    const u = document.getElementById('calcUnits');
+    const d = document.getElementById('calcDays');
+    if (u) u.addEventListener('input', updateCalculator);
+    if (d) d.addEventListener('input', function () {
+        setPresetActive(parseInt(d.value, 10));
+        updateCalculator();
+    });
 
-    console.log('MedSave: modal ready', !!modal);
+    const bind = (id, fn) => { const el = document.getElementById(id); if (el) el.addEventListener('click', fn); };
+    bind('unitsMinus', function () { bumpInput('calcUnits', -1); });
+    bind('unitsPlus',  function () { bumpInput('calcUnits', +1); });
+    bind('daysMinus',  function () { bumpInput('calcDays', -1); });
+    bind('daysPlus',   function () { bumpInput('calcDays', +1); });
+
+    document.querySelectorAll('.preset-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const days = parseInt(btn.getAttribute('data-days'), 10) || 30;
+            const dEl = document.getElementById('calcDays');
+            if (dEl) dEl.value = days;
+            setPresetActive(days);
+            updateCalculator();
+        });
+    });
+
+    console.log('MedSave: premium modal ready =', !!modal);
 })();
 
