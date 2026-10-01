@@ -61,6 +61,61 @@
             </div>
             <div id="storeResults"></div>
         </section>
+        <!-- Detailed Medicine Modal -->
+    <div id="medicineModal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close" id="closeModal" aria-label="Close">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-header">
+                <span class="modal-badge">Brand vs Generic Analysis</span>
+                <h2 id="modalBrandName">Medicine Name</h2>
+                <p id="modalGenericName" class="modal-subtitle">Composition</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-price-comparison">
+                    <div class="modal-price-box branded">
+                        <span class="price-label">Branded Price</span>
+                        <span class="price-val" id="modalBrandPrice">₹0</span>
+                    </div>
+                    <div class="vs-circle">VS</div>
+                    <div class="modal-price-box generic">
+                        <span class="price-label">Jan Aushadhi</span>
+                        <span class="price-val highlight" id="modalGenericPrice" style="color: var(--accent);">₹0</span>
+                    </div>
+                </div>
+                
+                <div class="savings-calculator">
+                    <h3><i class="fas fa-calculator" style="color: var(--blue);"></i> Calculate Monthly Savings</h3>
+                    <div class="calc-inputs">
+                        <div class="input-group">
+                            <label>Units per day (Tabs/Syrup)</label>
+                            <input type="number" id="calcUnits" value="1" min="1">
+                        </div>
+                        <div class="input-group">
+                            <label>Duration (Days)</label>
+                            <input type="number" id="calcDays" value="30" min="1">
+                        </div>
+                    </div>
+                    <div class="calc-results-box">
+                        <div class="result-row">
+                            <span>Estimated Branded Cost:</span>
+                            <span id="calcBrandTotal" class="strikethrough">₹0</span>
+                        </div>
+                        <div class="result-row">
+                            <span>Estimated Generic Cost:</span>
+                            <span id="calcGenericTotal">₹0</span>
+                        </div>
+                        <hr style="border-color: var(--glass-border); margin: 10px 0;">
+                        <div class="result-row highlight-row">
+                            <span>Total Estimated Savings:</span>
+                            <span id="calcTotalSavings" class="big-save">₹0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     </main>
 
     <footer class="footer" style="margin-top: 4rem; padding: 2rem 0; text-align: center; border-top: 1px solid var(--border-color); color: var(--text-secondary); font-size: 0.85rem;">
@@ -74,3 +129,4 @@
     <script src="main.js?v=20260930_v4"></script>
 </body>
 </html>
+

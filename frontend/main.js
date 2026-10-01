@@ -64,17 +64,35 @@ function displayMedicines(medicines) {
         return;
     }
 
-    resultsContainer.innerHTML = list.map(med => {
+    resultsContainer.innerHTML = list.map((med, index) => {
         const savings = (med.brand_price && med.generic_price) ? (med.brand_price - med.generic_price).toFixed(2) : '0.00';
+        const brandName = (med.brand_name || 'Generic Medicine').replace(/"/g, '&quot;');
+        const genericName = (med.generic_name || '').replace(/"/g, '&quot;');
+        const dosage = (med.dosage || '').replace(/"/g, '&quot;');
+        const form = (med.form || '').replace(/"/g, '&quot;');
+        const matchLabel = med.match_type === 'generic' ? 'GENERIC SALT' : 'BRANDED ALTERNATIVE';
+        
         return `
-        <div class="card medicine-card" style="margin-bottom: 1.5rem; padding: 1.5rem; background: var(--bg-card); border-radius: 12px; border: 1px solid var(--border-color);">
+        <div class="card medicine-card" 
+             data-index="${index}"
+             data-brand="${brandName}"
+             data-generic="${genericName}"
+             data-dosage="${dosage}"
+             data-form="${form}"
+             data-brand-price="${med.brand_price || 0}"
+             data-generic-price="${med.generic_price || 0}"
+             data-savings-percent="${med.savings_percent || 0}"
+             style="margin-bottom: 1.5rem; padding: 1.5rem; background: var(--bg-card); border-radius: 12px; border: 1px solid var(--border-color); cursor: pointer; transition: transform 0.2s ease, border-color 0.2s ease;">
             <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
                 <div>
                     <div style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent); font-weight: 700; margin-bottom: 0.3rem;">
-                        ${med.match_type === 'generic' ? 'GENERIC SALT' : 'BRANDED ALTERNATIVE'}
+                        ${matchLabel}
                     </div>
                     <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.2rem;">${med.brand_name || 'Generic Medicine'}</h3>
                     <p style="font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 0.5rem;">Generic: <strong>${med.generic_name || ''}</strong> (${med.dosage || ''} ${med.form || ''})</p>
+                    <div style="font-size: 0.8rem; color: var(--blue); margin-top: 0.6rem; font-weight: 600;">
+                        <i class="fas fa-expand-alt"></i> Tap for detailed savings calculator
+                    </div>
                 </div>
                 <div style="text-align: right;">
                     <div style="font-size: 0.85rem; color: var(--text-secondary); text-decoration: line-through;">Branded: ₹${med.brand_price || 0}</div>
@@ -85,6 +103,11 @@ function displayMedicines(medicines) {
         </div>
         `;
     }).join('');
+
+    // Attach click handlers to open modal
+    document.querySelectorAll('.medicine-card').forEach(card => {
+        card.addEventListener('click', () => openMedicineModal(card));
+    });
 }
 
 // Store Lookup Logic
@@ -209,3 +232,89 @@ if ('serviceWorker' in navigator) {
         });
     });
 }
+
+// ============================================
+// MEDICINE DETAIL MODAL + SAVINGS CALCULATOR
+// ============================================
+let currentBrandPrice = 0;
+let currentGenericPrice = 0;
+
+function openMedicineModal(card) {
+    const modal = document.getElementById('medicineModal');
+    if (!modal) {
+        console.error('Modal #medicineModal not found in DOM');
+        return;
+    }
+
+    const brand = card.dataset.brand || 'Medicine';
+    const generic = card.dataset.generic || '';
+    const dosage = card.dataset.dosage || '';
+    const form = card.dataset.form || '';
+    currentBrandPrice = parseFloat(card.dataset.brandPrice) || 0;
+    currentGenericPrice = parseFloat(card.dataset.genericPrice) || 0;
+
+    document.getElementById('modalBrandName').textContent = brand;
+    document.getElementById('modalGenericName').textContent =
+        'Generic: ' + generic + (dosage || form ? ' (' + (dosage + ' ' + form).trim() + ')' : '');
+    document.getElementById('modalBrandPrice').textContent = '₹' + currentBrandPrice;
+    document.getElementById('modalGenericPrice').textContent = '₹' + currentGenericPrice;
+
+    const unitsInput = document.getElementById('calcUnits');
+    const daysInput = document.getElementById('calcDays');
+    if (unitsInput) unitsInput.value = 1;
+    if (daysInput) daysInput.value = 30;
+
+    updateCalculator();
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeMedicineModal() {
+    const modal = document.getElementById('medicineModal');
+    if (!modal) return;
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+function updateCalculator() {
+    const unitsEl = document.getElementById('calcUnits');
+    const daysEl = document.getElementById('calcDays');
+    const units = parseFloat(unitsEl && unitsEl.value) || 1;
+    const days = parseFloat(daysEl && daysEl.value) || 30;
+
+    const totalUnits = units * days;
+    const brandTotal = (currentBrandPrice * totalUnits).toFixed(2);
+    const genericTotal = (currentGenericPrice * totalUnits).toFixed(2);
+    const savings = (brandTotal - genericTotal).toFixed(2);
+
+    const elBrand = document.getElementById('calcBrandTotal');
+    const elGeneric = document.getElementById('calcGenericTotal');
+    const elSave = document.getElementById('calcTotalSavings');
+
+    if (elBrand) elBrand.textContent = '₹' + brandTotal;
+    if (elGeneric) elGeneric.textContent = '₹' + genericTotal;
+    if (elSave) elSave.textContent = '₹' + savings;
+}
+
+// Wire modal events once
+(function initMedicineModal() {
+    const closeBtn = document.getElementById('closeModal');
+    const modal = document.getElementById('medicineModal');
+    const unitsInput = document.getElementById('calcUnits');
+    const daysInput = document.getElementById('calcDays');
+
+    if (closeBtn) closeBtn.addEventListener('click', closeMedicineModal);
+
+    if (modal) {
+        modal.addEventListener('click', function (e) {
+            if (e.target === modal) closeMedicineModal();
+        });
+    }
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeMedicineModal();
+    });
+
+    if (unitsInput) unitsInput.addEventListener('input', updateCalculator);
+    if (daysInput) daysInput.addEventListener('input', updateCalculator);
+})();
