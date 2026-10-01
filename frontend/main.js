@@ -1,4 +1,4 @@
-﻿const API_BASE = window.location.origin.includes('localhost') ? 'http://localhost:5000/api' : '/api';
+const API_BASE = window.location.origin.includes('localhost') ? 'http://localhost:5000/api' : '/api';
 
 const searchInput = document.getElementById('searchInput');
 const resultsContainer = document.getElementById('results');
@@ -456,3 +456,18 @@ if ('serviceWorker' in navigator) {
         });
     });
 }
+
+// Global Modal Close Delegation (Guarantees click works on button, icon, and backdrop)
+document.addEventListener('click', function (e) {
+    const closeBtn = e.target.closest('#closeModal, .modal-close');
+    if (closeBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+        closeMedicineModal();
+        return;
+    }
+    const modal = document.getElementById('medicineModal');
+    if (modal && e.target === modal) {
+        closeMedicineModal();
+    }
+}, true);

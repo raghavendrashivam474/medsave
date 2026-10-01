@@ -1663,3 +1663,6 @@ body.light-theme .hero-title { color: #0f172a !important; }
 .search-box input[type="text"] {
     padding-left: 3.1rem !important;
 }
+
+#medicineModal .modal-close { pointer-events: auto !important; cursor: pointer !important; z-index: 99999 !important; }
+#medicineModal .modal-close * { pointer-events: none !important; }
