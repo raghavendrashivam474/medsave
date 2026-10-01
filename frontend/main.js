@@ -64,50 +64,76 @@ function displayMedicines(medicines) {
         return;
     }
 
-    resultsContainer.innerHTML = list.map((med, index) => {
-        const savings = (med.brand_price && med.generic_price) ? (med.brand_price - med.generic_price).toFixed(2) : '0.00';
-        const brandName = (med.brand_name || 'Generic Medicine').replace(/"/g, '&quot;');
-        const genericName = (med.generic_name || '').replace(/"/g, '&quot;');
-        const dosage = (med.dosage || '').replace(/"/g, '&quot;');
-        const form = (med.form || '').replace(/"/g, '&quot;');
-        const matchLabel = med.match_type === 'generic' ? 'GENERIC SALT' : 'BRANDED ALTERNATIVE';
-        
-        return `
-        <div class="card medicine-card" 
-             data-index="${index}"
-             data-brand="${brandName}"
-             data-generic="${genericName}"
-             data-dosage="${dosage}"
-             data-form="${form}"
-             data-brand-price="${med.brand_price || 0}"
-             data-generic-price="${med.generic_price || 0}"
-             data-savings-percent="${med.savings_percent || 0}"
-             style="margin-bottom: 1.5rem; padding: 1.5rem; background: var(--bg-card); border-radius: 12px; border: 1px solid var(--border-color); cursor: pointer; transition: transform 0.2s ease, border-color 0.2s ease;">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
-                <div>
-                    <div style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent); font-weight: 700; margin-bottom: 0.3rem;">
-                        ${matchLabel}
-                    </div>
-                    <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.2rem;">${med.brand_name || 'Generic Medicine'}</h3>
-                    <p style="font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 0.5rem;">Generic: <strong>${med.generic_name || ''}</strong> (${med.dosage || ''} ${med.form || ''})</p>
-                    <div style="font-size: 0.8rem; color: var(--blue); margin-top: 0.6rem; font-weight: 600;">
-                        <i class="fas fa-expand-alt"></i> Tap for detailed savings calculator
-                    </div>
-                </div>
-                <div style="text-align: right;">
-                    <div style="font-size: 0.85rem; color: var(--text-secondary); text-decoration: line-through;">Branded: ₹${med.brand_price || 0}</div>
-                    <div style="font-size: 1.3rem; font-weight: 800; color: var(--accent);">Generic: ₹${med.generic_price || 0}</div>
-                    <div style="font-size: 0.85rem; color: #22c55e; font-weight: 700; margin-top: 0.2rem;">Save ${med.savings_percent || 0}% (₹${savings})</div>
-                </div>
-            </div>
-        </div>
-        `;
-    }).join('');
+    const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
 
-    // Attach click handlers to open modal
-    document.querySelectorAll('.medicine-card').forEach(card => {
-        card.addEventListener('click', () => openMedicineModal(card));
-    });
+    resultsContainer.innerHTML = list.map((med) => {
+        const brandPrice = Number(med.brand_price) || 0;
+        const genericPrice = Number(med.generic_price) || 0;
+        const packSave = Math.max(0, brandPrice - genericPrice);
+        const savingsPct = med.savings_percent != null ? med.savings_percent
+            : (brandPrice > 0 ? Math.round((packSave / brandPrice) * 1000) / 10 : 0);
+        const matchLabel = med.match_type === 'generic' ? 'GENERIC SALT' : 'BRANDED ALTERNATIVE';
+        const brandName = med.brand_name || 'Generic Medicine';
+        const genericName = med.generic_name || '';
+        const dosage = med.dosage || '';
+        const form = med.form || '';
+        const df = (dosage + ' ' + form).trim();
+
+        return (
+            '<div class="card medicine-card"' +
+            ' role="button" tabindex="0"' +
+            ' data-brand="' + esc(brandName) + '"' +
+            ' data-generic="' + esc(genericName) + '"' +
+            ' data-dosage="' + esc(dosage) + '"' +
+            ' data-form="' + esc(form) + '"' +
+            ' data-brand-price="' + brandPrice + '"' +
+            ' data-generic-price="' + genericPrice + '">' +
+
+            // ---- compact summary (always visible) ----
+            '<div class="mc-summary">' +
+              '<div class="mc-left">' +
+                '<div class="mc-label">' + matchLabel + '</div>' +
+                '<h3 class="mc-title">' + esc(brandName) + '</h3>' +
+                '<p class="mc-generic">Generic: <strong>' + esc(genericName) + '</strong>' +
+                  (df ? ' · ' + esc(df) : '') + '</p>' +
+              '</div>' +
+              '<div class="mc-right">' +
+                '<div class="mc-brand-price">Branded: ₹' + brandPrice + '</div>' +
+                '<div class="mc-generic-price">Generic: ₹' + genericPrice + '</div>' +
+                '<div class="mc-save-chip">Save ' + savingsPct + '%</div>' +
+              '</div>' +
+            '</div>' +
+
+            // ---- medium hover preview (revealed on hover / focus) ----
+            '<div class="mc-preview" aria-hidden="true">' +
+              '<div class="mc-preview-grid">' +
+                '<div class="mc-preview-stat">' +
+                  '<span class="mc-ps-label">Pack savings</span>' +
+                  '<span class="mc-ps-value">₹' + packSave.toFixed(2) + '</span>' +
+                '</div>' +
+                '<div class="mc-preview-stat">' +
+                  '<span class="mc-ps-label">You pay</span>' +
+                  '<span class="mc-ps-value accent">₹' + genericPrice + '</span>' +
+                '</div>' +
+                '<div class="mc-preview-stat">' +
+                  '<span class="mc-ps-label">vs branded</span>' +
+                  '<span class="mc-ps-value muted"><s>₹' + brandPrice + '</s></span>' +
+                '</div>' +
+              '</div>' +
+              '<div class="mc-preview-meta">' +
+                '<span><i class="fas fa-shield-alt"></i> Jan Aushadhi certified</span>' +
+                '<span><i class="fas fa-flask"></i> Same active salt</span>' +
+                (df ? '<span><i class="fas fa-pills"></i> ' + esc(df) + '</span>' : '') +
+              '</div>' +
+              '<div class="mc-preview-cta">' +
+                '<i class="fas fa-calculator"></i> Click for dose &amp; duration savings calculator' +
+                '<i class="fas fa-arrow-right mc-cta-arrow"></i>' +
+              '</div>' +
+            '</div>' +
+
+            '</div>'
+        );
+    }).join('');
 }
 
 // Store Lookup Logic
