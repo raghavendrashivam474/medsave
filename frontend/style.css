@@ -398,6 +398,8 @@ body.light-theme .calculator-toggle:hover { background: rgba(0, 0, 0, 0.05); col
 }
 
 #medicineModal.modal-overlay {
+    z-index: 10000 !important;
+    padding: 1.5rem 1rem !important;
     position: fixed !important;
     inset: 0 !important;
     background: rgba(2, 6, 12, 0.72) !important;
@@ -422,6 +424,7 @@ body.light-theme .calculator-toggle:hover { background: rgba(0, 0, 0, 0.05); col
 }
 
 #medicineModal .modal-content {
+    position: relative !important;
     background: linear-gradient(165deg, #101826 0%, #0a0f18 100%) !important;
     border: 1px solid rgba(148, 163, 184, 0.16);
     border-radius: 28px;
@@ -801,6 +804,7 @@ body.light-theme .calculator-toggle:hover { background: rgba(0, 0, 0, 0.05); col
 
 /* Light theme */
 body.light-theme #medicineModal .modal-content {
+    position: relative !important;
     background: linear-gradient(165deg, #ffffff 0%, #f8fafc 100%) !important;
     color: #0f172a;
     border-color: rgba(15, 23, 42, 0.08);
@@ -844,11 +848,17 @@ body.light-theme .hero-save-label { color: #15803d; }
 
 /* Responsive */
 @media (max-width: 540px) {
-    #medicineModal.modal-overlay { align-items: center !important; justify-content: center !important; padding: 12px !important; }
-    #medicineModal .modal-content { max-height: 85vh !important; border-radius: 20px !important; position: relative !important; }
-    #medicineModal .modal-close { top: 12px !important; right: 12px !important; width: 36px !important; height: 36px !important; z-index: 999 !important; background: rgba(239, 68, 68, 0.9) !important; color: #fff !important; }
-    #medicineModal.modal-overlay { padding: 1rem 0.75rem !important; align-items: center !important; }
+    #medicineModal.modal-overlay {
+    z-index: 10000 !important;
+    padding: 1.5rem 1rem !important; align-items: center !important; justify-content: center !important; padding: 12px !important; }
     #medicineModal .modal-content {
+    position: relative !important; max-height: 85vh !important; border-radius: 20px !important; position: relative !important; }
+    #medicineModal .modal-close { top: 12px !important; right: 12px !important; width: 36px !important; height: 36px !important; z-index: 999 !important; background: rgba(239, 68, 68, 0.9) !important; color: #fff !important; }
+    #medicineModal.modal-overlay {
+    z-index: 10000 !important;
+    padding: 1.5rem 1rem !important; padding: 1rem 0.75rem !important; align-items: center !important; }
+    #medicineModal .modal-content {
+    position: relative !important;
         max-width: 100%;
         max-height: 94vh;
         border-radius: 24px 24px 18px 18px;
