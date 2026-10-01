@@ -29,8 +29,14 @@ if (searchInput) {
         if (query.length < 1) {
             resultsContainer.innerHTML = `
                 <div class="empty-state">
-                    <i class="fas fa-pills" style="font-size: 2.5rem; margin-bottom: 1rem; color: var(--text-secondary);"></i>
-                    <p>Enter a medicine name to start comparing prices</p>
+                    <div class="empty-icon-wrap"><i class="fas fa-pills"></i></div>
+                    <h3 class="empty-title">Search a branded medicine</h3>
+                    <p class="empty-text">Try
+                      <button type="button" class="empty-chip" data-q="Dolo">Dolo</button>
+                      <button type="button" class="empty-chip" data-q="Crocin">Crocin</button>
+                      <button type="button" class="empty-chip" data-q="Glycomet">Glycomet</button>
+                      <button type="button" class="empty-chip" data-q="Calpol">Calpol</button>
+                      to compare prices</p>
                 </div>`;
             return;
         }
@@ -60,7 +66,16 @@ function displayMedicines(medicines) {
     if (!resultsContainer) return;
     const list = Array.isArray(medicines) ? medicines : (medicines && medicines.data ? medicines.data : []);
     if (list.length === 0) {
-        resultsContainer.innerHTML = '<div class="empty-state">No matching medicines found. Try searching for "Paracetamol", "Atorvastatin", or "Metformin".</div>';
+        resultsContainer.innerHTML = '<div class="empty-state">
+                    <div class="empty-icon-wrap"><i class="fas fa-pills"></i></div>
+                    <h3 class="empty-title">Search a branded medicine</h3>
+                    <p class="empty-text">Try
+                      <button type="button" class="empty-chip" data-q="Dolo">Dolo</button>
+                      <button type="button" class="empty-chip" data-q="Crocin">Crocin</button>
+                      <button type="button" class="empty-chip" data-q="Glycomet">Glycomet</button>
+                      <button type="button" class="empty-chip" data-q="Calpol">Calpol</button>
+                      to compare prices</p>
+                </div>';
         return;
     }
 
@@ -209,7 +224,16 @@ function displayStores(storesInput) {
     }
 
     if (list.length === 0) {
-        el.innerHTML = '<div class="empty-state">No Jan Aushadhi Kendras found for this query.</div>';
+        el.innerHTML = '<div class="empty-state">
+                    <div class="empty-icon-wrap"><i class="fas fa-pills"></i></div>
+                    <h3 class="empty-title">Search a branded medicine</h3>
+                    <p class="empty-text">Try
+                      <button type="button" class="empty-chip" data-q="Dolo">Dolo</button>
+                      <button type="button" class="empty-chip" data-q="Crocin">Crocin</button>
+                      <button type="button" class="empty-chip" data-q="Glycomet">Glycomet</button>
+                      <button type="button" class="empty-chip" data-q="Calpol">Calpol</button>
+                      to compare prices</p>
+                </div>';
         return;
     }
 
@@ -480,4 +504,5 @@ document.addEventListener('click', function (e) {
         });
     };
 })();
+
 

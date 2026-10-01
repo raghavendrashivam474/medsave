@@ -1620,3 +1620,24 @@ body.light-theme .hero-title { color: #0f172a !important; }
     .hero-pills { gap: 0.35rem; }
     .hero-pill { font-size: 0.7rem; padding: 0.35rem 0.6rem; }
 }
+
+/* SEARCH ICON FIX */
+.search-box { position: relative !important; }
+.search-box .search-icon,
+.search-icon {
+    position: absolute !important;
+    left: 1.15rem !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    color: #64748b !important;
+    font-size: 1.05rem !important;
+    z-index: 2 !important;
+    pointer-events: none !important;
+    display: inline-block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+#searchInput,
+.search-box input[type="text"] {
+    padding-left: 3.1rem !important;
+}
