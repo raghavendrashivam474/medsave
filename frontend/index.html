@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MedSave | Medicine Price & Savings Calculator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="manifest" href="manifest.json">
@@ -24,42 +27,77 @@
     <header class="header">
         <div class="container nav-container">
             <div class="logo">
-                <i class="fas fa-prescription-bottle-alt logo-icon"></i>
-                <span>MedSave</span>
+                <span class="logo-mark"><i class="fas fa-prescription-bottle-alt"></i></span>
+                <div class="logo-text">
+                    <span class="logo-name">MedSave</span>
+                    <span class="logo-tag">Jan Aushadhi Price Compare</span>
+                </div>
             </div>
-            <button class="theme-toggle" id="themeToggle" aria-label="Toggle Theme">
-                <i class="fas fa-moon"></i>
-            </button>
+            <div class="header-actions">
+                <span class="header-trust"><i class="fas fa-shield-alt"></i> Govt. certified generics</span>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle Theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
         </div>
     </header>
 
     <main class="container main-content">
         <section class="hero-section">
-            <h1 class="hero-title">Save Up to 80% on Your Medicines</h1>
-            <p class="hero-subtitle">Compare expensive branded drugs with government-certified Jan Aushadhi generic alternatives.</p>
-            
+            <div class="hero-kicker">
+                <span class="kicker-dot"></span>
+                India&rsquo;s generic medicine savings tool
+            </div>
+            <h1 class="hero-title">Save Up to 80% on Your <span class="hero-title-accent">Medicines</span></h1>
+            <p class="hero-subtitle">Compare expensive branded drugs with government-certified Jan Aushadhi generic alternatives — same salt, fraction of the price.</p>
+
             <div class="search-box">
                 <i class="fas fa-search search-icon"></i>
-                <input type="text" id="searchInput" placeholder="Search branded medicine (e.g. Crocin, Glycomet, Dolo)..." autocomplete="off">
+                <input type="text" id="searchInput" placeholder="Search branded medicine (e.g. Crocin, Glycomet, Dolo)..." autocomplete="off" aria-label="Search medicines">
+                <kbd class="search-hint">↵</kbd>
+            </div>
+
+            <div class="hero-pills">
+                <span class="hero-pill"><i class="fas fa-check-circle"></i> Same active composition</span>
+                <span class="hero-pill"><i class="fas fa-rupee-sign"></i> Live price comparison</span>
+                <span class="hero-pill"><i class="fas fa-map-marker-alt"></i> Nearby Jan Aushadhi stores</span>
             </div>
         </section>
 
         <section class="results-section">
             <div id="results" class="results-container">
-                <div class="empty-state">
-                    <i class="fas fa-pills" style="font-size: 2.5rem; margin-bottom: 1rem; color: var(--text-secondary);"></i>
-                    <p>Enter a medicine name to start comparing prices</p>
+                                <div class="empty-state">
+                    <div class="empty-icon-wrap"><i class="fas fa-pills"></i></div>
+                    <h3 class="empty-title">Search a branded medicine</h3>
+                    <p class="empty-text">Try <button type="button" class="empty-chip" data-q="Dolo">Dolo</button>
+                    <button type="button" class="empty-chip" data-q="Crocin">Crocin</button>
+                    <button type="button" class="empty-chip" data-q="Glycomet">Glycomet</button>
+                    <button type="button" class="empty-chip" data-q="Calpol">Calpol</button>
+                    to see branded vs Jan Aushadhi prices</p>
                 </div>
             </div>
         </section>
 
-        <section class="stores-section" id="storesSection" style="margin-top: 3rem;">
-            <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-primary);">Nearby Jan Aushadhi Stores</h2>
-            <div class="store-search" style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
-                <input type="text" id="pincodeInput" placeholder="Enter Pincode (e.g. 110001)" style="flex: 1; min-width: 200px; padding: 0.8rem 1rem; border-radius: 12px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-primary);">
-                <button id="findStoresBtn" style="padding: 0.8rem 1.5rem; border-radius: 12px; background: var(--blue); color: white; border: none; font-weight: 600; cursor: pointer;">Find</button>
+        <section class="stores-section" id="storesSection">
+            <div class="section-head">
+                <div>
+                    <p class="section-kicker">Find nearby</p>
+                    <h2 class="section-title">Jan Aushadhi Stores</h2>
+                </div>
+                <p class="section-desc">Locate government generic medicine outlets near you</p>
             </div>
-            <div id="storeResults"></div>
+
+            <div class="store-search" id="storeSearchBar">
+                <div class="store-input-wrap">
+                    <i class="fas fa-map-pin store-input-icon"></i>
+                    <input type="text" id="pincodeInput" placeholder="Enter pincode (e.g. 110001)" inputmode="numeric" maxlength="6" aria-label="Pincode">
+                </div>
+                <button id="findStoresBtn" class="btn btn-primary" type="button">
+                    <i class="fas fa-search"></i> Find
+                </button>
+                <button id="geoBtnSlot" class="btn btn-ghost" type="button" hidden></button>
+            </div>
+            <div id="storeResults" class="store-results"></div>
         </section>
     <!-- Detailed Medicine Modal -->
     <div id="medicineModal" class="modal-overlay" aria-hidden="true">
@@ -163,17 +201,22 @@
     </div>
     </main>
 
-    <footer class="footer" style="margin-top: 4rem; padding: 2rem 0; text-align: center; border-top: 1px solid var(--border-color); color: var(--text-secondary); font-size: 0.85rem;">
-        <div class="container">
-            <p>© 2026 MedSave Utility. All data is for informational purposes.</p>
-            <p style="margin-top: 0.5rem; color: var(--accent); font-weight: 600;"><i class="fas fa-exclamation-triangle"></i> Consult a doctor before switching medicines.</p>
+    <footer class="footer">
+        <div class="container footer-inner">
+            <div class="footer-brand">
+                <span class="logo-mark sm"><i class="fas fa-prescription-bottle-alt"></i></span>
+                <span>MedSave</span>
+            </div>
+            <p class="footer-copy">© 2026 MedSave · Data for informational purposes only</p>
+            <p class="footer-warn"><i class="fas fa-exclamation-triangle"></i> Always consult a doctor before switching medicines</p>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="main.js?v=20261001_hovercard"></script>
+    <script src="main.js?v=20261001_pro1"></script>
 </body>
 </html>
+
 
 
 

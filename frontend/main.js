@@ -436,3 +436,48 @@ if (resultsContainer) {
     console.log('MedSave: premium modal ready =', !!modal);
 })();
 
+// Empty-state quick search chips
+document.addEventListener('click', function (e) {
+    const chip = e.target.closest('.empty-chip');
+    if (!chip) return;
+    const q = chip.getAttribute('data-q');
+    if (!q || !searchInput) return;
+    searchInput.value = q;
+    searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+    searchInput.focus();
+});
+
+// Place geolocation button into designed slot (override old append)
+(function refineGeoBtn() {
+    if (!("geolocation" in navigator)) return;
+    const slot = document.getElementById('geoBtnSlot');
+    const bar = document.getElementById('storeSearchBar');
+    // Remove any old injected geo buttons that were appended earlier
+    if (bar) {
+        bar.querySelectorAll('button').forEach(b => {
+            if (b.id !== 'findStoresBtn' && b.id !== 'geoBtnSlot' && /location/i.test(b.textContent || '')) {
+                b.remove();
+            }
+        });
+    }
+    let geoBtn = slot;
+    if (!geoBtn) return;
+    geoBtn.hidden = false;
+    geoBtn.className = 'btn btn-ghost';
+    geoBtn.type = 'button';
+    geoBtn.innerHTML = '<i class="fas fa-location-arrow"></i> Use Location';
+    geoBtn.onclick = function () {
+        geoBtn.disabled = true;
+        geoBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Locating...';
+        navigator.geolocation.getCurrentPosition(function (pos) {
+            fetchStores('', pos.coords.latitude, pos.coords.longitude);
+            geoBtn.disabled = false;
+            geoBtn.innerHTML = '<i class="fas fa-location-arrow"></i> Use Location';
+        }, function () {
+            alert('Unable to get location. Please enter pincode.');
+            geoBtn.disabled = false;
+            geoBtn.innerHTML = '<i class="fas fa-location-arrow"></i> Use Location';
+        });
+    };
+})();
+

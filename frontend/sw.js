@@ -1,4 +1,4 @@
-﻿const CACHE_NAME = 'medsave-v7';
+﻿const CACHE_NAME = 'medsave-v8';
 
 // Only cache files that actually exist
 const ASSETS = [
@@ -49,6 +49,7 @@ self.addEventListener('fetch', (event) => {
         caches.match(event.request).then((response) => response || fetch(event.request))
     );
 });
+
 
 
 
