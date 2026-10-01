@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -49,12 +49,12 @@
                 India&rsquo;s generic medicine savings tool
             </div>
             <h1 class="hero-title">Save Up to 80% on Your <span class="hero-title-accent">Medicines</span></h1>
-            <p class="hero-subtitle">Compare expensive branded drugs with government-certified Jan Aushadhi generic alternatives — same salt, fraction of the price.</p>
+            <p class="hero-subtitle">Compare expensive branded drugs with government-certified Jan Aushadhi generic alternatives � same salt, fraction of the price.</p>
 
             <div class="search-box">
                 <i class="fas fa-search search-icon"></i>
                 <input type="text" id="searchInput" placeholder="Search branded medicine (e.g. Crocin, Glycomet, Dolo)..." autocomplete="off" aria-label="Search medicines">
-                <kbd class="search-hint">↵</kbd>
+                <kbd class="search-hint">?</kbd>
             </div>
 
             <div class="hero-pills">
@@ -107,6 +107,23 @@
             </div>
             <div id="storeResults" class="store-results"></div>
         </section>
+    
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-inner">
+            <div class="footer-brand">
+                <span class="logo-mark sm"><i class="fas fa-prescription-bottle-alt"></i></span>
+                <span>MedSave</span>
+            </div>
+            <p class="footer-copy">� 2026 MedSave � Data for informational purposes only</p>
+            <p class="footer-warn"><i class="fas fa-exclamation-triangle"></i> Always consult a doctor before switching medicines</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="main.js?v=20261001_fixSyntax"></script>
+
     <!-- Detailed Medicine Modal -->
     <div id="medicineModal" class="modal-overlay" aria-hidden="true">
         <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modalBrandName">
@@ -127,72 +144,65 @@
                 <!-- Hero savings -->
                 <div class="modal-hero-save">
                     <div class="hero-save-label">You could save</div>
-                    <div class="hero-save-value" id="modalHeroSave">₹0</div>
-                    <div class="hero-save-sub">per pack · Jan Aushadhi certified generic</div>
+                    <div class="hero-save-value" id="modalHeroSave">?0</div>
+                    <div class="hero-save-sub">per pack � Jan Aushadhi certified generic</div>
                 </div>
 
                 <!-- Price comparison -->
                 <div class="modal-price-comparison">
                     <div class="modal-price-box branded">
                         <span class="price-label">Branded MRP</span>
-                        <span class="price-val" id="modalBrandPrice">₹0</span>
+                        <span class="price-val" id="modalBrandPrice">?0</span>
                         <span class="price-tag">Market price</span>
                     </div>
                     <div class="vs-circle">VS</div>
                     <div class="modal-price-box generic">
                         <span class="price-label">Jan Aushadhi</span>
-                        <span class="price-val" id="modalGenericPrice">₹0</span>
+                        <span class="price-val" id="modalGenericPrice">?0</span>
                         <span class="price-tag accent-tag">Generic price</span>
                     </div>
                 </div>
 
-                <!-- Calculator -->
+                <!-- Savings Calculator -->
                 <div class="savings-calculator">
                     <div class="calc-header">
-                        <h3><i class="fas fa-calculator"></i> Savings Projector</h3>
-                        <p>Adjust dose &amp; duration to see long-term savings</p>
+                        <h3><i class="fas fa-calculator"></i> Savings Calculator</h3>
+                        <p>Calculate your savings based on your monthly prescription</p>
                     </div>
 
                     <div class="calc-inputs">
-                        <div class="input-group">
-                            <label for="calcUnits">Units per day</label>
+                        <div class="calc-field">
+                            <label for="calcUnits">Packs / Strips per month</label>
                             <div class="stepper">
-                                <button type="button" class="step-btn" id="unitsMinus" aria-label="Decrease">−</button>
-                                <input type="number" id="calcUnits" value="1" min="1" step="1">
-                                <button type="button" class="step-btn" id="unitsPlus" aria-label="Increase">+</button>
+                                <button type="button" class="step-btn" data-step="-1" aria-label="Decrease packs">-</button>
+                                <input type="number" id="calcUnits" min="1" max="50" value="2">
+                                <button type="button" class="step-btn" data-step="1" aria-label="Increase packs">+</button>
                             </div>
                         </div>
-                        <div class="input-group">
-                            <label for="calcDays">Duration (days)</label>
+                        <div class="calc-field">
+                            <label for="calcDays">Duration (months)</label>
                             <div class="stepper">
-                                <button type="button" class="step-btn" id="daysMinus" aria-label="Decrease">−</button>
-                                <input type="number" id="calcDays" value="30" min="1" step="1">
-                                <button type="button" class="step-btn" id="daysPlus" aria-label="Increase">+</button>
+                                <button type="button" class="step-btn" data-step-days="-1" aria-label="Decrease months">-</button>
+                                <input type="number" id="calcDays" min="1" max="36" value="6">
+                                <button type="button" class="step-btn" data-step-days="1" aria-label="Increase months">+</button>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="calc-presets">
-                        <button type="button" class="preset-btn" data-days="7">1 Week</button>
-                        <button type="button" class="preset-btn active" data-days="30">1 Month</button>
-                        <button type="button" class="preset-btn" data-days="90">3 Months</button>
-                        <button type="button" class="preset-btn" data-days="365">1 Year</button>
                     </div>
 
                     <div class="calc-results-box">
-                        <div class="result-row">
-                            <span>Branded cost</span>
-                            <span id="calcBrandTotal" class="strikethrough">₹0</span>
+                        <div class="calc-row">
+                            <span>Total Branded Cost:</span>
+                            <strong id="calcBrandedTotal">?0</strong>
                         </div>
-                        <div class="result-row">
-                            <span>Generic cost</span>
-                            <span id="calcGenericTotal">₹0</span>
+                        <div class="calc-row">
+                            <span>Total Generic Cost:</span>
+                            <strong id="calcGenericTotal" class="generic-green">?0</strong>
                         </div>
-                        <div class="result-divider"></div>
-                        <div class="result-row highlight-row">
-                            <span>Total savings</span>
-                            <span id="calcTotalSavings" class="big-save">₹0</span>
+                        <div class="calc-row highlight-row">
+                            <span>Total Estimated Savings:</span>
+                            <strong id="calcTotalSavings" class="big-save">?0</strong>
                         </div>
+
                         <div class="savings-bar-track">
                             <div class="savings-bar-fill" id="savingsBarFill"></div>
                         </div>
@@ -204,24 +214,6 @@
             </div>
         </div>
     </div>
-            </div>
-        </div>
-    </div>
-    </main>
-
-    <footer class="footer">
-        <div class="container footer-inner">
-            <div class="footer-brand">
-                <span class="logo-mark sm"><i class="fas fa-prescription-bottle-alt"></i></span>
-                <span>MedSave</span>
-            </div>
-            <p class="footer-copy">© 2026 MedSave · Data for informational purposes only</p>
-            <p class="footer-warn"><i class="fas fa-exclamation-triangle"></i> Always consult a doctor before switching medicines</p>
-        </div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="main.js?v=20261001_fixSyntax"></script>
 </body>
 </html>
 

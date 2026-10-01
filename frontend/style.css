@@ -38,7 +38,6 @@ body {
 .container {
     max-width: 900px;
     width: 100%;
-    z-index: 1;
 }
 
 header {
@@ -406,7 +405,7 @@ body.light-theme .calculator-toggle:hover { background: rgba(0, 0, 0, 0.05); col
     display: none;
     align-items: center !important;
     justify-content: center !important;
-    z-index: 2147483646 !important;
+    z-index: 99999 !important;
     padding: 1.25rem !important;
     opacity: 1 !important;
     visibility: visible !important;
@@ -422,6 +421,7 @@ body.light-theme .calculator-toggle:hover { background: rgba(0, 0, 0, 0.05); col
 }
 
 #medicineModal .modal-content {
+    position: relative !important;
     background: linear-gradient(165deg, #101826 0%, #0a0f18 100%) !important;
     border: 1px solid rgba(148, 163, 184, 0.16);
     border-radius: 28px;
@@ -802,6 +802,7 @@ body.light-theme .calculator-toggle:hover { background: rgba(0, 0, 0, 0.05); col
 
 /* Light theme */
 body.light-theme #medicineModal .modal-content {
+    position: relative !important;
     background: linear-gradient(165deg, #ffffff 0%, #f8fafc 100%) !important;
     color: #0f172a;
     border-color: rgba(15, 23, 42, 0.08);
@@ -859,6 +860,7 @@ body.light-theme .hero-save-label { color: #15803d; }
     }
     #medicineModal.modal-overlay { padding: 0.65rem !important; align-items: flex-end !important; }
     #medicineModal .modal-content {
+    position: relative !important;
         max-width: 100%;
         max-height: 94vh;
         border-radius: 24px 24px 18px 18px;
