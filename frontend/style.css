@@ -1,4 +1,4 @@
-ï»¿:root {
+:root {
     --bg-color: #05070a;
     --card-bg: rgba(30, 41, 59, 0.7);
     --accent: #22c55e;
@@ -453,6 +453,7 @@ body.light-theme .calculator-toggle:hover { background: rgba(0, 0, 0, 0.05); col
 
 /* Close */
 #medicineModal .modal-close {
+    z-index: 110 !important;
     position: absolute !important;
     top: 1.1rem !important;
     right: 1.1rem !important;
@@ -812,6 +813,7 @@ body.light-theme #medicineModal .modal-header {
 }
 body.light-theme #medicineModal .modal-header h2 { color: #0f172a; }
 body.light-theme #medicineModal .modal-close {
+    z-index: 110 !important;
     color: #0f172a !important;
     background: rgba(15,23,42,0.05) !important;
 }
@@ -844,13 +846,25 @@ body.light-theme .hero-save-label { color: #15803d; }
 
 /* Responsive */
 @media (max-width: 540px) {
+    #medicineModal .modal-close {
+        top: 0.85rem !important;
+        right: 0.85rem !important;
+        width: 38px !important;
+        height: 38px !important;
+        background: rgba(15, 23, 42, 0.85) !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        z-index: 120 !important;
+    }
     #medicineModal.modal-overlay { padding: 0.65rem !important; align-items: flex-end !important; }
     #medicineModal .modal-content {
         max-width: 100%;
         max-height: 94vh;
         border-radius: 24px 24px 18px 18px;
     }
-    #medicineModal .modal-header,
+    #medicineModal .modal-header { padding-left: 1.15rem; padding-right: 3.6rem !important; }
+    #medicineModal .modal-body {
     #medicineModal .modal-body { padding-left: 1.15rem; padding-right: 1.15rem; }
     #medicineModal .calc-inputs { grid-template-columns: 1fr; }
     #medicineModal .modal-price-comparison { padding: 0.9rem 0.5rem; }
@@ -938,7 +952,7 @@ body.light-theme .hero-save-label { color: #15803d; }
     border-radius: 99px;
 }
 
-/* Medium preview â€” collapsed by default */
+/* Medium preview — collapsed by default */
 .mc-preview {
     max-height: 0;
     opacity: 0;
@@ -1052,7 +1066,7 @@ body.light-theme .medicine-card:hover {
     box-shadow: 0 16px 36px rgba(15, 23, 42, 0.1) !important;
 }
 
-/* Mobile: no hover expand â€” keep compact; tap opens modal */
+/* Mobile: no hover expand — keep compact; tap opens modal */
 @media (hover: none), (max-width: 640px) {
     .medicine-card:hover {
         transform: none !important;
@@ -1083,7 +1097,7 @@ body.light-theme .medicine-card:hover {
 }
 
 /* =========================================================
-   PRO SHELL â€” refined layout (keeps green/blue identity)
+   PRO SHELL — refined layout (keeps green/blue identity)
    ========================================================= */
 :root {
     --bg-color: #070b12;
