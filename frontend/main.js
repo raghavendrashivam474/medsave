@@ -242,22 +242,29 @@ let currentGenericPrice = 0;
 function openMedicineModal(card) {
     const modal = document.getElementById('medicineModal');
     if (!modal) {
-        console.error('Modal #medicineModal not found in DOM');
+        console.error('MedSave: #medicineModal not found');
         return;
     }
 
-    const brand = card.dataset.brand || 'Medicine';
-    const generic = card.dataset.generic || '';
-    const dosage = card.dataset.dosage || '';
-    const form = card.dataset.form || '';
-    currentBrandPrice = parseFloat(card.dataset.brandPrice) || 0;
-    currentGenericPrice = parseFloat(card.dataset.genericPrice) || 0;
+    const brand = card.getAttribute('data-brand') || 'Medicine';
+    const generic = card.getAttribute('data-generic') || '';
+    const dosage = card.getAttribute('data-dosage') || '';
+    const form = card.getAttribute('data-form') || '';
+    currentBrandPrice = parseFloat(card.getAttribute('data-brand-price')) || 0;
+    currentGenericPrice = parseFloat(card.getAttribute('data-generic-price')) || 0;
 
-    document.getElementById('modalBrandName').textContent = brand;
-    document.getElementById('modalGenericName').textContent =
-        'Generic: ' + generic + (dosage || form ? ' (' + (dosage + ' ' + form).trim() + ')' : '');
-    document.getElementById('modalBrandPrice').textContent = '₹' + currentBrandPrice;
-    document.getElementById('modalGenericPrice').textContent = '₹' + currentGenericPrice;
+    const nameEl = document.getElementById('modalBrandName');
+    const subEl = document.getElementById('modalGenericName');
+    const bPriceEl = document.getElementById('modalBrandPrice');
+    const gPriceEl = document.getElementById('modalGenericPrice');
+
+    if (nameEl) nameEl.textContent = brand;
+    if (subEl) {
+        const extra = (dosage + ' ' + form).trim();
+        subEl.textContent = 'Generic: ' + generic + (extra ? ' (' + extra + ')' : '');
+    }
+    if (bPriceEl) bPriceEl.textContent = '₹' + currentBrandPrice;
+    if (gPriceEl) gPriceEl.textContent = '₹' + currentGenericPrice;
 
     const unitsInput = document.getElementById('calcUnits');
     const daysInput = document.getElementById('calcDays');
@@ -266,6 +273,7 @@ function openMedicineModal(card) {
 
     updateCalculator();
     modal.classList.add('active');
+    modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
 }
 
@@ -273,16 +281,17 @@ function closeMedicineModal() {
     const modal = document.getElementById('medicineModal');
     if (!modal) return;
     modal.classList.remove('active');
+    modal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
 }
 
 function updateCalculator() {
     const unitsEl = document.getElementById('calcUnits');
     const daysEl = document.getElementById('calcDays');
-    const units = parseFloat(unitsEl && unitsEl.value) || 1;
-    const days = parseFloat(daysEl && daysEl.value) || 30;
-
+    const units = Math.max(0, parseFloat(unitsEl && unitsEl.value) || 0);
+    const days = Math.max(0, parseFloat(daysEl && daysEl.value) || 0);
     const totalUnits = units * days;
+
     const brandTotal = (currentBrandPrice * totalUnits).toFixed(2);
     const genericTotal = (currentGenericPrice * totalUnits).toFixed(2);
     const savings = (brandTotal - genericTotal).toFixed(2);
@@ -290,20 +299,38 @@ function updateCalculator() {
     const elBrand = document.getElementById('calcBrandTotal');
     const elGeneric = document.getElementById('calcGenericTotal');
     const elSave = document.getElementById('calcTotalSavings');
-
     if (elBrand) elBrand.textContent = '₹' + brandTotal;
     if (elGeneric) elGeneric.textContent = '₹' + genericTotal;
     if (elSave) elSave.textContent = '₹' + savings;
 }
 
-// Wire modal events once
+// Event delegation — works for every search result, every time
+if (resultsContainer) {
+    resultsContainer.addEventListener('click', function (e) {
+        const card = e.target.closest('.medicine-card');
+        if (card) openMedicineModal(card);
+    });
+    resultsContainer.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+            const card = e.target.closest('.medicine-card');
+            if (card) {
+                e.preventDefault();
+                openMedicineModal(card);
+            }
+        }
+    });
+}
+
 (function initMedicineModal() {
     const closeBtn = document.getElementById('closeModal');
     const modal = document.getElementById('medicineModal');
     const unitsInput = document.getElementById('calcUnits');
     const daysInput = document.getElementById('calcDays');
 
-    if (closeBtn) closeBtn.addEventListener('click', closeMedicineModal);
+    if (closeBtn) closeBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        closeMedicineModal();
+    });
 
     if (modal) {
         modal.addEventListener('click', function (e) {
@@ -317,4 +344,7 @@ function updateCalculator() {
 
     if (unitsInput) unitsInput.addEventListener('input', updateCalculator);
     if (daysInput) daysInput.addEventListener('input', updateCalculator);
+
+    console.log('MedSave: modal ready', !!modal);
 })();
+
