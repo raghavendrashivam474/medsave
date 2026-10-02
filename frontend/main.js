@@ -1,5 +1,4 @@
-const API_BASE = window.location.origin.includes('localhost') ? 'http://localhost:5000/api' : '/api';
-
+﻿const API_BASE = window.location.origin.includes('localhost') ? 'http://localhost:5000/api' : '/api';
 const searchInput = document.getElementById('searchInput');
 const resultsContainer = document.getElementById('results');
 const pincodeInput = document.getElementById('pincodeInput');
@@ -13,7 +12,6 @@ let currentGenericPrice = 0;
 // Theme Toggle
 const themeToggle = document.getElementById('themeToggle');
 const body = document.body;
-
 if (themeToggle) {
     themeToggle.addEventListener('click', () => {
         body.classList.toggle('light-theme');
@@ -27,14 +25,13 @@ if (searchInput) {
     searchInput.addEventListener('input', (e) => {
         clearTimeout(debounceTimer);
         const query = e.target.value.trim();
-
         if (query.length < 1) {
             renderEmptyState();
             return;
         }
-
-        resultsContainer.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Searching database...</div>';
-
+        if (resultsContainer) {
+            resultsContainer.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Searching database...</div>';
+        }
         debounceTimer = setTimeout(() => {
             fetchMedicines(query);
         }, 300);
@@ -47,7 +44,7 @@ function renderEmptyState() {
         <div class="empty-state">
             <div class="empty-icon-wrap"><i class="fas fa-pills"></i></div>
             <h3 class="empty-title">Search a branded medicine</h3>
-            <p class="empty-text">Try 
+            <p class="empty-text">Try
                 <button type="button" class="empty-chip" data-q="Dolo">Dolo</button>
                 <button type="button" class="empty-chip" data-q="Crocin">Crocin</button>
                 <button type="button" class="empty-chip" data-q="Glycomet">Glycomet</button>
@@ -77,9 +74,7 @@ function displayMedicines(medicines) {
         resultsContainer.innerHTML = '<div class="empty-state">No matching medicines found. Try searching for "Paracetamol", "Atorvastatin", or "Metformin".</div>';
         return;
     }
-
     const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
-
     resultsContainer.innerHTML = list.map((med) => {
         const brandPrice = Number(med.brand_price) || 0;
         const genericPrice = Number(med.generic_price) || 0;
@@ -92,7 +87,6 @@ function displayMedicines(medicines) {
         const dosage = med.dosage || '';
         const form = med.form || '';
         const df = (dosage + ' ' + form).trim();
-
         return `
         <div class="card medicine-card"
              role="button" tabindex="0"
@@ -135,7 +129,7 @@ function displayMedicines(medicines) {
                 ${df ? `<span><i class="fas fa-pills"></i> ${esc(df)}</span>` : ''}
               </div>
               <div class="mc-preview-cta">
-                <i class="fas fa-calculator"></i> Click for dose &amp; duration savings calculator
+                <i class="fas fa-calculator"></i> Click for dose & duration savings calculator
                 <i class="fas fa-arrow-right mc-cta-arrow"></i>
               </div>
             </div>
@@ -147,10 +141,8 @@ function displayMedicines(medicines) {
 function openMedicineModal(card) {
     const modal = document.getElementById('medicineModal');
     if (!modal) return;
-
     currentBrandPrice = parseFloat(card.getAttribute('data-brand-price')) || 0;
     currentGenericPrice = parseFloat(card.getAttribute('data-generic-price')) || 0;
-
     const brand = card.getAttribute('data-brand') || 'Medicine';
     const generic = card.getAttribute('data-generic') || '';
     const dosage = card.getAttribute('data-dosage') || '';
@@ -164,7 +156,6 @@ function openMedicineModal(card) {
     const hero = document.getElementById('modalHeroSave');
 
     if (nameEl) nameEl.textContent = brand;
-
     if (subEl) {
         let bits = [];
         if (generic) bits.push(generic);
@@ -172,7 +163,6 @@ function openMedicineModal(card) {
         if (df) bits.push(df);
         subEl.textContent = bits.length ? bits.join(' · ') : 'Generic alternative';
     }
-
     if (bp) bp.textContent = '₹' + formatNum(currentBrandPrice);
     if (gp) gp.textContent = '₹' + formatNum(currentGenericPrice);
 
@@ -185,9 +175,10 @@ function openMedicineModal(card) {
     const d = document.getElementById('calcDays');
     if (u) u.value = 1;
     if (d) d.value = 30;
-    setPresetActive(30);
 
+    setPresetActive(30);
     updateCalculator();
+
     modal.classList.add('active');
     modal.style.display = 'flex';
     modal.setAttribute('aria-hidden', 'false');
@@ -211,10 +202,10 @@ function formatNum(n) {
 function updateCalculator() {
     const u = document.getElementById('calcUnits');
     const d = document.getElementById('calcDays');
-    const units = Math.max(0, parseFloat(u && u.value) || 0);
-    const days = Math.max(0, parseFloat(d && d.value) || 0);
-    const n = units * days;
+    const units = Math.max(1, parseFloat(u ? u.value : 1) || 1);
+    const days = Math.max(1, parseFloat(d ? d.value : 1) || 1);
 
+    const n = units * days;
     const bt = currentBrandPrice * n;
     const gt = currentGenericPrice * n;
     const sv = Math.max(0, bt - gt);
@@ -230,65 +221,124 @@ function updateCalculator() {
     if (eg) eg.textContent = '₹' + gt.toFixed(2);
     if (es) es.textContent = '₹' + sv.toFixed(2);
     if (bar) bar.style.width = Math.min(100, pct) + '%';
-    if (cap) cap.textContent = pct > 0
-        ? ("You're saving " + pct + "% vs branded")
-        : 'Adjust values to project savings';
+    if (cap) {
+        cap.textContent = pct > 0
+            ? `You're saving ${pct}% vs branded`
+            : 'Adjust values to project savings';
+    }
 }
 
 function bumpInput(id, delta) {
     const el = document.getElementById(id);
     if (!el) return;
-    const next = Math.max(1, (parseFloat(el.value) || 1) + delta);
+    const currentVal = parseFloat(el.value) || 1;
+    const next = Math.max(1, currentVal + delta);
     el.value = next;
-    if (id === 'calcDays') setPresetActive(next);
+    if (id === 'calcDays') {
+        setPresetActive(next);
+    }
     updateCalculator();
 }
 
 function setPresetActive(days) {
     document.querySelectorAll('.preset-btn').forEach(btn => {
         const d = parseInt(btn.getAttribute('data-days'), 10);
-        btn.classList.toggle('active', d === days);
+        btn.classList.toggle('active', d === Number(days));
     });
 }
 
-// Event Delegation for Medicine Cards & Chips
-if (resultsContainer) {
-    resultsContainer.addEventListener('click', function (e) {
-        const chip = e.target.closest('.empty-chip');
-        if (chip) {
-            const q = chip.getAttribute('data-q');
-            if (q && searchInput) {
-                searchInput.value = q;
-                searchInput.dispatchEvent(new Event('input', { bubbles: true }));
-                searchInput.focus();
-            }
-            return;
-        }
-
-        const card = e.target.closest('.medicine-card');
-        if (card) openMedicineModal(card);
-    });
-
-    resultsContainer.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter' || e.key === ' ') {
-            const card = e.target.closest('.medicine-card');
-            if (card) {
-                e.preventDefault();
-                openMedicineModal(card);
-            }
-        }
-    });
-}
-
-// Global chip listener fallback
+// Global Click Delegation (Captures all buttons reliably)
 document.addEventListener('click', function (e) {
+    // 1. Close Modal
+    if (e.target.closest('#closeModal, .modal-close, [data-dismiss="modal"]')) {
+        e.preventDefault();
+        closeMedicineModal();
+        return;
+    }
+
+    // 2. Modal Backdrop Click
+    const modal = document.getElementById('medicineModal');
+    if (e.target === modal) {
+        closeMedicineModal();
+        return;
+    }
+
+    // 3. Calculator Buttons: Units & Days (+/-)
+    if (e.target.closest('#unitsMinus, [data-action="units-minus"]')) {
+        e.preventDefault();
+        bumpInput('calcUnits', -1);
+        return;
+    }
+    if (e.target.closest('#unitsPlus, [data-action="units-plus"]')) {
+        e.preventDefault();
+        bumpInput('calcUnits', 1);
+        return;
+    }
+    if (e.target.closest('#daysMinus, [data-action="days-minus"]')) {
+        e.preventDefault();
+        bumpInput('calcDays', -1);
+        return;
+    }
+    if (e.target.closest('#daysPlus, [data-action="days-plus"]')) {
+        e.preventDefault();
+        bumpInput('calcDays', 1);
+        return;
+    }
+
+    // 4. Preset Duration Chips (30, 60, 90 days)
+    const presetBtn = e.target.closest('.preset-btn');
+    if (presetBtn) {
+        e.preventDefault();
+        const days = parseInt(presetBtn.getAttribute('data-days'), 10) || 30;
+        const dEl = document.getElementById('calcDays');
+        if (dEl) dEl.value = days;
+        setPresetActive(days);
+        updateCalculator();
+        return;
+    }
+
+    // 5. Search Chips
     const chip = e.target.closest('.empty-chip');
-    if (!chip) return;
-    const q = chip.getAttribute('data-q');
-    if (q && searchInput) {
-        searchInput.value = q;
-        searchInput.dispatchEvent(new Event('input', { bubbles: true }));
-        searchInput.focus();
+    if (chip) {
+        e.preventDefault();
+        const q = chip.getAttribute('data-q');
+        if (q && searchInput) {
+            searchInput.value = q;
+            searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+            searchInput.focus();
+        }
+        return;
+    }
+
+    // 6. Medicine Card Selection
+    const card = e.target.closest('.medicine-card');
+    if (card) {
+        e.preventDefault();
+        openMedicineModal(card);
+        return;
+    }
+});
+
+// Live input listener for keyboard typing in input fields
+document.addEventListener('input', function (e) {
+    if (e.target && (e.target.id === 'calcUnits' || e.target.id === 'calcDays')) {
+        if (e.target.id === 'calcDays') {
+            setPresetActive(parseInt(e.target.value, 10));
+        }
+        updateCalculator();
+    }
+});
+
+// Keyboard Accessibility (Escape to close, Enter on card)
+document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+        closeMedicineModal();
+    } else if (e.key === 'Enter' || e.key === ' ') {
+        const card = document.activeElement && document.activeElement.closest('.medicine-card');
+        if (card) {
+            e.preventDefault();
+            openMedicineModal(card);
+        }
     }
 });
 
@@ -304,7 +354,6 @@ async function fetchStores(pincode = '', lat = '', lng = '') {
     const el = document.getElementById('storeResults');
     if (!el) return;
     el.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Locating stores...</div>';
-
     try {
         let url = `${API_BASE}/stores`;
         const params = new URLSearchParams();
@@ -314,7 +363,6 @@ async function fetchStores(pincode = '', lat = '', lng = '') {
             params.append('lng', lng);
         }
         if (params.toString()) url += `?${params.toString()}`;
-
         const response = await fetch(url);
         const json = await response.json();
         displayStores(json);
@@ -327,19 +375,16 @@ async function fetchStores(pincode = '', lat = '', lng = '') {
 function displayStores(storesInput) {
     const el = document.getElementById('storeResults');
     if (!el) return;
-
     let list = storesInput;
     if (!Array.isArray(list)) {
         if (list && Array.isArray(list.data)) list = list.data;
         else if (list && Array.isArray(list.stores)) list = list.stores;
         else list = [];
     }
-
     if (list.length === 0) {
         el.innerHTML = '<div class="empty-state">No Jan Aushadhi Kendras found for this query.</div>';
         return;
     }
-
     el.innerHTML = list.map(store => {
         const name = store.name || 'Jan Aushadhi Kendra';
         const address = store.address || '';
@@ -351,14 +396,13 @@ function displayStores(storesInput) {
         const dist = (store.distance_km !== null && store.distance_km !== undefined) ? store.distance_km : store.distance;
         const phoneHtml = store.phone ? `<div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.2rem;"><i class="fas fa-phone-alt"></i> ${store.phone}</div>` : '';
         const distHtml = (dist !== null && dist !== undefined) ? `<div style="font-size: 0.8rem; color: var(--accent); margin-top: 0.4rem; font-weight: 600;">Approx. ${Number(dist).toFixed(1)} km away</div>` : '';
-
         return `
         <div class="card store-card" style="margin-bottom: 1rem; padding: 1.2rem; background: var(--card-bg); border-radius: 12px; border: 1px solid var(--glass-border);">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap;">      
                 <div>
                     <div style="font-weight: 700; font-size: 1.05rem; margin-bottom: 0.3rem; color: var(--text-primary);">${name}</div>
                     <div style="font-size: 0.9rem; color: var(--text-secondary);"><i class="fas fa-map-marker-alt"></i> ${address}${city ? ', ' + city : ''}${state ? ', ' + state : ''}</div>
-                    <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.2rem;">Pincode: ${pincode}</div>
+                    <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.2rem;">Pincode: ${pincode}</div>   
                     ${phoneHtml}
                     ${distHtml}
                 </div>
@@ -372,76 +416,29 @@ function displayStores(storesInput) {
     }).join('');
 }
 
-// Initial modal & events setup
-(function initModalChrome() {
-    const modal = document.getElementById('medicineModal');
-    const closeBtn = document.getElementById('closeModal');
-
-    if (modal) {
-        modal.style.display = 'none';
-        modal.addEventListener('click', function (e) {
-            if (e.target === modal) closeMedicineModal();
-        });
+// Setup Geo Location Button Slot
+if ("geolocation" in navigator) {
+    const slot = document.getElementById('geoBtnSlot');
+    if (slot) {
+        slot.hidden = false;
+        slot.className = 'btn btn-ghost';
+        slot.type = 'button';
+        slot.innerHTML = '<i class="fas fa-location-arrow"></i> Use Location';
+        slot.onclick = function () {
+            slot.disabled = true;
+            slot.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Locating...';
+            navigator.geolocation.getCurrentPosition(function (pos) {
+                fetchStores('', pos.coords.latitude, pos.coords.longitude);
+                slot.disabled = false;
+                slot.innerHTML = '<i class="fas fa-location-arrow"></i> Use Location';
+            }, function () {
+                alert('Unable to get location. Please enter pincode.');
+                slot.disabled = false;
+                slot.innerHTML = '<i class="fas fa-location-arrow"></i> Use Location';
+            });
+        };
     }
-    if (closeBtn) {
-        closeBtn.addEventListener('click', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            closeMedicineModal();
-        });
-    }
-    document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') closeMedicineModal();
-    });
-
-    const u = document.getElementById('calcUnits');
-    const d = document.getElementById('calcDays');
-    if (u) u.addEventListener('input', updateCalculator);
-    if (d) d.addEventListener('input', function () {
-        setPresetActive(parseInt(d.value, 10));
-        updateCalculator();
-    });
-
-    const bind = (id, fn) => { const el = document.getElementById(id); if (el) el.addEventListener('click', fn); };
-    bind('unitsMinus', function () { bumpInput('calcUnits', -1); });
-    bind('unitsPlus',  function () { bumpInput('calcUnits', +1); });
-    bind('daysMinus',  function () { bumpInput('calcDays', -1); });
-    bind('daysPlus',   function () { bumpInput('calcDays', +1); });
-
-    document.querySelectorAll('.preset-btn').forEach(btn => {
-        btn.addEventListener('click', function () {
-            const days = parseInt(btn.getAttribute('data-days'), 10) || 30;
-            const dEl = document.getElementById('calcDays');
-            if (dEl) dEl.value = days;
-            setPresetActive(days);
-            updateCalculator();
-        });
-    });
-
-    // Geo Button Slot Setup
-    if ("geolocation" in navigator) {
-        const slot = document.getElementById('geoBtnSlot');
-        if (slot) {
-            slot.hidden = false;
-            slot.className = 'btn btn-ghost';
-            slot.type = 'button';
-            slot.innerHTML = '<i class="fas fa-location-arrow"></i> Use Location';
-            slot.onclick = function () {
-                slot.disabled = true;
-                slot.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Locating...';
-                navigator.geolocation.getCurrentPosition(function (pos) {
-                    fetchStores('', pos.coords.latitude, pos.coords.longitude);
-                    slot.disabled = false;
-                    slot.innerHTML = '<i class="fas fa-location-arrow"></i> Use Location';
-                }, function () {
-                    alert('Unable to get location. Please enter pincode.');
-                    slot.disabled = false;
-                    slot.innerHTML = '<i class="fas fa-location-arrow"></i> Use Location';
-                });
-            };
-        }
-    }
-})();
+}
 
 // Initial store load
 fetchStores();
@@ -456,18 +453,3 @@ if ('serviceWorker' in navigator) {
         });
     });
 }
-
-// Global Modal Close Delegation (Guarantees click works on button, icon, and backdrop)
-document.addEventListener('click', function (e) {
-    const closeBtn = e.target.closest('#closeModal, .modal-close');
-    if (closeBtn) {
-        e.preventDefault();
-        e.stopPropagation();
-        closeMedicineModal();
-        return;
-    }
-    const modal = document.getElementById('medicineModal');
-    if (modal && e.target === modal) {
-        closeMedicineModal();
-    }
-}, true);
